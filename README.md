@@ -1,4 +1,5 @@
-# Ngrx5ExampleApp
+# Ngrx5ExampleApp, extracted out from platform/example-app, make it as a standalone app
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.3.
 
