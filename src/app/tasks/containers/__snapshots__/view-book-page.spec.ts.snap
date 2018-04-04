@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`View Task Page should compile 1`] = `
+<pomo-view-Task-page
+  actionsSubscription={[Function Subscriber]}
+>
+
+      <pomo-selected-Task-page>
+
+
+    <pomo-Task-detail
+      _nghost-c0=""
+    >
+
+
+
+
+
+
+    </pomo-Task-detail>
+
+
+  </pomo-selected-Task-page>
+
+</pomo-view-Task-page>
+`;

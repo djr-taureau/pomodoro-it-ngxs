@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Collection Page should compile 1`] = `
+<pomo-collection-page
+  Tasks$={[Function Store]}
+  store={[Function Store]}
+>
+
+      <mat-card
+    _ngcontent-c0=""
+    class="mat-card"
+  >
+
+
+    <mat-card-title
+      _ngcontent-c0=""
+      class="mat-card-title"
+    >
+      My Collection
+    </mat-card-title>
+
+
+  </mat-card>
+
+      <pomo-Task-preview-list
+    _ngcontent-c0=""
+    _nghost-c2=""
+    ng-reflect-Tasks=""
+  >
+
+
+
+
+
+  </pomo-Task-preview-list>
+
+</pomo-collection-page>
+`;

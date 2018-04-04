@@ -13,12 +13,15 @@ import * as Auth from '../../auth/actions/auth';
   template: `
     <bc-layout>
       <bc-sidenav [open]="showSidenav$ | async">
-        <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/" icon="book" hint="View your book collection">
-          My Collection
-        </bc-nav-item>
-        <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/books/find" icon="search" hint="Find your next book!">
-          Browse Books
-        </bc-nav-item>
+      <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/tasks" icon="assignment" hint="View your task collection">
+        My Task Collection
+      </bc-nav-item>
+      <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/tasks/find" icon="search" hint="Find your next task!">
+        Find Tasks
+      </bc-nav-item>
+      <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/tasks/find" icon="alarm" hint="Start your Timer!">
+        Start Your Timer
+      </bc-nav-item>
         <bc-nav-item (navigate)="closeSidenav()" *ngIf="!(loggedIn$ | async)">
           Sign In
         </bc-nav-item>
@@ -27,7 +30,7 @@ import * as Auth from '../../auth/actions/auth';
         </bc-nav-item>
       </bc-sidenav>
       <bc-toolbar (openMenu)="openSidenav()">
-        Book Collection
+        Pomodo-it
       </bc-toolbar>
 
       <router-outlet></router-outlet>

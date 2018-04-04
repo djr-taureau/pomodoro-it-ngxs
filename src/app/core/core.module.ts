@@ -1,3 +1,4 @@
+import { TodoistTasksService } from './services/todoist-tasks';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -9,8 +10,6 @@ import { NavItemComponent } from './components/nav-item';
 import { SidenavComponent } from './components/sidenav';
 import { ToolbarComponent } from './components/toolbar';
 import { MaterialModule } from '../material';
-
-import { GoogleBooksService } from './services/google-books';
 
 export const COMPONENTS = [
   AppComponent,
@@ -30,7 +29,7 @@ export class CoreModule {
   static forRoot() {
     return {
       ngModule: CoreModule,
-      providers: [GoogleBooksService],
+      providers: [TodoistTasksService],
     };
   }
 }
