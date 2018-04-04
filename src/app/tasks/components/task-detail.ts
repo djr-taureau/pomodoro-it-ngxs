@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Task } from '../models/Task';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'bc-task-detail',
@@ -23,6 +23,8 @@ import { Task } from '../models/Task';
         <button mat-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(task)">
         Add Task to Collection
         </button>
+        <button mat-raised-button color="primary"><i class="material-icons">play_arrow</i></button>
+        <button mat-raised-button color="primary"><i class="material-icons">pause</i></button>
       </mat-card-actions>
     </mat-card>
 

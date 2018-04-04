@@ -5,7 +5,7 @@ import { Database } from '@ngrx/db';
 import { Observable } from 'rxjs/Observable';
 import { defer } from 'rxjs/observable/defer';
 import { of } from 'rxjs/observable/of';
-import { Load } from './../actions/Task';
+import { Load } from './../actions/task';
 
 import {
   CollectionActions,
@@ -19,7 +19,7 @@ import {
   RemoveTaskSuccess,
   AddTask,
 } from './../actions/collection';
-import { Task } from '../models/Task';
+import { Task } from '../models/task';
 import { switchMap, toArray, map, catchError, mergeMap } from 'rxjs/operators';
 //import { CollectionActions } from '../../tasks__/actions/collection';
 
@@ -37,7 +37,7 @@ export class CollectionEffects {
    */
   @Effect({ dispatch: false })
   openDB$: Observable<any> = defer(() => {
-    return this.db.open('Tasks_app');
+    return this.db.open('tasks_app');
   });
 
   @Effect()
@@ -45,7 +45,7 @@ export class CollectionEffects {
     ofType(CollectionActionTypes.Load),
     switchMap(() =>
       this.db
-        .query('Tasks')
+        .query('tasks')
         .pipe(
           toArray(),
           map((tasks: Task[]) => new LoadSuccess(tasks)),

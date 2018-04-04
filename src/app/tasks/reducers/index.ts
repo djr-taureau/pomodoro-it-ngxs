@@ -4,7 +4,7 @@ import {
   ActionReducerMap,
 } from '@ngrx/store';
 import * as fromSearch from './search';
-import * as fromTasks from './Tasks';
+import * as fromTasks from './tasks';
 import * as fromCollection from './collection';
 import * as fromRoot from '../../reducers';
 

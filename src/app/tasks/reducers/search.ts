@@ -1,4 +1,4 @@
-import { TaskActionTypes, TaskActions } from '../actions/Task';
+import { TaskActionTypes, TaskActions } from '../actions/task';
 //import { isEmpty } from 'lodash';
 import { Task } from '../models/task';
 

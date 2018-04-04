@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
 
 import * as fromTasks from '../reducers';
-import * as TaskActions from '../actions/Task';
-import { Task } from '../models/Task';
+import * as TaskActions from '../actions/task';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'bc-find-task-page',

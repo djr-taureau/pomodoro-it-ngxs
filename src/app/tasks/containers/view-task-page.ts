@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { map } from 'rxjs/operators';
 
 import * as fromTasks from '../reducers';
-import * as task from '../actions/Task';
+import * as task from '../actions/task';
 
 /**
  * Note: Container components are also reusable. Whether or not

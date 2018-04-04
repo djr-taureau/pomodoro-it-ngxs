@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import * as fromTasks from '../reducers';
 import * as collection from '../actions/collection';
-import { Task } from '../models/Task';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'bc-selected-task-page',

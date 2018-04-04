@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Task } from '../models/Task';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'bc-task-preview',

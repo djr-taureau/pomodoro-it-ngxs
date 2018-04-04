@@ -5,13 +5,13 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
 import { ComponentsModule } from './components';
-import { TaskEffects } from './effects/Task';
+import { TaskEffects } from './effects/task';
 import { CollectionEffects } from './effects/collection';
-import { TaskExistsGuard } from './guards/Task-exists';
+import { TaskExistsGuard } from './guards/task-exists';
 
-import { FindTaskPageComponent } from './containers/find-Task-page';
-import { ViewTaskPageComponent } from './containers/view-Task-page';
-import { SelectedTaskPageComponent } from './containers/selected-Task-page';
+import { FindTaskPageComponent } from './containers/find-task-page';
+import { ViewTaskPageComponent } from './containers/view-task-page';
+import { SelectedTaskPageComponent } from './containers/selected-task-page';
 import { CollectionPageComponent } from './containers/collection-page';
 import { MaterialModule } from '../material';
 
@@ -38,7 +38,7 @@ import { reducers } from './reducers';
      * eagerly or lazily and will be dynamically added to
      * the existing state.
      */
-    StoreModule.forFeature('Tasks', reducers),
+    StoreModule.forFeature('tasks', reducers),
 
     /**
      * Effects.forFeature is used to register effects

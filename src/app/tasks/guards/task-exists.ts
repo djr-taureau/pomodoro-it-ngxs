@@ -7,7 +7,7 @@ import { of } from 'rxjs/observable/of';
 
 import { TodoistTasksService } from '../../core/services/todoist-tasks';
 import * as fromTasks from '../reducers';
-import * as task from '../actions/Task';
+import * as task from '../actions/task';
 
 /**
  * Guards are hooks into the route resolution process, providing an opportunity

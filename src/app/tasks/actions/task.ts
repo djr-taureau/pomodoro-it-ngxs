@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Task } from '../models/Task';
+import { Task } from '../models/task';
 
 export enum TaskActionTypes {
   Search = '[Task] Search',
