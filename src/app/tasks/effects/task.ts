@@ -14,7 +14,7 @@ import {
   SearchComplete,
   SearchError,
   Search,
-} from '../actions/Task';
+} from '../actions/task';
 import { Task } from '../models/task';
 import {
   debounceTime,

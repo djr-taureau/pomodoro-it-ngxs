@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SelectedTaskPageComponent } from './selected-Task-page';
+import { SelectedTaskPageComponent } from './selected-task-page';
 import { combineReducers, Store, StoreModule } from '@ngrx/store';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material';
 
 import * as CollectionActions from '../actions/collection';
 import * as fromTasks from '../reducers';
-import { TaskDetailComponent } from '../components/Task-detail';
-import { Task, generateMockTask } from '../models/Task';
-import { TaskAuthorsComponent } from '../components/Task-authors';
+import { TaskDetailComponent } from '../components/task-detail';
+import { Task } from '../models/task';
 import { AddCommasPipe } from '../../shared/pipes/add-commas';
 
 describe('Selected Task Page', () => {
@@ -27,8 +26,7 @@ describe('Selected Task Page', () => {
       ],
       declarations: [
         SelectedTaskPageComponent,
-        TaskDetailComponent,
-        TaskAuthorsComponent,
+        TaskDetailComponent,,
         AddCommasPipe,
       ],
     });

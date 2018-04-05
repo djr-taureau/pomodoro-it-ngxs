@@ -4,12 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { MatCardModule } from '@angular/material';
 
-import { ViewTaskPageComponent } from './view-Task-page';
-import * as TaskActions from '../actions/Task';
+import { ViewTaskPageComponent } from './view-task-page';
+import * as TaskActions from '../actions/task';
 import * as fromTasks from '../reducers';
-import { SelectedTaskPageComponent } from './selected-Task-page';
-import { TaskDetailComponent } from '../components/Task-detail';
-import { TaskAuthorsComponent } from '../components/Task-authors';
+import { SelectedTaskPageComponent } from './selected-task-page';
+import { TaskDetailComponent } from '../components/task-detail';
 import { AddCommasPipe } from '../../shared/pipes/add-commas';
 
 describe('View Task Page', () => {

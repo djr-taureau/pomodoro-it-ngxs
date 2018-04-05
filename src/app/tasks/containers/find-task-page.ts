@@ -11,8 +11,12 @@ import { Task } from '../models/task';
   selector: 'bc-find-task-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <bc-task-search [query]="searchQuery$ | async" [searching]="loading$ | async" [error]="error$ | async" (search)="search($event)"></bc-task-search>
-    <bc-task-preview-list [tasks]="tasks$ | async"></bc-task-preview-list>
+    <bc-task-search [query]="searchQuery$ | async"
+      [searching]="loading$ | async" [error]="error$ | async"
+      (search)="search($event)">
+    </bc-task-search>
+    <bc-task-preview-list [tasks]="tasks$ | async">
+    </bc-task-preview-list>
   `,
 })
 export class FindTaskPageComponent {

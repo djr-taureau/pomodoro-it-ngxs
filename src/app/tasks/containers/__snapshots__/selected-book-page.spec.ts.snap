@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Selected Task Page should compile 1`] = `
-<pomo-selected-Task-page
+<pomo-selected-task-page
   Task$={[Function Store]}
   isSelectedTaskInCollection$={[Function Store]}
   store={[Function Store]}
 >
 
-      <pomo-Task-detail
+      <pomo-task-detail
     _nghost-c0=""
     ng-reflect-in-collection="false"
   >
@@ -17,7 +17,7 @@ exports[`Selected Task Page should compile 1`] = `
 
 
 
-  </pomo-Task-detail>
+  </pomo-task-detail>
 
-</pomo-selected-Task-page>
+</pomo-selected-task-page>
 `;

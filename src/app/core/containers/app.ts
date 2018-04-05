@@ -13,7 +13,11 @@ import * as Auth from '../../auth/actions/auth';
   template: `
     <bc-layout>
       <bc-sidenav [open]="showSidenav$ | async">
-      <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/tasks" icon="assignment" hint="View your task collection">
+      <bc-nav-item (navigate)="closeSidenav()"
+          *ngIf="loggedIn$ | async"
+          routerLink="/tasks"
+          icon="assignment"
+          hint="View your task collection">
         My Task Collection
       </bc-nav-item>
       <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/tasks/find" icon="search" hint="Find your next task!">

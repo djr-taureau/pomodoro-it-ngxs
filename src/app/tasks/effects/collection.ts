@@ -21,7 +21,6 @@ import {
 } from './../actions/collection';
 import { Task } from '../models/task';
 import { switchMap, toArray, map, catchError, mergeMap } from 'rxjs/operators';
-//import { CollectionActions } from '../../tasks__/actions/collection';
 
 @Injectable()
 export class CollectionEffects {

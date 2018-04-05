@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`View Task Page should compile 1`] = `
+exports[`View task Page should compile 1`] = `
 <pomo-view-Task-page
   actionsSubscription={[Function Subscriber]}
 >
 
-      <pomo-selected-Task-page>
+      <pomo-selected-task-page>
 
 
-    <pomo-Task-detail
+    <pomo-task-detail
       _nghost-c0=""
     >
 
@@ -17,10 +17,10 @@ exports[`View Task Page should compile 1`] = `
 
 
 
-    </pomo-Task-detail>
+    </pomo-task-detail>
 
 
-  </pomo-selected-Task-page>
+  </pomo-selected-task-page>
 
-</pomo-view-Task-page>
+</pomo-view-task-page>
 `;

@@ -8,14 +8,14 @@ import {
 import { combineReducers, Store, StoreModule } from '@ngrx/store';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { TaskSearchComponent } from '../components/Task-search';
-import { TaskPreviewComponent } from '../components/Task-preview';
-import { TaskPreviewListComponent } from '../components/Task-preview-list';
+import { TaskSearchComponent } from '../components/task-search';
+import { TaskPreviewComponent } from '../components/task-preview';
+import { TaskPreviewListComponent } from '../components/task-preview-list';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EllipsisPipe } from '../../shared/pipes/ellipsis';
 import { AddCommasPipe } from '../../shared/pipes/add-commas';
-import { FindTaskPageComponent } from './find-Task-page';
-import * as TaskActions from '../actions/Task';
+import { FindTaskPageComponent } from './find-task-page';
+import * as TaskActions from '../actions/task';
 import * as fromTasks from '../reducers';
 
 describe('Find Task Page', () => {

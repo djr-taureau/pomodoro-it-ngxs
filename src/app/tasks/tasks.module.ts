@@ -27,7 +27,7 @@ import { reducers } from './reducers';
       {
         path: ':id',
         component: ViewTaskPageComponent,
-        //canActivate: [TaskExistsGuard],
+        canActivate: [TaskExistsGuard],
       },
       { path: '', component: CollectionPageComponent },
     ]),

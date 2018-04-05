@@ -6,23 +6,22 @@ import { Task } from '../models/task';
   template: `
     <mat-card *ngIf="task">
       <mat-card-title-group>
-        <mat-card-title color="primary">{{ task.content }}</mat-card-title>
-        <mat-card-subtitle color="secondary" *ngIf="subtitle">{{ task.project_id }}</mat-card-subtitle>
+        <mat-card-title color="primary">{{ content }}</mat-card-title>
+        <mat-card-subtitle color="secondary" *ngIf="projectId">{{ projectId }}</mat-card-subtitle>
         <img mat-card-sm-image *ngIf="thumbnail" [src]="thumbnail"/>
       </mat-card-title-group>
       <mat-card-content>
-        <p [innerHtml]="task.content"></p>
+        <p [innerHtml]="id"></p>
       </mat-card-content>
       <mat-card-footer class="footer">
       </mat-card-footer>
       <mat-card-actions align="start">
-        <button mat-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(task)">
+      <button mat-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(task)">
         Remove Task from Collection
-        </button>
-
-        <button mat-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(task)">
-        Add Task to Collection
-        </button>
+      </button>
+      <button mat-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(task)">
+      Add Task to Collection
+      </button>
         <button mat-raised-button color="primary"><i class="material-icons">play_arrow</i></button>
         <button mat-raised-button color="primary"><i class="material-icons">pause</i></button>
       </mat-card-actions>
@@ -78,15 +77,22 @@ export class TaskDetailComponent {
    * Tip: Utilize getters to keep templates clean
    */
   get id() {
+    console.log(this.task.id);
+    console.log(this.inCollection);
+    //WTF with the task ids
     return this.task.id;
   }
 
-  get title() {
+  get content() {
     return this.task.content;
   }
 
-  get subtitle() {
+  get projectId() {
     return this.task.project_id;
+  }
+
+  get comment_count() {
+    return this.task.comment_count;
   }
 
   // get description() {

@@ -22,17 +22,17 @@ exports[`Collection Page should compile 1`] = `
 
   </mat-card>
 
-      <pomo-Task-preview-list
+      <pomo-task-preview-list
     _ngcontent-c0=""
     _nghost-c2=""
-    ng-reflect-Tasks=""
+    ng-reflect-tasks=""
   >
 
 
 
 
 
-  </pomo-Task-preview-list>
+  </pomo-task-preview-list>
 
 </pomo-collection-page>
 `;

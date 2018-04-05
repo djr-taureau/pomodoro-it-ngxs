@@ -61,6 +61,7 @@ export function reducer(
   }
 }
 
+
 export const getLoaded = (state: State) => state.loaded;
 
 export const getLoading = (state: State) => state.loading;

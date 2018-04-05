@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError, tap, map, mergeMap, filter } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { of } from 'rxjs/observable/of';
-import { Task, Comment, StrInt, Project } from '../../Tasks/models/Task';
+import { Task, Comment, StrInt, Project } from '../../tasks/models/task';
 import 'rxjs/add/observable/fromPromise';
 import TodoistApiREST, { TodoistProject } from 'todoist-api-ts';
 import { BinaryOperatorToken } from 'typescript';

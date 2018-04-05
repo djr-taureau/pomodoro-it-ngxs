@@ -1,3 +1,6 @@
+import * as LogRocket from 'logrocket';
+LogRocket.init('b5lrit/bloctime');
+import createNgrxMiddleware from 'logrocket-ngrx';
 import {
   ActionReducerMap,
   createSelector,
@@ -54,6 +57,7 @@ export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
   };
 }
 
+
 /**
  * By default, @ngrx/store uses combineReducers with the reducer map to compose
  * the root meta-reducer. To add more meta-reducers, provide an array of meta-reducers
@@ -72,3 +76,11 @@ export const getShowSidenav = createSelector(
   getLayoutState,
   fromLayout.getShowSidenav
 );
+
+// export const logrocketMiddleware = createNgrxMiddleware(LogRocket);
+// export const productionReducer = compose(
+//   stateSetter,
+//   logrocketMiddleware,
+//   combineReducers
+// )(reducers)
+

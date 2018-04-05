@@ -10,7 +10,6 @@ import * as CollectionActions from '../actions/collection';
 import * as fromTasks from '../reducers';
 import { EllipsisPipe } from '../../shared/pipes/ellipsis';
 import { AddCommasPipe } from '../../shared/pipes/add-commas';
-import { TaskAuthorsComponent } from '../components/Task-authors';
 
 describe('Collection Page', () => {
   let fixture: ComponentFixture<CollectionPageComponent>;

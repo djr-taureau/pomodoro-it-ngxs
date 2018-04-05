@@ -15,6 +15,7 @@
     "types": [],
     "baseUrl": "."
   },
+  "includes": "../src/*",
   "exclude": [
     "../node_modules",
     "test.ts",
