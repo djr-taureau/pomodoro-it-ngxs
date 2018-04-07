@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Task } from '../models/task';
+import { Task } from '../models/Task';
 
 export enum CollectionActionTypes {
   AddTask = '[Collection] Add Task',

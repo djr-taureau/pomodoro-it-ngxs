@@ -151,11 +151,18 @@ export const getTaskCollection = createSelector(
     return ids.map(id => entities[id]);
   }
 );
-
+//TODO :: Show to Ben on Tuesday and then get rid of
 export const isSelectedTaskInCollection = createSelector(
   getCollectionTaskIds,
   getSelectedTaskId,
   (ids, selected) => {
+    ids = ids.map(id => id.toString());
+    ids.map(id => id.toString());
+    console.log(typeof(ids[0]));
+    console.log(typeof(selected));
+    console.log([ids]);
+    console.log(ids.indexOf(selected));
     return ids.indexOf(selected) > -1;
   }
 );
+

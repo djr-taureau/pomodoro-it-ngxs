@@ -42,7 +42,7 @@ export class TaskExistsGuard implements CanActivate {
   hasTaskInStore(id: string): Observable<boolean> {
     return this.store.pipe(
       select(fromTasks.getTaskEntities),
-      map(entities => !!entities[`${id}`]),
+      map(entities => !!entities[id]),
       take(1)
     );
   }
