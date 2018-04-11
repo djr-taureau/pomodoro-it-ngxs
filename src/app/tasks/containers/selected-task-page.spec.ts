@@ -26,7 +26,7 @@ describe('Selected Task Page', () => {
       ],
       declarations: [
         SelectedTaskPageComponent,
-        TaskDetailComponent,,
+        TaskDetailComponent,
         AddCommasPipe,
       ],
     });

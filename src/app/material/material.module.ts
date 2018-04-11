@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   MatInputModule,
   MatCardModule,
@@ -9,6 +9,8 @@ import {
   MatIconModule,
   MatToolbarModule,
   MatProgressSpinnerModule,
+  MatTableModule,
+  MatCheckboxModule,
 } from '@angular/material';
 
 @NgModule({
@@ -21,6 +23,8 @@ import {
     MatIconModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
+    MatTableModule,
+    MatCheckboxModule,
   ],
   exports: [
     MatInputModule,
@@ -31,6 +35,8 @@ import {
     MatIconModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
+    MatTableModule,
+    MatCheckboxModule
   ],
 })
 export class MaterialModule {}

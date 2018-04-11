@@ -151,7 +151,7 @@ export const getTaskCollection = createSelector(
     return ids.map(id => entities[id]);
   }
 );
-//TODO :: Show to Ben on Tuesday and then get rid of
+
 export const isSelectedTaskInCollection = createSelector(
   getCollectionTaskIds,
   getSelectedTaskId,

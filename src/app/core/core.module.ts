@@ -1,3 +1,4 @@
+import { PomoTimerService } from './services/pomo-timer';
 import { TodoistTasksService } from './services/todoist-tasks';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -29,7 +30,7 @@ export class CoreModule {
   static forRoot() {
     return {
       ngModule: CoreModule,
-      providers: [TodoistTasksService],
+      providers: [TodoistTasksService, PomoTimerService],
     };
   }
 }

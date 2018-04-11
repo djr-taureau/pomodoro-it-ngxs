@@ -98,5 +98,6 @@ import { environment } from '../environments/environment';
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
   ],
   bootstrap: [AppComponent],
+  declarations: [],
 })
 export class AppModule {}

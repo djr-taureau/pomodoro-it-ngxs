@@ -1,17 +1,21 @@
+import { RouterStateSnapshot } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Task } from '../models/task';
-
+import { MinuteSecondsPipe } from '../../shared/pipes/timer-pipe';
+import { PomoTimerService } from '../../core/services/pomo-timer';
 @Component({
   selector: 'bc-task-detail',
   template: `
+    <div class="grid-2 mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col">
     <mat-card *ngIf="task">
       <mat-card-title-group>
         <mat-card-title color="primary">{{ content }}</mat-card-title>
-        <mat-card-subtitle color="secondary" *ngIf="projectId">{{ projectId }}</mat-card-subtitle>
-        <img mat-card-sm-image *ngIf="thumbnail" [src]="thumbnail"/>
+        <mat-card-subtitle color="secondary">{{ pomoTitle }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ timeRemaining  }}</mat-card-subtitle>
       </mat-card-title-group>
       <mat-card-content>
-        <p [innerHtml]="id"></p>
+        <p>{{ pomoCount }}</p>
       </mat-card-content>
       <mat-card-footer class="footer">
       </mat-card-footer>
@@ -22,10 +26,15 @@ import { Task } from '../models/task';
       <button mat-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(task)">
       Add Task to Collection
       </button>
-        <button mat-raised-button color="primary"><i class="material-icons">play_arrow</i></button>
-        <button mat-raised-button color="primary"><i class="material-icons">pause</i></button>
+        <button id="resume" name="resumeButton" class="resume-btn"
+          mat-raised-button color="primary" (click)="resumeButton.emit($event)"><i class="material-icons">play_arrow</i></button>
+        <button id="pause" name="pauseButton" class="pause-btn"
+          mat-raised-button color="primary" (click)="pauseButton.emit($event)"><i class="material-icons">pause</i></button>
+        <button id="reset" name="resetButton" class="reset-btn"
+          mat-raised-button color="primary" (click)="resetButton.emit($event)"><i class="material-icons">stop</i></button>
       </mat-card-actions>
     </mat-card>
+    </div>
 
   `,
   styles: [
@@ -60,22 +69,19 @@ import { Task } from '../models/task';
   ],
 })
 export class TaskDetailComponent {
-  /**
-   * Presentational components receive data through @Input() and communicate events
-   * through @Output() but generally maintain no internal state of their
-   * own. All decisions are delegated to 'container', or 'smart'
-   * components before data updates flow back down.
-   *
-   * More on 'smart' and 'presentational' components: https://gist.github.com/btroncone/a6e4347326749f938510#utilizing-container-components
-   */
+
   @Input() task: Task;
   @Input() inCollection: boolean;
+  @Input() pomoCount: number;
+  @Input() pomoTitle: number;
+  @Input() timeRemaining: number;
   @Output() add = new EventEmitter<Task>();
   @Output() remove = new EventEmitter<Task>();
+  //@Output() resume = resumeTimer();
+  @Output() resumeButton = new EventEmitter();
+  @Output() pauseButton = new EventEmitter();
+  @Output() resetButton = new EventEmitter();
 
-  /**
-   * Tip: Utilize getters to keep templates clean
-   */
   get id() {
     console.log(this.task.id);
     console.log(this.inCollection);
@@ -101,5 +107,9 @@ export class TaskDetailComponent {
 
   get thumbnail() {
     return false;
+  }
+
+  getTimeRemaining() {
+    //return this.pomoTimerService.timeRemaining;
   }
 }
