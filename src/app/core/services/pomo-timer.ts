@@ -15,36 +15,49 @@ export class PomoTimerService {
   // inject the task service
   constructor() { }
 
-  private timerStartedSource = new Subject();
+  private timerSource = new Subject<any>();
   countdownSeconds$: number;
   pomoTitle$;
   pomoCount$;
   pomosCompleted$;
-  timeRemaining: any;
+  timeRemaining;
+  // testTimer$ = this.timerSource.asObservable();
   interval$;
   pause$;
   resume$;
-  timer$;
+  timer$ = this.timerSource.asObservable();
+  buttonState;
+  buttonAction;
+  timerToggle;
+
+  setState(state: any) {
+    this.timerSource.next(state);
+  }
+
+  getState(): Observable<any> {
+    return this.timerSource.asObservable();
+  }
 
   initTimer () {
     //pomoService
     //this.pomoCount = 1;
     //this.pomosCompleted = 1500;
 
+
     if (this.pomoCount$ % 8 === 0 && this.pomoCount$ !== 0) {
-      this.timeRemaining = 1800;
+      // this.timeRemaining = 1800;
       this.countdownSeconds$ = 1800;
       this.pomoTitle$ = 'Real Break';
       this.pomoCount$ = 0;
       this.pomosCompleted$ += 1;
     } else if (this.pomoCount$ % 2 === 0 && this.pomoCount$ !== 0) {
-      this.timeRemaining = 300;
+      // this.timeRemaining = 300;
       this.countdownSeconds$ = 300;
       this.pomoTitle$ = 'Time to Break';
       this.pomoCount$ += 1;
       this.pomosCompleted$ += 1;
       } else {
-        this.timeRemaining = 1500;
+        // this.timeRemaining = 1500;
         this.countdownSeconds$ = 1500;
         this.pomoTitle$ = 'Time to Work';
         this.pomoCount$ += 1;
@@ -55,8 +68,11 @@ export class PomoTimerService {
   toggleTimer(event) {
     this.startTimer(event);
   }
-
+  //TODO: Save this to show to Ben before removing
   startTimer(event) {
+    this.buttonState = event.currentTarget.attributes.name.nodeValue;
+    this.buttonAction = event.currentTarget.attributes.id.nodeValue;
+    this.timerToggle = (this.buttonAction === 'resume') ? true : false;
     const resumeButton = document.getElementById('resume');
     const pauseButton = document.getElementById('pause');
     const resetButton = document.getElementById('reset');

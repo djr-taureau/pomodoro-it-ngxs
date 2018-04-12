@@ -1,7 +1,7 @@
+import { Subscription } from 'rxjs/Subscription';
 import { RouterStateSnapshot } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Task } from '../models/task';
-import { MinuteSecondsPipe } from '../../shared/pipes/timer-pipe';
 import { PomoTimerService } from '../../core/services/pomo-timer';
 @Component({
   selector: 'bc-task-detail',
@@ -27,11 +27,11 @@ import { PomoTimerService } from '../../core/services/pomo-timer';
       Add Task to Collection
       </button>
         <button id="resume" name="resumeButton" class="resume-btn"
-          mat-raised-button color="primary" (click)="resumeButton.emit($event)"><i class="material-icons">play_arrow</i></button>
+          mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">play_arrow</i></button>
         <button id="pause" name="pauseButton" class="pause-btn"
-          mat-raised-button color="primary" (click)="pauseButton.emit($event)"><i class="material-icons">pause</i></button>
+          mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">pause</i></button>
         <button id="reset" name="resetButton" class="reset-btn"
-          mat-raised-button color="primary" (click)="resetButton.emit($event)"><i class="material-icons">stop</i></button>
+          mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">stop</i></button>
       </mat-card-actions>
     </mat-card>
     </div>
@@ -75,12 +75,13 @@ export class TaskDetailComponent {
   @Input() pomoCount: number;
   @Input() pomoTitle: number;
   @Input() timeRemaining: number;
+  @Input() timerSubscription: Subscription;
   @Output() add = new EventEmitter<Task>();
   @Output() remove = new EventEmitter<Task>();
-  //@Output() resume = resumeTimer();
-  @Output() resumeButton = new EventEmitter();
-  @Output() pauseButton = new EventEmitter();
-  @Output() resetButton = new EventEmitter();
+  // @Output() resume = resumeTimer();
+  @Output() resumeClicked = new EventEmitter();
+  // @Output() pauseClicked = new EventEmitter();
+  // @Output() resetClicked = new EventEmitter();
 
   get id() {
     console.log(this.task.id);
@@ -109,7 +110,11 @@ export class TaskDetailComponent {
     return false;
   }
 
-  getTimeRemaining() {
-    //return this.pomoTimerService.timeRemaining;
+  // getTimeRemaining() {
+  //   return this..timeRemaining;
+  // }
+
+  resumeCommand(action: any) {
+    this.resumeClicked.emit(action);
   }
 }

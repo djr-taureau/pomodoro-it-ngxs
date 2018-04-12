@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-
 import { ComponentsModule } from './components';
 import { TaskEffects } from './effects/task';
 import { CollectionEffects } from './effects/collection';
