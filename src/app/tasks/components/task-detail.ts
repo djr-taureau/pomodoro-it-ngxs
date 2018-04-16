@@ -111,7 +111,7 @@ export class TaskDetailComponent {
   }
 
   get  time() {
-    return this.timerSubscription;
+    return this.timeRemaining$;
   }
 
 

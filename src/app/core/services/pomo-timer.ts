@@ -60,6 +60,7 @@ export class PomoTimerService {
       }
     }
 
+
     startTimer(event){
 
       const resumeButton = document.getElementById('resume');
@@ -81,16 +82,8 @@ export class PomoTimerService {
       });
     }
 
-    resetTimer() {
+  resetTimer() {
       //
-    }
-
   }
-
-
-
-
-
-
 
 }

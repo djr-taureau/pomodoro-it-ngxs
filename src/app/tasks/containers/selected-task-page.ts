@@ -52,12 +52,12 @@ export class SelectedTaskPageComponent implements OnInit {
     this.isSelectedTaskInCollection$ = store.pipe(
       select(fromTasks.isSelectedTaskInCollection)
     );
-    // this.timerSubscription = this.pomoTimerService.interval$.subscribe(
-    //   timeRemaining => {
-    //     this.timeRemaining$ = timeRemaining;
-    //     console.log('TIME FUCKING REMAIN!:' + timeRemaining);
-    //   }
-    // );
+    this.timerSubscription = this.pomoTimerService.getTimerState().subscribe(
+      timeRemaining => {
+        this.timeRemaining$ = timeRemaining;
+        console.log('TIME FUCKING REMAIN!:' + timeRemaining.next());
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -77,17 +77,21 @@ export class SelectedTaskPageComponent implements OnInit {
 
   timerClicked(event) {
     console.log(event);
-    console.log(event.id['nodeValue']);
+    // console.log(event.id['nodeValue']);
     //TODO: save to show to Ben before removing
     console.log(event.target);
     console.log(event.srcElement);
     console.log(event.type);
     console.log(event.currentTarget.attributes.name.nodeValue);
     console.log(event.currentTarget.attributes.id.nodeValue);
-
+    this.pomoTimerService.startTimer(event);
     if (event.currentTarget.attributes.id.nodeValue === 'resume') {
       //this.pomoTimerService.start();
       console.log('resume')
+      this.pomoTimerService.startTimer(event);
+      console.log('DID THE FUCKING TIMER START');
+      console.log(this.pomoTimerService.timeRemaining);
+      console.log(this.pomoTimerService.timeRemaining$)
     }
 
     if (event.currentTarget.attributes.id.nodeValue === 'pause') {
