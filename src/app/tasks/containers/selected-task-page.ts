@@ -25,14 +25,14 @@ import { TimerObservable } from 'rxjs/observable/TimerObservable'
     <bc-task-detail
       [task]="task$ | async"
       [inCollection]="isSelectedTaskInCollection$ | async"
-      [timeRemaining]="this.pomoTimerService.timeRemaining"
-      [pomoTitle]="this.pomoTimerService.pomoTitle$"
-      [pomoCount]="this.pomoTimerService.pomoCount$"
+      [timeRemaining$]="this.pomoTimerService.timeRemaining$"
+      [pomoTitle]="this.pomoTimerService.pomoTitle"
+      [pomoCount]="this.pomoTimerService.pomoCount"
       (add)="addToCollection($event)"
       (remove)="removeFromCollection($event)"
-      (resumeClicked)="resumeClicked($event)"
-      (resumeClicked)="resumeClicked($event)"
-      (reset)="resumeClicked($event)">
+      (timerClicked)="timerClicked($event)"
+      (timerClicked)="timerClicked($event)"
+      (timerClicked)="timerClicked($event)">
     </bc-task-detail>
     <bc-pomo-tracker></bc-pomo-tracker>
     </div>
@@ -41,7 +41,7 @@ import { TimerObservable } from 'rxjs/observable/TimerObservable'
 })
 export class SelectedTaskPageComponent implements OnInit {
   task$: Observable<Task>;
-  timeRemaining: any;
+  timeRemaining$: any;
   private timerSubscription: Subscription;
   isSelectedTaskInCollection$: Observable<boolean>;
 
@@ -52,17 +52,16 @@ export class SelectedTaskPageComponent implements OnInit {
     this.isSelectedTaskInCollection$ = store.pipe(
       select(fromTasks.isSelectedTaskInCollection)
     );
-    this.timerSubscription = this.pomoTimerService.getState().subscribe(
-      timeRemaining => {
-        this.timeRemaining = timeRemaining;
-      }
-    );
+    // this.timerSubscription = this.pomoTimerService.interval$.subscribe(
+    //   timeRemaining => {
+    //     this.timeRemaining$ = timeRemaining;
+    //     console.log('TIME FUCKING REMAIN!:' + timeRemaining);
+    //   }
+    // );
   }
 
   ngOnInit(): void {
-   this.pomoTimerService.pomoCount$ = 0;
-   this.pomoTimerService.pomosCompleted$ = 0;
-   this.pomoTimerService.initTimer();
+    this.pomoTimerService.initTimer();
    //this.pomoTimerService.timer$.subscribe(val = this.countdownSeconds = countdownSeconds);
   }
 
@@ -74,9 +73,11 @@ export class SelectedTaskPageComponent implements OnInit {
     this.store.dispatch(new collection.RemoveTask(task));
   }
 
-  resumeClicked(event) {
+
+
+  timerClicked(event) {
     console.log(event);
-    //console.log(event.id['nodeValue']);
+    console.log(event.id['nodeValue']);
     //TODO: save to show to Ben before removing
     console.log(event.target);
     console.log(event.srcElement);
@@ -84,34 +85,35 @@ export class SelectedTaskPageComponent implements OnInit {
     console.log(event.currentTarget.attributes.name.nodeValue);
     console.log(event.currentTarget.attributes.id.nodeValue);
 
-    this.pomoTimerService.startTimer(event);
+    if (event.currentTarget.attributes.id.nodeValue === 'resume') {
+      //this.pomoTimerService.start();
+      console.log('resume')
+    }
+
+    if (event.currentTarget.attributes.id.nodeValue === 'pause') {
+
+      //this.pomoTimerService.pause();
+      console.log('pause')
+    }
+
+    if (event.currentTarget.attributes.id.nodeValue === 'reset') {
+
+      //this.pomoTimerService.pause();
+      console.log('reset')
+    }
+
     // const resume$ = fromEvent($event, `${event.type}`).pipe(mapTo(true));
     // console.log(resume$);
   }
 
-  resumeTimer() {
-    // placeholder
-    // if not pomoInit start pomo
-    // if pomoCount = 0 set to 1 otherwise add 1
-    //
-    this.pomoTimerService.startTimer(event);
-  }
 
-  startTimer (event: any) {
-    this.pomoTimerService.startTimer(event);
-  }
-
-  toggleTimer() {
-    // toggle timer
-    this.pomoTimerService.startTimer(event);
-  }
 
   pauseTimer() {
     // placeholder
   }
 
-  resetTimer() {
-    // placeholder
-    this.pomoTimerService.initTimer();
-  }
+  // resetTimer() {
+  //   // placeholder
+  //   this.pomoTimerService.initTimer();
+  // }
 }

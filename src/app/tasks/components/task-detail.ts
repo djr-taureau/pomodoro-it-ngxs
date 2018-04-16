@@ -3,6 +3,8 @@ import { RouterStateSnapshot } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Task } from '../models/task';
 import { PomoTimerService } from '../../core/services/pomo-timer';
+import * as Rx from 'rxjs/Rx'
+import { TimerObservable } from 'rxjs/observable/TimerObservable';
 @Component({
   selector: 'bc-task-detail',
   template: `
@@ -11,11 +13,11 @@ import { PomoTimerService } from '../../core/services/pomo-timer';
     <mat-card *ngIf="task">
       <mat-card-title-group>
         <mat-card-title color="primary">{{ content }}</mat-card-title>
-        <mat-card-subtitle color="secondary">{{ pomoTitle }}</mat-card-subtitle>
-        <mat-card-subtitle>{{ timeRemaining  }}</mat-card-subtitle>
+        <mat-card-subtitle color="secondary">WHAT THE FUCK IS UP {{ title }}</mat-card-subtitle>
+        <mat-card-subtitle>WHERE IS IT???? {{ time }}</mat-card-subtitle>
       </mat-card-title-group>
       <mat-card-content>
-        <p>{{ pomoCount }}</p>
+        <h2>{{ time }}</h2>
       </mat-card-content>
       <mat-card-footer class="footer">
       </mat-card-footer>
@@ -27,11 +29,11 @@ import { PomoTimerService } from '../../core/services/pomo-timer';
       Add Task to Collection
       </button>
         <button id="resume" name="resumeButton" class="resume-btn"
-          mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">play_arrow</i></button>
+          mat-raised-button color="primary" (click)="timerCommand($event)"><i class="material-icons">play_arrow</i></button>
         <button id="pause" name="pauseButton" class="pause-btn"
-          mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">pause</i></button>
+          mat-raised-button color="primary" (click)="timerCommand($event)"><i class="material-icons">pause</i></button>
         <button id="reset" name="resetButton" class="reset-btn"
-          mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">stop</i></button>
+          mat-raised-button color="primary" (click)="timerCommand($event)"><i class="material-icons">stop</i></button>
       </mat-card-actions>
     </mat-card>
     </div>
@@ -74,14 +76,12 @@ export class TaskDetailComponent {
   @Input() inCollection: boolean;
   @Input() pomoCount: number;
   @Input() pomoTitle: number;
-  @Input() timeRemaining: number;
+  @Input() timeRemaining$: number;
   @Input() timerSubscription: Subscription;
   @Output() add = new EventEmitter<Task>();
   @Output() remove = new EventEmitter<Task>();
-  // @Output() resume = resumeTimer();
-  @Output() resumeClicked = new EventEmitter();
-  // @Output() pauseClicked = new EventEmitter();
-  // @Output() resetClicked = new EventEmitter();
+  @Output() timerClicked = new EventEmitter();
+
 
   get id() {
     console.log(this.task.id);
@@ -102,19 +102,23 @@ export class TaskDetailComponent {
     return this.task.comment_count;
   }
 
-  // get description() {
-  //   return this.task.due.date;
-  // }
-
   get thumbnail() {
     return false;
   }
 
-  // getTimeRemaining() {
-  //   return this..timeRemaining;
-  // }
-
-  resumeCommand(action: any) {
-    this.resumeClicked.emit(action);
+  get title () {
+    return this.pomoTitle;
   }
+
+  get  time() {
+    return this.timerSubscription;
+  }
+
+
+  timerCommand(action: any) {
+    console.log('this is the initial click: ' + action)
+    this.timerClicked.emit(action);
+  }
+
+
 }
