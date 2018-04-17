@@ -3,6 +3,9 @@ import { RouterStateSnapshot } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Task } from '../models/task';
 import { PomoTimerService } from '../../core/services/pomo-timer';
+import { Observable } from 'rxjs/Observable';
+
+
 @Component({
   selector: 'bc-task-detail',
   template: `
@@ -12,7 +15,7 @@ import { PomoTimerService } from '../../core/services/pomo-timer';
       <mat-card-title-group>
         <mat-card-title color="primary">{{ content }}</mat-card-title>
         <mat-card-subtitle color="secondary">{{ pomoTitle }}</mat-card-subtitle>
-        <mat-card-subtitle>{{ timeRemaining  }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ time  }}</mat-card-subtitle>
       </mat-card-title-group>
       <mat-card-content>
         <p>{{ pomoCount }}</p>
@@ -74,7 +77,7 @@ export class TaskDetailComponent {
   @Input() inCollection: boolean;
   @Input() pomoCount: number;
   @Input() pomoTitle: number;
-  @Input() timeRemaining: number;
+  @Input() timeRemaining: any;
   @Input() timerSubscription: Subscription;
   @Output() add = new EventEmitter<Task>();
   @Output() remove = new EventEmitter<Task>();
@@ -110,9 +113,16 @@ export class TaskDetailComponent {
     return false;
   }
 
-  // getTimeRemaining() {
-  //   return this..timeRemaining;
-  // }
+  get time() {
+    return this.timeRemaining;
+  }
+
+  // this.timerSubscription = this.pomoTimerService.getState().subscribe(
+  //   timeRemaining => {
+  //     this.timeRemaining = timeRemaining;
+  //     console.log('from Sub:' + this.timeRemaining);
+  //   }
+  // );
 
   resumeCommand(action: any) {
     this.resumeClicked.emit(action);

@@ -15,7 +15,7 @@ export class PomoTimerService {
   // inject the task service
   constructor() { }
 
-  private timerSource = new Subject<any>();
+  timerSource = new Subject<any>();
   countdownSeconds$: number;
   pomoTitle$;
   pomoCount$;
@@ -25,10 +25,13 @@ export class PomoTimerService {
   interval$;
   pause$;
   resume$;
-  timer$ = this.timerSource.asObservable();
+  $timer
+  // $timer = this.timerSource.asObservable();
+  timer$;
   buttonState;
   buttonAction;
   timerToggle;
+  timerStarted;
 
   setState(state: any) {
     this.timerSource.next(state);
@@ -42,37 +45,38 @@ export class PomoTimerService {
     //pomoService
     //this.pomoCount = 1;
     //this.pomosCompleted = 1500;
-
+    this.timerStarted = false;
 
     if (this.pomoCount$ % 8 === 0 && this.pomoCount$ !== 0) {
       // this.timeRemaining = 1800;
-      this.countdownSeconds$ = 1800;
+      this.countdownSeconds$ = 3;
       this.pomoTitle$ = 'Real Break';
       this.pomoCount$ = 0;
       this.pomosCompleted$ += 1;
     } else if (this.pomoCount$ % 2 === 0 && this.pomoCount$ !== 0) {
       // this.timeRemaining = 300;
-      this.countdownSeconds$ = 300;
+      this.countdownSeconds$ = 4;
       this.pomoTitle$ = 'Time to Break';
       this.pomoCount$ += 1;
       this.pomosCompleted$ += 1;
       } else {
         // this.timeRemaining = 1500;
-        this.countdownSeconds$ = 1500;
+        this.countdownSeconds$ = 6;
         this.pomoTitle$ = 'Time to Work';
         this.pomoCount$ += 1;
       }
 
     }
 
-  toggleTimer(event) {
-    this.startTimer(event);
-  }
+  // toggleTimer(event) {
+
+  // }
+
   //TODO: Save this to show to Ben before removing
-  startTimer(event) {
-    this.buttonState = event.currentTarget.attributes.name.nodeValue;
-    this.buttonAction = event.currentTarget.attributes.id.nodeValue;
-    this.timerToggle = (this.buttonAction === 'resume') ? true : false;
+  startTimer() {
+    //this.buttonState = event.currentTarget.attributes.name.nodeValue;
+    //this.buttonAction = event.currentTarget.attributes.id.nodeValue;
+    //this.timerToggle = (this.buttonAction === 'resume') ? true : false;
     const resumeButton = document.getElementById('resume');
     const pauseButton = document.getElementById('pause');
     const resetButton = document.getElementById('reset');
@@ -80,17 +84,25 @@ export class PomoTimerService {
     const pause$ = fromEvent(pauseButton, 'click').pipe(mapTo(false));
     const resume$ = fromEvent(resumeButton, 'click').pipe(mapTo(true));
 
-    const timer$ = merge(pause$, resume$).pipe(
+    this.timer$ = merge(pause$, resume$).pipe(
       startWith(interval$),
       switchMap(val => (val ? interval$ : empty())),
       scan((acc, curr) => (curr ? curr + acc : acc), this.countdownSeconds$),
       takeWhile(v => v >= 0),
     )
     .subscribe(
-      val => { this.timeRemaining = val; },
-      () => {
-        this.resetTimer();
-    });
+      val => {
+        this.timeRemaining = val;
+        this.timeRemaining = this.timeRemaining + 'tick';
+        if (this.timeRemaining === 0) {
+          console.log('timer done');
+          this.resetTimer();
+        }
+      },
+      () => { this.resetTimer(); });
+    if (this.timeRemaining === 0) {
+      console.log('timer is completed');
+    }
   }
 
   resetTimer() {
