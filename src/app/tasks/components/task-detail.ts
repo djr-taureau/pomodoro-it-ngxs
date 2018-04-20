@@ -6,6 +6,7 @@ import { PomoTimerService } from '../../core/services/pomo-timer';
 import { Observable } from 'rxjs/Observable';
 
 
+
 @Component({
   selector: 'bc-task-detail',
   template: `
@@ -15,7 +16,10 @@ import { Observable } from 'rxjs/Observable';
       <mat-card-title-group>
         <mat-card-title color="primary">{{ content }}</mat-card-title>
         <mat-card-subtitle color="secondary">{{ pomoTitle }}</mat-card-subtitle>
-        <mat-card-subtitle>{{ time  }}</mat-card-subtitle>
+        <mat-card-subtitle>Original {{ time }}</mat-card-subtitle>
+        <mat-card-subtitle></mat-card-subtitle>
+        <mat-card-subtitle>Second Try {{ simpleObservable }}</mat-card-subtitle>
+        <mat-card-subtitle>Third Try {{ seconds }}</mat-card-subtitle>
       </mat-card-title-group>
       <mat-card-content>
         <p>{{ pomoCount }}</p>
@@ -77,12 +81,15 @@ export class TaskDetailComponent {
   @Input() inCollection: boolean;
   @Input() pomoCount: number;
   @Input() pomoTitle: number;
-  @Input() timeRemaining: any;
+  @Input() simpleObservable: number;
+  @Input() seconds: string;
+  @Input() timeRemaining: number;
   @Input() timerSubscription: Subscription;
   @Output() add = new EventEmitter<Task>();
   @Output() remove = new EventEmitter<Task>();
   // @Output() resume = resumeTimer();
   @Output() resumeClicked = new EventEmitter();
+  @Output() checkTime: EventEmitter<number> = new EventEmitter();
   // @Output() pauseClicked = new EventEmitter();
   // @Output() resetClicked = new EventEmitter();
 
