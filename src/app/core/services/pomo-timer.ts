@@ -6,119 +6,127 @@ import { interval } from 'rxjs/observable/interval';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { empty } from 'rxjs/observable/empty';
-import { switchMap, scan, takeWhile, startWith, mapTo, map, filter, last } from 'rxjs/operators';
+import { switchMap, scan, takeWhile, startWith, mapTo, map, filter, last, tap } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { Subscription } from 'rxjs/Subscription';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+
 @Injectable()
 export class PomoTimerService {
   // inject the task service
   constructor() { }
 
-  timerSource = new Subject<any>();
-  countdownSeconds$: number;
+  timerSource$ = new BehaviorSubject(null);
+
+  countdownSeconds$;
   pomoTitle$;
   pomoCount$;
   pomosCompleted$;
-  timeRemaining;
-  // testTimer$ = this.timerSource.asObservable();
+  pomosCycleCompleted$;
   interval$;
   pause$;
   resume$;
-  $timer
-  // $timer = this.timerSource.asObservable();
-  timer$;
-  buttonState;
-  buttonAction;
-  timerToggle;
+  $timer: Observable<any>;
   timerStarted;
-  checkTime: any;
+  timeRemaining;
+  audio;
+  notesEntry;
 
-  setState(state: any) {
-    this.timerSource.next(state);
+  // setState(state: any) {
+  //   this.timerSource$.next(state);
+  // }
+
+  // getState(): Observable<any> {
+  //   return this.timerSource$.asObservable();
+  // }
+  private buttons;
+
+  initTimer(buttons) {
+    this.buttons = buttons;
+    this.initTimerParameters();
   }
 
-  getState(): Observable<any> {
-    return this.timerSource.asObservable();
-  }
-
-  initTimer () {
-    //pomoService
-    //this.pomoCount = 1;
-    //this.pomosCompleted = 1500;
+  initTimerParameters () {
     this.timerStarted = false;
 
-    if (this.pomoCount$ % 8 === 0 && this.pomoCount$ !== 0) {
-      // this.timeRemaining = 1800;
-      this.countdownSeconds$ = 3;
-      this.timeRemaining = this.countdownSeconds$;
-      this.pomoTitle$ = 'Real Break';
-      this.pomoCount$ = 0;
-      this.pomosCompleted$ += 1;
-    } else if (this.pomoCount$ % 2 === 0 && this.pomoCount$ !== 0) {
-      // this.timeRemaining = 300;
-      this.countdownSeconds$ = 4;
-      this.timeRemaining = this.countdownSeconds$;
-      this.pomoTitle$ = 'Time to Break';
-      this.pomoCount$ += 1;
-      this.pomosCompleted$ += 1;
-      } else {
-        // this.timeRemaining = 1500;
-        this.countdownSeconds$ = 6;
-        this.timeRemaining = this.countdownSeconds$;
+    switch (this.pomoCount$) {
+      case 1:
+      case 3:
+      case 5:
         this.pomoTitle$ = 'Time to Work';
-        this.pomoCount$ += 1;
-      }
+        this.countdownSeconds$ = 5; // 1500
+        this.timerSource$.next(this.countdownSeconds$);
+        this.notesEntry = false;
+        break;
+      case 7:
+        this.pomoTitle$ = 'Time to Work';
+        this.countdownSeconds$ = 5; // 1500
+        this.pomosCompleted$ += 1;
+        this.timerSource$.next(this.countdownSeconds$);
+        this.notesEntry = false;
+        break;
+      case 2:
+      case 4:
+      case 6:
+        this.pomoTitle$ = 'Time to Rest';
+        this.countdownSeconds$ = 3; // 300
+        this.pomosCompleted$ += 1;
+        this.timerSource$.next(this.countdownSeconds$);
+        this.notesEntry = true;
+        break;
+      case 8:
+        this.pomoTitle$ = 'Time for a Long Break';
+        this.countdownSeconds$ = 8; // 1800
+        this.pomosCycleCompleted$ += 1;
+        this.timerSource$.next(this.countdownSeconds$);
+        this.notesEntry = true;
+        break;
+      default:
+        console.log('do what');
+    }
 
     }
 
-  // toggleTimer(event) {
-
-  // }
-  // TODO figure out why the async pipe is still not working
-  // Timer built with code from
-  //TODO: Save this to show to Ben before removing
   startTimer() {
-    //this.buttonState = event.currentTarget.attributes.name.nodeValue;
-    //this.buttonAction = event.currentTarget.attributes.id.nodeValue;
-    //this.timerToggle = (this.buttonAction === 'resume') ? true : false;
-    const resumeButton = document.getElementById('resume');
-    const pauseButton = document.getElementById('pause');
-    const resetButton = document.getElementById('reset');
+    this.timerStarted = true;
+
     const interval$: any = interval(1000).pipe(mapTo(-1));
-    const pause$ = fromEvent(pauseButton, 'click').pipe(mapTo(false));
-    const resume$ = fromEvent(resumeButton, 'click').pipe(mapTo(true));
+    const pause$ = fromEvent(this.buttons.pauseButton.nativeElement, 'click').pipe(mapTo(false));
+    const resume$ = fromEvent(this.buttons.resumeButton.nativeElement, 'click').pipe(mapTo(true));
 
     const timer$ = merge(pause$, resume$).pipe(
-      startWith(interval$),
+      startWith(true),
       switchMap(val => (val ? interval$ : empty())),
       scan((acc, curr) => (curr ? curr + acc : acc), this.countdownSeconds$),
       takeWhile(v => v >= 0),
-    )
-    .subscribe(
-      val => { this.timeRemaining = val; console.log(this.timeRemaining); },
-      val => { this.checkTime.emit(val); },
-      () => {
-        this.resetTimer();
-    });
-    // .subscribe(
-    //   val => {
-    //     this.timeRemaining = val;
-    //     if (this.timeRemaining === 0) {
-    //       console.log('timer done');
-    //       this.resetTimer();
-    //     }
-    //   },
-    //   () => { this.resetTimer(); });
-    // if (this.timeRemaining === 0) {
-    //   console.log('timer is completed');
-    // }
+      tap(val => console.log('timeRemaining', val)),
+      tap(val => {
+        if (val === 0) {
+          this.pomoCount$ += 1;
+          console.log(this.pomoCount$);
+          console.log('completed', this.pomosCompleted$);
+          console.log('cycles', this.pomosCycleCompleted$);
+          this.timerStarted = false;
+          this.initTimerParameters();
+        }
+      }),
+    );
+    timer$.subscribe(val => this.timerSource$.next(val));
   }
 
   resetTimer() {
-    this.initTimer();
+    this.initTimerParameters();
   }
 
-
-
+  soundAlarm() {
+    this.audio = new Audio();
+    this.audio.src = '../../../assets/Grandfather-clock-chimes.mp3';
+    this.audio.load();
+    this.audio.play();
+  }
+  stopSoundAlarm() {
+    this.audio.pause();
+  }
 }

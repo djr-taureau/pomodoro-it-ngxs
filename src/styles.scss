@@ -15,3 +15,13 @@ html {
   width: 30px !important;
   height: 30px !important;
 }
+
+::ng-deep .mat-input-wrapper{
+  width:600px !important;
+}
+
+mat-chip {
+  max-width: 75px;
+}
+
+

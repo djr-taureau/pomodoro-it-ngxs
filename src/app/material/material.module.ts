@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatChipsModule} from '@angular/material/chips';
 import {
   MatInputModule,
   MatCardModule,
@@ -25,6 +26,7 @@ import {
     MatProgressSpinnerModule,
     MatTableModule,
     MatCheckboxModule,
+    MatChipsModule
   ],
   exports: [
     MatInputModule,
@@ -36,7 +38,8 @@ import {
     MatToolbarModule,
     MatProgressSpinnerModule,
     MatTableModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatChipsModule
   ],
 })
 export class MaterialModule {}

@@ -7,19 +7,22 @@ import { ComponentsModule } from './components';
 import { TaskEffects } from './effects/task';
 import { CollectionEffects } from './effects/collection';
 import { TaskExistsGuard } from './guards/task-exists';
-
 import { FindTaskPageComponent } from './containers/find-task-page';
 import { ViewTaskPageComponent } from './containers/view-task-page';
-import { SelectedTaskPageComponent } from './containers/selected-task-page';
+import { SelectedTaskPageComponent, PomoDialogComponent } from './containers/selected-task-page';
 import { CollectionPageComponent } from './containers/collection-page';
 import { MaterialModule } from '../material';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import { reducers } from './reducers';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     MaterialModule,
+    MatDialogModule,
+    ReactiveFormsModule,
     ComponentsModule,
     RouterModule.forChild([
       { path: 'find', component: FindTaskPageComponent },
@@ -54,6 +57,11 @@ import { reducers } from './reducers';
     ViewTaskPageComponent,
     SelectedTaskPageComponent,
     CollectionPageComponent,
+    PomoDialogComponent
+  ],
+  entryComponents: [
+    PomoDialogComponent,
+    SelectedTaskPageComponent
   ],
   providers: [TaskExistsGuard],
 })

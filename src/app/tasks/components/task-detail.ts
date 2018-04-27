@@ -1,10 +1,13 @@
+import { MinuteSecondsPipe } from './../../shared/pipes/timer-pipe';
 import { Subscription } from 'rxjs/Subscription';
 import { RouterStateSnapshot } from '@angular/router';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Task } from '../models/task';
 import { PomoTimerService } from '../../core/services/pomo-timer';
 import { Observable } from 'rxjs/Observable';
-
+import { filter } from 'rxjs/operators';
+import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
 @Component({
@@ -15,16 +18,18 @@ import { Observable } from 'rxjs/Observable';
     <mat-card *ngIf="task">
       <mat-card-title-group>
         <mat-card-title color="primary">{{ content }}</mat-card-title>
-        <mat-card-subtitle color="secondary">{{ pomoTitle }}</mat-card-subtitle>
-        <mat-card-subtitle>Original {{ time }}</mat-card-subtitle>
-        <mat-card-subtitle></mat-card-subtitle>
-        <mat-card-subtitle>Second Try {{ simpleObservable }}</mat-card-subtitle>
-        <mat-card-subtitle>Third Try {{ seconds }}</mat-card-subtitle>
+        <mat-card-title>{{ pomoTitle }} - {{ timerService.timerSource$ | async | minutesSeconds }}</mat-card-title>
       </mat-card-title-group>
       <mat-card-content>
-        <p>{{ pomoCount }}</p>
+        <mat-chip-list>
+        <mat-chip>Pomo</mat-chip>
+        <mat-chip>Pomo</mat-chip>
+        <mat-chip color="primary" selected="true">Pomo</mat-chip>
+        <mat-chip color="accent" selected="true">Pomo</mat-chip>
+      </mat-chip-list>
       </mat-card-content>
       <mat-card-footer class="footer">
+
       </mat-card-footer>
       <mat-card-actions align="start">
       <button mat-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(task)">
@@ -33,11 +38,11 @@ import { Observable } from 'rxjs/Observable';
       <button mat-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(task)">
       Add Task to Collection
       </button>
-        <button id="resume" name="resumeButton" class="resume-btn"
+        <button #resume id="resume" name="resumeButton" class="resume-btn"
           mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">play_arrow</i></button>
-        <button id="pause" name="pauseButton" class="pause-btn"
+        <button #pause id="pause" name="pauseButton" class="pause-btn"
           mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">pause</i></button>
-        <button id="reset" name="resetButton" class="reset-btn"
+        <button #reset id="reset" name="resetButton" class="reset-btn"
           mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">stop</i></button>
       </mat-card-actions>
     </mat-card>
@@ -72,31 +77,55 @@ import { Observable } from 'rxjs/Observable';
       padding: 0 25px 25px;
       position: relative;
     }
+    .progress-bar-container {
+      width: 100%;
+      mat-progress-bar {
+        margin: 20px 0;
+      }
+    }
+    .progress-bar-spacer {
+      display: inline-block;
+      width: 50px;
+    }
+    .progress-bar-controls {
+      margin: 10px 0;
+    }
   `,
   ],
 })
-export class TaskDetailComponent {
+export class TaskDetailComponent implements AfterViewInit {
 
   @Input() task: Task;
   @Input() inCollection: boolean;
   @Input() pomoCount: number;
   @Input() pomoTitle: number;
-  @Input() simpleObservable: number;
-  @Input() seconds: string;
-  @Input() timeRemaining: number;
-  @Input() timerSubscription: Subscription;
+  @Input() pomosCompleted: number;
   @Output() add = new EventEmitter<Task>();
   @Output() remove = new EventEmitter<Task>();
-  // @Output() resume = resumeTimer();
   @Output() resumeClicked = new EventEmitter();
-  @Output() checkTime: EventEmitter<number> = new EventEmitter();
-  // @Output() pauseClicked = new EventEmitter();
-  // @Output() resetClicked = new EventEmitter();
+
+
+  constructor(public timerService: PomoTimerService, element: ElementRef) {}
+
+  @ViewChild('resume', {read: ElementRef}) resumeButton;
+  @ViewChild('pause', {read: ElementRef}) pauseButton;
+  @ViewChild('reset', {read: ElementRef}) resetButton;
+
+  ngAfterViewInit() {
+    const buttons = {
+      resumeButton: this.resumeButton,
+      pauseButton: this.pauseButton,
+      resetButton: this.resetButton,
+    };
+    this.timerService.initTimer(buttons);
+    //TODO Show Ben: issues from last night
+    this.timerService.timerSource$.next(this.timerService.countdownSeconds$);
+  }
+
 
   get id() {
-    console.log(this.task.id);
-    console.log(this.inCollection);
-    //WTF with the task ids
+    console.log('wtf', this.task.id);
+    console.log('is the fucking task there?', this.inCollection);
     return this.task.id;
   }
 
@@ -112,26 +141,13 @@ export class TaskDetailComponent {
     return this.task.comment_count;
   }
 
-  // get description() {
-  //   return this.task.due.date;
-  // }
 
   get thumbnail() {
     return false;
   }
 
-  get time() {
-    return this.timeRemaining;
-  }
-
-  // this.timerSubscription = this.pomoTimerService.getState().subscribe(
-  //   timeRemaining => {
-  //     this.timeRemaining = timeRemaining;
-  //     console.log('from Sub:' + this.timeRemaining);
-  //   }
-  // );
-
   resumeCommand(action: any) {
     this.resumeClicked.emit(action);
   }
+
 }
