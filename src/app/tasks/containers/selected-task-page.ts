@@ -61,7 +61,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
       select(fromTasks.isSelectedTaskInCollection)
     );
     this.pomoTimerService.timerSource$ = this.timerSource;
-    console.log(this.isSelectedTaskInCollection$);
+    // console.log(this.isSelectedTaskInCollection$);
   }
 
   ngOnInit(): void {
@@ -104,6 +104,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
     console.log(event.type);
     console.log(event.currentTarget.attributes.name.nodeValue);
     console.log(event.currentTarget.attributes.id.nodeValue);
+    console.log(this.task$);
     if (event.currentTarget.attributes.id.nodeValue === 'resume' && !this.pomoTimerService.timerStarted) {
       this.pomoTimerService.timerStarted = true;
       this.pomoTimerService.startTimer();

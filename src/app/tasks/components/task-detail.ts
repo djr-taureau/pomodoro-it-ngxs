@@ -9,6 +9,7 @@ import { filter } from 'rxjs/operators';
 import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+//TODO add new
 
 @Component({
   selector: 'bc-task-detail',
@@ -32,10 +33,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
       </mat-card-footer>
       <mat-card-actions align="start">
-      <button mat-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(task)">
+      <button mat-raised-button color="warn" (click)="remove.emit(task)">
         Remove Task from Collection
       </button>
-      <button mat-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(task)">
+      <button mat-raised-button color="primary" (click)="add.emit(task)">
       Add Task to Collection
       </button>
         <button #resume id="resume" name="resumeButton" class="resume-btn"

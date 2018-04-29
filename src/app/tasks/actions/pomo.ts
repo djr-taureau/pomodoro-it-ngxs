@@ -1,12 +1,12 @@
 import { Action } from '@ngrx/store';
-import { Task } from '../models/task';
+import { Pomo } from '../models/Pomo';
 
-export enum TaskActionTypes {
-  Search = '[Task] Search',
-  SearchComplete = '[Task] Search Complete',
-  SearchError = '[Task] Search Error',
-  Load = '[Task] Load',
-  Select = '[Task] Select',
+export enum PomoActionTypes {
+  Search = '[Pomo] Search',
+  SearchComplete = '[Pomo] Search Complete',
+  SearchError = '[Pomo] Search Error',
+  Load = '[Pomo] Load',
+  Select = '[Pomo] Select',
 }
 
 /**
@@ -14,34 +14,34 @@ export enum TaskActionTypes {
  * payload. Expressing actions as classes enables powerful
  * type checking in reducer functions.
  *
- * See Discriminated Unions: https://www.typescriptlang.org/docs/handTask/advanced-types.html#discriminated-unions
+ * See Discriminated Unions: https://www.typescriptlang.org/docs/handPomo/advanced-types.html#discriminated-unions
  */
 export class Search implements Action {
-  readonly type = TaskActionTypes.Search;
+  readonly type = PomoActionTypes.Search;
 
   constructor(public payload: string) {}
 }
 
 export class SearchComplete implements Action {
-  readonly type = TaskActionTypes.SearchComplete;
+  readonly type = PomoActionTypes.SearchComplete;
 
-  constructor(public payload: Task[]) {}
+  constructor(public payload: Pomo[]) {}
 }
 
 export class SearchError implements Action {
-  readonly type = TaskActionTypes.SearchError;
+  readonly type = PomoActionTypes.SearchError;
 
   constructor(public payload: string) {}
 }
 
 export class Load implements Action {
-  readonly type = TaskActionTypes.Load;
+  readonly type = PomoActionTypes.Load;
 
-  constructor(public payload: Task) {}
+  constructor(public payload: Pomo) {}
 }
 
 export class Select implements Action {
-  readonly type = TaskActionTypes.Select;
+  readonly type = PomoActionTypes.Select;
 
   constructor(public payload: string) {}
 }
@@ -50,7 +50,7 @@ export class Select implements Action {
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
  */
-export type TaskActions =
+export type PomoActions =
   | Search
   | SearchComplete
   | SearchError

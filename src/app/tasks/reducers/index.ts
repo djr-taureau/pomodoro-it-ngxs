@@ -7,10 +7,12 @@ import * as fromSearch from './search';
 import * as fromTasks from './tasks';
 import * as fromCollection from './collection';
 import * as fromRoot from '../../reducers';
+import * as fromPomos from './pomos';
 
 export interface TasksState {
   search: fromSearch.State;
   tasks: fromTasks.State;
+  pomos: fromPomos.State;
   collection: fromCollection.State;
 }
 
@@ -21,6 +23,7 @@ export interface State extends fromRoot.State {
 export const reducers: ActionReducerMap<TasksState> = {
   search: fromSearch.reducer,
   tasks: fromTasks.reducer,
+  pomos: fromPomos.reducer,
   collection: fromCollection.reducer,
 };
 
@@ -56,6 +59,11 @@ export const getTasksState = createFeatureSelector<TasksState>('tasks');
  * together to select different pieces of state.
  */
 export const getTaskEntitiesState = createSelector(
+  getTasksState,
+  state => state.tasks
+);
+
+export const getPomosEntitiesState = createSelector(
   getTasksState,
   state => state.tasks
 );
@@ -131,6 +139,11 @@ export const getCollectionState = createSelector(
   (state: TasksState) => state.collection
 );
 
+export const getPomosState = createSelector(
+  getTasksState,
+  (state: TasksState) => state.pomos
+);
+
 export const getCollectionLoaded = createSelector(
   getCollectionState,
   fromCollection.getLoaded
@@ -165,4 +178,5 @@ export const isSelectedTaskInCollection = createSelector(
     return ids.indexOf(selected) > -1;
   }
 );
+
 

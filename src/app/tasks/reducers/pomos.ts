@@ -2,22 +2,19 @@ import { createSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
-import { PomoActions, PomoActionTypes } from '../actions/pomo';
 import { TaskActions, TaskActionTypes } from '../actions/task';
-import {
-  CollectionActions,
-  CollectionActionTypes,
-} from '../actions/collection';
+import {  PomoActions, PomoActionTypes } from '../actions/pomo';
+
 
 /**
  * @ngrx/entity provides a predefined interface for handling
  * a structured dictionary of records. This interface
  * includes an array of ids, and a dictionary of the provided
  * model type by id. This interface is extended to include
- * any additional interface properties. Going
+ * any additional interface properties.
  */
-export interface State extends EntityState<Task> {
-  selectedTaskId: string | null;
+export interface State extends EntityState<Pomo> {
+  selectedPomoId: string | null;
 }
 
 /**
@@ -28,8 +25,8 @@ export interface State extends EntityState<Task> {
  * a sortComparer option which is set to a compare
  * function if the records are to be sorted.
  */
-export const adapter: EntityAdapter<Task> = createEntityAdapter<Task>({
-  selectId: (task: Task) => task.id,
+export const adapter: EntityAdapter<Pomo> = createEntityAdapter<Pomo>({
+  selectId: (pomo: Pomo) => pomo.id,
   sortComparer: false,
 });
 
@@ -39,30 +36,30 @@ export const adapter: EntityAdapter<Task> = createEntityAdapter<Task>({
  * additional properties can also be defined.
  */
 export const initialState: State = adapter.getInitialState({
-  selectedTaskId: null,
+  selectedPomoId: null,
 });
 
 export function reducer(
   state = initialState,
-  action: TaskActions | CollectionActions
+  action: PomoActions | TaskActions
 ): State {
   switch (action.type) {
-    case TaskActionTypes.SearchComplete:
-    case CollectionActionTypes.LoadSuccess: {
+    case PomoActionTypes.SearchComplete:
+    case TaskActionTypes.LoadPomosSuccess: {
       /**
        * The addMany function provided by the created adapter
        * adds many records to the entity dictionary
-       * and returns a new state including those records. If
+       * and returns a new state including those records. If y9u
        * the collection is to be sorted, the adapter will
        * sort each record upon entry into the sorted array.
        */
       return adapter.addMany(action.payload, {
         ...state,
-        selectedTaskId: state.selectedTaskId,
+        selectedPomoId: state.selectedPomoId,
       });
     }
 
-    case TaskActionTypes.Load: {
+    case PomoActionTypes.Load: {
       /**
        * The addOne function provided by the created adapter
        * adds one record to the entity dictionary
@@ -72,14 +69,14 @@ export function reducer(
        */
       return adapter.addOne(action.payload, {
         ...state,
-        selectedTaskId: state.selectedTaskId,
+        selectedPomoId: state.selectedPomoId,
       });
     }
 
-    case TaskActionTypes.Select: {
+    case PomoActionTypes.Select: {
       return {
         ...state,
-        selectedTaskId: action.payload,
+        selectedPomoId: action.payload,
       };
     }
 
@@ -98,4 +95,4 @@ export function reducer(
  * use-case.
  */
 
-export const getSelectedId = (state: State) => state.selectedTaskId;
+export const getSelectedId = (state: State) => state.selectedPomoId;

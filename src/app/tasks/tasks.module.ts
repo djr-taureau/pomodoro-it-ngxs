@@ -5,6 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ComponentsModule } from './components';
 import { TaskEffects } from './effects/task';
+import { PomoEffects } from './effects/pomo';
 import { CollectionEffects } from './effects/collection';
 import { TaskExistsGuard } from './guards/task-exists';
 import { FindTaskPageComponent } from './containers/find-task-page';
@@ -50,7 +51,7 @@ import { ReactiveFormsModule } from '@angular/forms';
      * All Effects will only be instantiated once regardless of
      * whether they are registered once or multiple times.
      */
-    EffectsModule.forFeature([TaskEffects, CollectionEffects]),
+    EffectsModule.forFeature([TaskEffects, PomoEffects, CollectionEffects]),
   ],
   declarations: [
     FindTaskPageComponent,

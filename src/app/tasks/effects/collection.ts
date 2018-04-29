@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Observable';
 import { defer } from 'rxjs/observable/defer';
 import { of } from 'rxjs/observable/of';
 import { Load } from './../actions/task';
-
 import {
   CollectionActions,
   LoadFail,
