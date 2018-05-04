@@ -44,7 +44,7 @@ export const initialState: State = adapter.getInitialState({
 
 export function reducer(
   state = initialState,
-  action: TaskActions | CollectionActions
+  action: TaskActions | CollectionActions | PomoActions
 ): State {
   switch (action.type) {
     case TaskActionTypes.SearchComplete:
@@ -82,6 +82,22 @@ export function reducer(
         selectedTaskId: action.payload,
       };
     }
+    // case TaskActionTypes.LoadPomos: {
+    //   return {
+    //     ...state,
+    //     loading: true,
+    //   };
+    // }
+
+    // case TaskActionTypes.LoadPomosSuccess: {
+    //   return {
+    //     loaded: true,
+    //     loading: false,
+    //     ids: action.payload.map(pomo => pomo.id)
+    //   };
+    // }
+
+
 
     default: {
       return state;

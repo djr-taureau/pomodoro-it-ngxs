@@ -41,29 +41,29 @@ export const SEARCH_SCHEDULER = new InjectionToken<Scheduler>(
 
 @Injectable()
 export class PomoEffects {
-  // @Effect()
-  // search$: Observable<Action> = this.actions$.pipe(
-  //   ofType<Search>(PomoActionTypes.Search),
-  //   debounceTime(this.debounce || 300, this.scheduler || async),
-  //   map(action => action.payload),
-  //   switchMap(query => {
-  //     if (query === '') {
-  //       return empty();
-  //     }
+  @Effect()
+  search$: Observable<Action> = this.actions$.pipe(
+    ofType<Search>(PomoActionTypes.Search),
+    debounceTime(this.debounce || 300, this.scheduler || async),
+    map(action => action.payload),
+    switchMap(query => {
+      if (query === '') {
+        return empty();
+      }
 
-  //     const nextSearch$ = this.actions$.pipe(
-  //       ofType(PomoActionTypes.Search),
-  //       skip(1)
-  //     );
-  //     return this.pomoService
-  //       .searchPomos(query)
-  //       .pipe(
-  //         takeUntil(nextSearch$),
-  //         map((pomos: Pomo[]) => new SearchComplete(pomos)),
-  //         catchError(err => of(new SearchError(err)))
-  //       );
-  //   })
-  // );
+      const nextSearch$ = this.actions$.pipe(
+        ofType(PomoActionTypes.Search),
+        skip(1)
+      );
+      // return this.pomoService
+      //   .searchPomos(query)
+      //   .pipe(
+      //     takeUntil(nextSearch$),
+      //     map((pomos: Pomo[]) => new SearchComplete(pomos)),
+      //     catchError(err => of(new SearchError(err)))
+      //   );
+    })
+  );
 
   constructor(
     private actions$: Actions,

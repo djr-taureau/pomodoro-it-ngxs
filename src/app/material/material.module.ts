@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import {
+  MatNativeDateModule,
   MatInputModule,
   MatCardModule,
   MatButtonModule,
@@ -16,6 +18,7 @@ import {
 
 @NgModule({
   imports: [
+    MatNativeDateModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,
@@ -26,9 +29,11 @@ import {
     MatProgressSpinnerModule,
     MatTableModule,
     MatCheckboxModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDatepickerModule
   ],
   exports: [
+    MatNativeDateModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,
@@ -39,7 +44,8 @@ import {
     MatProgressSpinnerModule,
     MatTableModule,
     MatCheckboxModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDatepickerModule
   ],
 })
 export class MaterialModule {}

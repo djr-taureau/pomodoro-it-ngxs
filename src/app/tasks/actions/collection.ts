@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Task } from '../models/Task';
+import { Pomo } from '../models/Pomo';
 
 export enum CollectionActionTypes {
   AddTask = '[Collection] Add Task',
@@ -11,6 +12,9 @@ export enum CollectionActionTypes {
   Load = '[Collection] Load',
   LoadSuccess = '[Collection] Load Success',
   LoadFail = '[Collection] Load Fail',
+  LoadPomos = '[Pomo] Load',
+  LoadPomosSuccess = '[Pomo] Load Pomos Success',
+  LoadPomosFail = '[Pomo] Load Pomo Fail'
 }
 
 /**
@@ -74,6 +78,23 @@ export class LoadFail implements Action {
   constructor(public payload: any) {}
 }
 
+export class LoadPomos implements Action {
+  readonly type = CollectionActionTypes.LoadPomos;
+}
+
+export class LoadPomosSuccess implements Action {
+  readonly type = CollectionActionTypes.LoadPomosSuccess;
+
+  constructor(public payload: Pomo[]) {}
+}
+
+export class LoadPomosFail implements Action {
+  readonly type = CollectionActionTypes.LoadPomosFail;
+
+  constructor(public payload: any) {}
+}
+
+
 export type CollectionActions =
   | AddTask
   | AddTaskSuccess
@@ -83,4 +104,8 @@ export type CollectionActions =
   | RemoveTaskFail
   | Load
   | LoadSuccess
-  | LoadFail;
+  | LoadFail
+  | LoadPomos
+  | LoadPomosSuccess
+  | LoadPomosFail;
+

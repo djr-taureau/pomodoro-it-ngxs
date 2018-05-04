@@ -61,6 +61,12 @@ export const SEARCH_SCHEDULER = new InjectionToken<Scheduler>(
 
 @Injectable()
 export class TaskEffects {
+
+  @Effect({ dispatch: false })
+  openDB$: Observable<any> = defer(() => {
+    return this.db.open('tasks_app');
+  });
+
   @Effect()
   search$: Observable<Action> = this.actions$.pipe(
     ofType<Search>(TaskActionTypes.Search),
@@ -84,11 +90,6 @@ export class TaskEffects {
         );
     })
   );
-
-  @Effect({ dispatch: false })
-  openDB$: Observable<any> = defer(() => {
-    return this.db.open('tasks_app');
-  });
 
   @Effect()
   loadPomos$: Observable<Action> = this.actions$.pipe(

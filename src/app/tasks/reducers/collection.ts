@@ -31,7 +31,7 @@ export function reducer(
       return {
         loaded: true,
         loading: false,
-        ids: action.payload.map(task => task.id),
+        ids: action.payload.map(task => task.id)
       };
     }
 

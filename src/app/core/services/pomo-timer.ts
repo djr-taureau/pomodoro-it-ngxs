@@ -35,7 +35,7 @@ export class PomoTimerService {
   notesEntry;
 
   // setState(state: any) {
-  //   this.timerSource$.next(state);
+  //   this.timerSource$.next(state); .====
   // }
 
   // getState(): Observable<any> {
@@ -82,6 +82,8 @@ export class PomoTimerService {
         this.pomosCycleCompleted$ += 1;
         this.timerSource$.next(this.countdownSeconds$);
         this.notesEntry = true;
+        this.pomosCompleted$ = 0;
+        this.pomoCount$ = 0;
         break;
       default:
         console.log('do what');

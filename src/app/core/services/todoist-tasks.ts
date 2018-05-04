@@ -66,6 +66,6 @@ export class TodoistTasksService {
   }
 
   // createComment(taskId?: StrInt, content: string): Observable<Comment> {
-  //   return fromPromise<Comment>(this.api.createComment(taskId?, content));
+  //   return fromPromise<Comment>(this.api.createComment(content, taskId));
   // }
 }

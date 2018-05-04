@@ -1,10 +1,11 @@
+
 import { createSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
 import { TaskActions, TaskActionTypes } from '../actions/task';
 import {  PomoActions, PomoActionTypes } from '../actions/pomo';
-
+import {  CollectionActions, CollectionActionTypes } from '../actions/collection';
 
 /**
  * @ngrx/entity provides a predefined interface for handling
@@ -41,11 +42,11 @@ export const initialState: State = adapter.getInitialState({
 
 export function reducer(
   state = initialState,
-  action: PomoActions | TaskActions
+  action: PomoActions | TaskActions | CollectionActions
 ): State {
   switch (action.type) {
     case PomoActionTypes.SearchComplete:
-    case TaskActionTypes.LoadPomosSuccess: {
+    case CollectionActionTypes.LoadPomosSuccess: {
       /**
        * The addMany function provided by the created adapter
        * adds many records to the entity dictionary
@@ -96,3 +97,4 @@ export function reducer(
  */
 
 export const getSelectedId = (state: State) => state.selectedPomoId;
+export const getIds = (state: State) => state.ids;

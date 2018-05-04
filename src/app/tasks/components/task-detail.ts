@@ -9,8 +9,6 @@ import { filter } from 'rxjs/operators';
 import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-//TODO add new
-
 @Component({
   selector: 'bc-task-detail',
   template: `
@@ -119,14 +117,12 @@ export class TaskDetailComponent implements AfterViewInit {
       resetButton: this.resetButton,
     };
     this.timerService.initTimer(buttons);
-    //TODO Show Ben: issues from last night
     this.timerService.timerSource$.next(this.timerService.countdownSeconds$);
   }
 
-
   get id() {
     console.log('wtf', this.task.id);
-    console.log('is the fucking task there?', this.inCollection);
+    console.log(this.inCollection);
     return this.task.id;
   }
 
@@ -141,7 +137,6 @@ export class TaskDetailComponent implements AfterViewInit {
   get comment_count() {
     return this.task.comment_count;
   }
-
 
   get thumbnail() {
     return false;
