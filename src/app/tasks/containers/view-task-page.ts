@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import * as fromTasks from '../reducers';
 import * as task from '../actions/task';
-
+import * as pomoTasks from '../actions/collection';
 /**
  * Note: Container components are also reusable. Whether or not
  * a component is a presentation component or a container
@@ -31,6 +31,9 @@ export class ViewTaskPageComponent implements OnDestroy {
     this.actionsSubscription = route.params
       .pipe(map(params => new task.Select(params.id)))
       .subscribe(store);
+    // this.actionsSubscription = route.params
+    //   .pipe(map(params => new task.LoadPomos(params.id)))
+    //   .subscribe(store);
   }
 
   ngOnDestroy() {

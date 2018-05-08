@@ -11,7 +11,7 @@ export const schema: DBSchema = {
       autoIncrement: true,
       primaryKey: 'id',
     },
-      pomos: {
+    pomos: {
       autoIncrement: true,
       primaryKey: 'id',
     },

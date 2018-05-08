@@ -20,12 +20,15 @@ export function reducer(
   action: CollectionActions
 ): State {
   switch (action.type) {
+
     case CollectionActionTypes.Load: {
       return {
         ...state,
         loading: true,
       };
     }
+
+
 
     case CollectionActionTypes.LoadSuccess: {
       return {
@@ -67,3 +70,4 @@ export const getLoaded = (state: State) => state.loaded;
 export const getLoading = (state: State) => state.loading;
 
 export const getIds = (state: State) => state.ids;
+// export const getPomoIds = (state: State) => state.pomoIds;

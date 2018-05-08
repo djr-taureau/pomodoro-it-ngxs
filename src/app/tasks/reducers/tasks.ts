@@ -1,8 +1,6 @@
 import { createSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Task } from '../models/task';
-import { Pomo } from '../models/pomo';
-import { PomoActions, PomoActionTypes } from '../actions/pomo';
 import { TaskActions, TaskActionTypes } from '../actions/task';
 import {
   CollectionActions,
@@ -44,7 +42,7 @@ export const initialState: State = adapter.getInitialState({
 
 export function reducer(
   state = initialState,
-  action: TaskActions | CollectionActions | PomoActions
+  action: TaskActions | CollectionActions
 ): State {
   switch (action.type) {
     case TaskActionTypes.SearchComplete:
@@ -82,23 +80,6 @@ export function reducer(
         selectedTaskId: action.payload,
       };
     }
-    // case TaskActionTypes.LoadPomos: {
-    //   return {
-    //     ...state,
-    //     loading: true,
-    //   };
-    // }
-
-    // case TaskActionTypes.LoadPomosSuccess: {
-    //   return {
-    //     loaded: true,
-    //     loading: false,
-    //     ids: action.payload.map(pomo => pomo.id)
-    //   };
-    // }
-
-
-
     default: {
       return state;
     }

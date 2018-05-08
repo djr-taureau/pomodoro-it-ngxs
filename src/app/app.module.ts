@@ -1,6 +1,3 @@
-import * as LogRocket from 'logrocket';
-LogRocket.init('b5lrit/bloctime');
-
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -12,10 +9,7 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
-import {
-  StoreRouterConnectingModule,
-  RouterStateSerializer,
-} from '@ngrx/router-store';
+import { StoreRouterConnectingModule, RouterStateSerializer, routerReducer } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { CoreModule } from './core/core.module';
@@ -68,10 +62,10 @@ import { environment } from '../environments/environment';
      *
      * See: https://github.com/zalmoxisus/redux-devtools-extension
      */
-    StoreDevtoolsModule.instrument({
-      name: 'NgRx Book Store DevTools',
-      logOnly: environment.production,
-    }),
+    // StoreDevtoolsModule.instrument({
+    //   name: 'NgRx Book Store DevTools',
+    //   logOnly: environment.production,
+    // }),
 
     /**
      * EffectsModule.forRoot() is imported once in the root module and

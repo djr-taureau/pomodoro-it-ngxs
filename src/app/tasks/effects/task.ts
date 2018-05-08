@@ -30,8 +30,8 @@ import {
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
 import { defer } from 'rxjs/observable/defer';
-import { Load } from './../actions/pomo';
-import { LoadPomos } from '../actions/task';
+// import { Load } from './../actions/pomo';
+// import { LoadPomos } from '../actions/task';
 import {
   debounceTime,
   map,
@@ -40,6 +40,7 @@ import {
   mergeMap,
   skip,
   takeUntil,
+  filter,
   catchError,
 } from 'rxjs/operators';
 
@@ -91,6 +92,23 @@ export class TaskEffects {
     })
   );
 
+  // @Effect()
+  // loadPomos$: Observable<Action> = this.actions$.pipe(
+  //   ofType(TaskActionTypes.LoadPomos),
+  //   switchMap(() =>
+  //     this.db
+  //       .query('pomos')
+  //       .pipe(
+  //         filter(),
+  //         toArray(),
+  //         map((pomos: Pomo[]) => new LoadPomosSuccess(pomos)),
+  //         catchError(error => of(new LoadPomosFail(error)))
+  //       )
+
+  //   )
+  // );
+
+  // TODO saved a copy if i mess it up
   @Effect()
   loadPomos$: Observable<Action> = this.actions$.pipe(
     ofType(TaskActionTypes.LoadPomos),

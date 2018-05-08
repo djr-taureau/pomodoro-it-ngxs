@@ -8,7 +8,6 @@ export enum PomoActionTypes {
   Load = '[Pomo] Load',
   Select = '[Pomo] Select',
 }
-
 /**
  * Every action is comprised of at least a type and an optional
  * payload. Expressing actions as classes enables powerful

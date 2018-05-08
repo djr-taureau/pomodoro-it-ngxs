@@ -1,4 +1,4 @@
-import { getPomosState } from './../reducers/index';
+
 import { LoadPomos } from './../actions/task';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RouterStateSnapshot } from '@angular/router';
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/obserable/of';
 import { DataSource } from '@angular/cdk/collections';
 import * as fromTasks from '../reducers';
-import * as taskPomo from '../actions/task';
+import * as taskPomo from '../actions/collection';
 // import { LoadPomos } from '../actions/task';
 
 
@@ -20,35 +20,10 @@ import * as taskPomo from '../actions/task';
     <div class="mdl-cell mdl-cell--6-col">
       <div class="pomo-container mat-elevation-z8">
         <div class="pomo-header">
-          <mat-form-field>
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-          </mat-form-field>
+        <mat-list *ngFor="let pomo of pomos">
+        <mat-list-item> FUCK YOU </mat-list-item>
+       </mat-list>
         </div>
-
-      <mat-table #table [dataSource]="dataSource">
-
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="date">
-          <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
-          <mat-cell *matCellDef="let pomo"> {{ date }} </mat-cell>
-        </ng-container>
-
-        <!-- date Column -->
-        <ng-container matColumnDef="notes">
-          <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
-          <mat-cell *matCellDef="let pomo"> {{ notes }} </mat-cell>
-        </ng-container>
-
-
-        <ng-container matColumnDef="isSubmitted">
-          <mat-header-cell *matHeaderCellDef> Submit </mat-header-cell>
-          <mat-cell *matCellDef="let pomo"><mat-checkbox [checked]="isPublish"></mat-checkbox></mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      </mat-table>
     </div>
   </div>
 
@@ -84,14 +59,20 @@ import * as taskPomo from '../actions/task';
   ],
 })
 export class PomoTrackerComponent implements OnInit {
+  @Input() pomos: Pomo[];
 
   //TODO: THE POMO TRACKER COMPONENT IS GOING TO BECOME A CHILD COMPONENT
-  displayedColumns = ['date', 'notes', 'isSubmitted'];
   dataSource: any | null;
+  displayedColumns = ['date', 'notes', 'isSubmitted'];
   index: number;
   id: string;
+  task_id;
+  date: Date;
+  notes: string;
+  isPublished: boolean;
   selectedPomoId: string;
-
+  pomosDB: Pomo[] = [];
+  // pomos: Array<Pomo> = [];
   pomos$: Observable<Pomo[]>;
 
   constructor(private store: Store<fromTasks.State>) {
@@ -99,22 +80,17 @@ export class PomoTrackerComponent implements OnInit {
 
   ngOnInit() {
     console.log('hold it for pomo tracker');
-    this.store.dispatch(new taskPomo.LoadPomos);
-    this.pomos$.subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-    });
-    this.dataSource.filterPredicate = function(data, filter): boolean {
-      return data.state.toLowerCase() === filter;
-    };
+    // this.store.dispatch(new taskPomo.LoadPomos);
+    // this.store.select(fromTasks.getTaskPomos).subscribe(pomos => {
+    //   this.pomos = pomos;
+    // });
+    // this.store.dispatch(new taskPomo.LoadPomos());
+    console.log('What the fuck is this', this.pomos$);
   }
 
 
 
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
-  }
+
 }
 
 

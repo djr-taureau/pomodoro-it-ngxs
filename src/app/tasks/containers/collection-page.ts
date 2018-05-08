@@ -6,6 +6,7 @@ import * as fromTasks from '../reducers';
 import * as collection from '../actions/collection';
 import { Task } from '../models/task';
 
+
 @Component({
   selector: 'bc-collection-page',
   changeDetection: ChangeDetectionStrategy.OnPush,

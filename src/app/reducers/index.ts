@@ -1,6 +1,4 @@
-import * as LogRocket from 'logrocket';
-LogRocket.init('b5lrit/bloctime');
-import createNgrxMiddleware from 'logrocket-ngrx';
+
 import {
   ActionReducerMap,
   createSelector,

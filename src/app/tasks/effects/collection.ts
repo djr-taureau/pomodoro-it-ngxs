@@ -9,6 +9,9 @@ import { Load } from './../actions/task';
 import {
   CollectionActions,
   LoadFail,
+  LoadPomos,
+  LoadPomosSuccess,
+  LoadPomosFail,
   LoadSuccess,
   AddTaskSuccess,
   AddTaskFail,
@@ -19,6 +22,7 @@ import {
   AddTask,
 } from './../actions/collection';
 import { Task } from '../models/task';
+import { Pomo } from '../models/pomo';
 import { switchMap, toArray, map, catchError, mergeMap } from 'rxjs/operators';
 
 @Injectable()
@@ -48,6 +52,20 @@ export class CollectionEffects {
           toArray(),
           map((tasks: Task[]) => new LoadSuccess(tasks)),
           catchError(error => of(new LoadFail(error)))
+        )
+    )
+  );
+
+  @Effect()
+  loadPomos$: Observable<Action> = this.actions$.pipe(
+    ofType(CollectionActionTypes.LoadPomos),
+    switchMap(() =>
+      this.db
+        .query('pomos')
+        .pipe(
+          toArray(),
+          map((pomos: Pomo[]) => new LoadPomosSuccess(pomos)),
+          catchError(error => of(new LoadPomosFail(error)))
         )
     )
   );

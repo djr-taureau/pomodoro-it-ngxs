@@ -44,7 +44,7 @@ import { UUID } from 'angular2-uuid';
       (pauseClicked)="resumeClicked($event)"
       (reset)="resumeClicked($event)">
     </bc-task-detail>
-    <bc-pomo-tracker></bc-pomo-tracker>
+    <bc-pomo-tracker [pomos]="pomos$ | async"></bc-pomo-tracker>
     </div>
   `,
 
@@ -52,23 +52,30 @@ import { UUID } from 'angular2-uuid';
 
 export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
   task$: Observable<Task>;
-  pomo$: Observable<Pomo>;
+  pomos$: Observable<Pomo[]>;
   timeRemaining: any;
   isSelectedTaskInCollection$: Observable<boolean>;
   timerSource = new BehaviorSubject(null);
   pomoDialogRef: MatDialogRef<PomoDialogComponent>;
   dialogResult: any;
   dialogRef;
+  pomos;
   pomo;
+  taskIds;
+
 
 
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
               private store: Store<fromTasks.State>) {
     this.task$ = store.pipe(select(fromTasks.getSelectedTask));
+    // this.pomos = store.pipe(select(fromTasks.getPomos));
+    console.log('this task ', this.task$);
     this.isSelectedTaskInCollection$ = store.pipe(
       select(fromTasks.isSelectedTaskInCollection)
     );
+    this.taskIds = store.pipe(select(fromTasks.getCollectionTaskIds));
+    this.pomos = store.pipe(select(fromTasks.getPomoIds));
     this.pomoTimerService.timerSource$ = this.timerSource;
     // console.log(this.isSelectedTaskInCollection$);
   }
@@ -83,6 +90,19 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
    this.pomoTimerService.countdownSeconds$ = 6;
    this.timerSource.next(this.pomoTimerService.countdownSeconds$);
    this.timerSource = this.pomoTimerService.timerSource$;
+   // this.store.dispatch(new collection.LoadPomos());
+    console.log('this task ', this.task$);
+    console.log('this pomos ', this.pomos$);
+    console.log('are these the taskIds', this.taskIds);
+    console.log('show me the pomoIds', this.pomos);
+    // this.pomos$.pipe().subscribe(pomo => {
+    //   console.log(pomo);
+    // });
+  //  this.store.select(fromTasks.getTaskPomos).subscribe(pomos => {
+  //    this.pomos$ = pomos;
+  //    console.log(this.pomos$);
+  //  });
+     //TODO Starting Point for Sunday
    this.timerSource.pipe().subscribe(val => {
     /* do something with the value */
     if (val === 0 && !this.pomoTimerService.timerStarted) {
