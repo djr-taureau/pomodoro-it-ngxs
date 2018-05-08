@@ -7,6 +7,8 @@ import { tap, map, exhaustMap, catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import {
   Login,
+  TodoistLogin,
+  TodoistLoginSuccess,
   LoginSuccess,
   LoginFailure,
   AuthActionTypes,
@@ -29,9 +31,30 @@ export class AuthEffects {
     )
   );
 
+  @Effect()
+  Todoistlogin$ = this.actions$.pipe(
+    ofType(AuthActionTypes.Login),
+    map((action: TodoistLogin) => action.payload),
+    exhaustMap((auth: Authenticate) =>
+      this.authService
+        .todoistLogin(auth)
+        .pipe(
+          map(user => new TodoistLoginSuccess({ user })),
+          catchError(error => of(new LoginFailure(error)))
+        )
+    )
+  );
+
+
   @Effect({ dispatch: false })
   loginSuccess$ = this.actions$.pipe(
     ofType(AuthActionTypes.LoginSuccess),
+    tap(() => this.router.navigate(['/']))
+  );
+
+  @Effect({ dispatch: false })
+  TodoistLoginSuccess$ = this.actions$.pipe(
+    ofType(AuthActionTypes.TodoistLoginSuccess),
     tap(() => this.router.navigate(['/']))
   );
 
@@ -40,6 +63,14 @@ export class AuthEffects {
     ofType(AuthActionTypes.LoginRedirect, AuthActionTypes.Logout),
     tap(authed => {
       this.router.navigate(['/login']);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  TodoisRedirect$ = this.actions$.pipe(
+    ofType(AuthActionTypes.TodoistRedirect, AuthActionTypes.Logout),
+    tap(authed => {
+      this.router.navigateByUrl(`${this.authService.oAuthUrl}`);
     })
   );
 

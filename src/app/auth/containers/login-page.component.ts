@@ -25,5 +25,6 @@ export class LoginPageComponent implements OnInit {
 
   onSubmit($event: Authenticate) {
     this.store.dispatch(new Auth.Login($event));
+    this.store.dispatch(new Auth.TodoistLogin($event));
   }
 }

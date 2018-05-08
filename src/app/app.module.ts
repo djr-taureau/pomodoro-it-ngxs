@@ -1,7 +1,9 @@
-
+import { AuthTokenService } from './auth/services/auth-token.service';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientXsrfModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,17 +21,22 @@ import { routes } from './routes';
 import { reducers, metaReducers } from './reducers';
 import { schema } from './db';
 import { CustomRouterStateSerializer } from './shared/utils';
-
 import { AppComponent } from './core/containers/app';
 import { environment } from '../environments/environment';
+import { NgxOAuthModule } from 'ngx-oauth-client';
 
 @NgModule({
   imports: [
+    NgxOAuthModule,
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'My-Xrsf-Cookie',
+      headerName: 'My-Xsrf-Header'
+    }),
     // RouterModule.forRoot(routes, { useHash: true }),
     RouterModule.forRoot(routes),
     /**
@@ -93,6 +100,7 @@ import { environment } from '../environments/environment';
      * by `@ngrx/router-store` to include only the desired pieces of the snapshot.
      */
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+    // { provide: HTTP_INTERCEPTORS , useClass: AuthTokenService, multi: true},
   ],
   bootstrap: [AppComponent],
   declarations: [],
