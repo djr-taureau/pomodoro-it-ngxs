@@ -82,14 +82,6 @@ export class AuthService {
     this.todoist.getToken().subscribe((token: NgxOAuthResponse) => {
       this.todoist.fetchToken('access_token');
     });
-    // this.todoist.getToken('password', {
-    //   username: 'dave.ruyle@gmail.com',
-    //   password: 'Art4free@1987'
-    // }).subscribe((token: NgxOAuthResponse) => {
-    //   // Token is already set for you
-    //   console.log(this.todoist.fetchToken('access_token')); // your_access_token_from_response
-    //   console.log(this.todoist.fetchToken('refresh_token')); // your_refresh_token_from_response
-    // });
   }
 
   logout() {
