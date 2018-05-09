@@ -85,7 +85,7 @@ export class PomoTrackerComponent implements OnInit {
     //   this.pomos = pomos;
     // });
     // this.store.dispatch(new taskPomo.LoadPomos());
-    console.log('What the fuck is this', this.pomos$);
+    console.log('What is this', this.pomos$);
   }
 
 
