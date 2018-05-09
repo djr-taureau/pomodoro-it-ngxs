@@ -250,7 +250,7 @@ export class PomoDialogComponent implements OnInit {
               ngOnInit() {
                 this.form = this.fb.group({
                   id: this.id,
-                  date: new Date(),
+                  date: Date.now(),
                   notes: ''
                 });
               }

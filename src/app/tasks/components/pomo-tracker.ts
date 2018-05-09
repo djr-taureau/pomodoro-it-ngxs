@@ -21,7 +21,7 @@ import * as taskPomo from '../actions/collection';
       <div class="pomo-container mat-elevation-z8">
         <div class="pomo-header">
         <mat-list *ngFor="let pomo of pomos">
-        <mat-list-item> FUCK YOU </mat-list-item>
+        <mat-list-item></mat-list-item>
        </mat-list>
         </div>
     </div>
