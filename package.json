@@ -36,6 +36,7 @@
     "logrocket-ngrx": "^0.1.0",
     "ngrx-store-freeze": "^0.2.1",
     "rxjs": "^5.5.6",
+    "todoist-api-ts": "^1.0.3",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
