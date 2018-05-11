@@ -14,6 +14,18 @@ export const environment = {
     tokens: {
       access: 'access_token',
     }
+  },
+  firebase: {
+    apiKey: 'AIzaSyC3Hd9DIO5PyHBVM1js7J2owUgfmXUPkzo',
+    authDomain: 'pomodoro-it.firebaseapp.com',
+    databaseURL: 'https://pomodoro-it.firebaseio.com',
+    projectId: 'pomodoro-it',
+    storageBucket: 'pomodoro-it.appspot.com',
+    messagingSenderId: '190752659546'
+  },
+  google: {
+    webClientId: '190752659546-ble3d9625vv4gorjhemm6m3dis3enau7.apps.googleusercontent.com',
+    webClientSecret: 'xnkCv-uzhmuTiG-29rKHly2Z'
   }
 };
 

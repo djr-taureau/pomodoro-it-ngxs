@@ -1,6 +1,10 @@
 export interface Authenticate {
-  username: string;
-  password: string;
+  uid?: string;
+  email?: string;
+  photoURL?: string;
+  displayName?: string;
+  username?: string;
+  password?: string;
   code?: string;
   state?: string;
   accessKey?: string;

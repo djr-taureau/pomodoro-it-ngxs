@@ -1,42 +1,54 @@
-import { OAuthModule } from 'angular-oauth2-oidc';
-import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
 import { LoginPageComponent } from './containers/login-page.component';
 import { LoginFormComponent } from './components/login-form.component';
-import { AuthService } from './services/auth.service';
-import { AuthGuard } from './services/auth-guard.service';
-import { AuthEffects } from './effects/auth.effects';
-import { reducers } from './reducers';
-import { MaterialModule } from '../material';
+import { MaterialModule } from './../material/material.module';
+import { AuthState } from './auth.state';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AuthenticatedGuard } from './auth.guard';
 import { TodoistApiAuth } from './services/todoist-api-auth';
-
 export const COMPONENTS = [LoginPageComponent, LoginFormComponent];
 
+export const AUTH_ROUTES: Routes = [
+  { path: 'login', component: LoginPageComponent  },
+];
+
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, MaterialModule],
-  declarations: COMPONENTS,
+  imports: [
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    MaterialModule,
+
+    RouterModule.forChild(AUTH_ROUTES),
+
+    NgxsModule.forFeature([
+      AuthState,
+    ]),
+  ],
+  declarations: [
+    COMPONENTS,
+  ],
   exports: COMPONENTS,
 })
 export class AuthModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: RootAuthModule,
-      providers: [AuthService, TodoistApiAuth, AuthGuard],
+      providers: [
+        AuthenticatedGuard,
+        TodoistApiAuth
+      ],
     };
   }
 }
 
 @NgModule({
   imports: [
-    OAuthModule.forRoot(),
     AuthModule,
     RouterModule.forChild([{ path: 'login', component: LoginPageComponent }]),
-    StoreModule.forFeature('auth', reducers),
-    EffectsModule.forFeature([AuthEffects]),
   ],
 })
 export class RootAuthModule {}

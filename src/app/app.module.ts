@@ -16,7 +16,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
-
+import { NgxsModule } from '@ngxs/store';
 import { routes } from './routes';
 import { reducers, metaReducers } from './reducers';
 import { schema } from './db';
@@ -24,6 +24,11 @@ import { CustomRouterStateSerializer } from './shared/utils';
 import { AppComponent } from './core/containers/app';
 import { environment } from '../environments/environment';
 import { NgxOAuthModule } from 'ngx-oauth-client';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireStorageModule } from 'angularfire2/storage';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 @NgModule({
   imports: [
@@ -32,6 +37,11 @@ import { NgxOAuthModule } from 'ngx-oauth-client';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule,
     ReactiveFormsModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'My-Xrsf-Cookie',
@@ -47,7 +57,9 @@ import { NgxOAuthModule } from 'ngx-oauth-client';
      * based application.
      */
     StoreModule.forRoot(reducers, { metaReducers }),
-
+    NgxsModule.forRoot([
+      // testAuthState
+    ]),
     /**
      * @ngrx/router-store keeps router state up-to-date in the store.
      */

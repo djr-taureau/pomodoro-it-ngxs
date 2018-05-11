@@ -1,30 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { Authenticate } from '../models/user';
-import * as fromAuth from '../reducers';
-import * as Auth from '../actions/auth';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import { LoginWithGoogle } from '../auth.actions';
 
+import { Store } from '@ngxs/store';
 @Component({
   selector: 'bc-login-page',
   template: `
-    <bc-login-form
-      (submitted)="onSubmit($event)"
-      [pending]="pending$ | async"
-      [errorMessage]="error$ | async">
+    <bc-login-form (submitted)="onSubmit($event)">
     </bc-login-form>
   `,
   styles: [],
 })
-export class LoginPageComponent implements OnInit {
-  pending$ = this.store.pipe(select(fromAuth.getLoginPagePending));
-  error$ = this.store.pipe(select(fromAuth.getLoginPageError));
+export class LoginPageComponent {
+  items: Observable<any[]>;
 
-  constructor(private store: Store<fromAuth.State>) {}
+  constructor(private store: Store, db: AngularFirestore) {
+    this.items = db.collection('items').valueChanges();
+  }
 
-  ngOnInit() {}
 
-  onSubmit($event: Authenticate) {
-    this.store.dispatch(new Auth.Login($event));
-    this.store.dispatch(new Auth.TodoistLogin($event));
+  onSubmit() {
+    this.store.dispatch(new LoginWithGoogle());
+    // this.store.dispatch(new Auth.TodoistLogin($event));
   }
 }

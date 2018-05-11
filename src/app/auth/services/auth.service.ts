@@ -1,14 +1,27 @@
+import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 import { _throw } from 'rxjs/observable/throw';
-import { User, Authenticate } from '../models/user';
+import * as firebase from 'firebase/app';
+import { Authenticate } from '../models/user';
 import { Observable } from 'rxjs/Observable';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc';
 import { AuthConfig } from 'angular-oauth2-oidc';
 import {NgxOAuthClient, NgxOAuthResponse, DefaultHeaders, Configuration} from 'ngx-oauth-client';
 import { TodoistApiAuth } from './todoist-api-auth';
+import { AngularFireAuth } from 'angularfire2/auth';
+import 'rxjs/add/operator/switchMap';
+
+interface User {
+  uid: string;
+  email: string;
+  photoURL?: string;
+  displayName?: string;
+  favoriteColor?: string;
+}
 // export const authConfig: AuthConfig = {
 //   issuer: 'https://todoist.com/oauth/authorize',
 //   redirectUri: 'http://localhost:4200/tasks',
@@ -25,9 +38,20 @@ export class AuthService {
   fullUrl: 'https://todoist.com/oauth/authorize?client_id=928cd4baca4f456790059633990eaa2e&scope=data:read_write&state=PipU9sG8';
   todoistAuth;
   todoistRes;
+  user$: Observable<User>;
 
-  constructor(public http: HttpClient, public todoist: TodoistApiAuth) {
+  constructor(public http: HttpClient, public todoist: TodoistApiAuth,
+              private afAuth: AngularFireAuth, private afs: AngularFirestore,
+            private router: Router) {
     // this.configureWithNewConfigApi();
+    this.user$ = this.afAuth.authState
+      .switchMap(user => {
+        if (user) {
+          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+        } else {
+          return Observable.of(null);
+        }
+      });
   }
 
   // private configureWithNewConfigApi() {
@@ -43,17 +67,41 @@ export class AuthService {
   //   this.oauthService.loadDiscoveryDocumentAndTryLogin();
   // }
 
-  login({ username, password }: Authenticate): Observable<User> {
-    /**
-     * Simulate a failed login to display the error
-     * message for the login form.
-     */
-    if (!username) {
-      console.log('danger');
-    }
+  loginWithGoogle(auth) {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return this.oAuthLogin(provider);
 
-    return of({ name: 'User' });
   }
+
+  private oAuthLogin(provider) {
+    return this.afAuth.auth.signInWithPopup(provider)
+      .then((credential) => {
+        this.updateUserData(credential.user);
+      });
+  }
+
+  private updateUserData(user) {
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+    const data:  User = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL
+    };
+    return userRef.set(data, { merge: true});
+  }
+
+  // login({ username, password }: Authenticate): Observable<User> {
+  //   /**
+  //    * Simulate a failed login to display the error
+  //    * message for the login form.
+  //    */
+  //   if (!username) {
+  //     console.log('danger');
+  //   }
+
+  //   // return of({ name: 'User' });
+  // }
 
   todoistLogin ({username, password}: Authenticate): Observable<User> {
     this.todoistTest();
@@ -86,6 +134,9 @@ export class AuthService {
 
   logout() {
     // this.oauthService.logOut();
+    this.afAuth.auth.signOut().then(() => {
+      this.router.navigate(['/']);
+    });
     return of(true);
   }
 }

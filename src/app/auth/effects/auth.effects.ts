@@ -23,7 +23,7 @@ export class AuthEffects {
     map((action: Login) => action.payload),
     exhaustMap((auth: Authenticate) =>
       this.authService
-        .login(auth)
+        .loginWithGoogle(auth)
         .pipe(
           map(user => new LoginSuccess({ user })),
           catchError(error => of(new LoginFailure(error)))
