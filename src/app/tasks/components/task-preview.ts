@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { Task } from '../models/task';
-
 @Component({
   selector: 'bc-task-preview',
   template: `
@@ -97,3 +96,4 @@ export class TaskPreviewComponent {
     return false;
   }
 }
+//

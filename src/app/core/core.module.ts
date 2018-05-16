@@ -1,9 +1,6 @@
-import { PomoTimerService } from './services/pomo-timer';
-import { TodoistTasksService } from './services/todoist-tasks';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 import { AppComponent } from './containers/app';
 import { NotFoundPageComponent } from './containers/not-found-page';
 import { LayoutComponent } from './components/layout';
@@ -30,7 +27,7 @@ export class CoreModule {
   static forRoot() {
     return {
       ngModule: CoreModule,
-      providers: [TodoistTasksService, PomoTimerService],
+      providers: [],
     };
   }
 }

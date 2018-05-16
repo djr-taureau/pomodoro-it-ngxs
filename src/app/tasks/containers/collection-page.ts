@@ -1,9 +1,7 @@
+import { CollectionState } from '../store';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store, Select } from '@ngxs/store';
 import { Observable } from 'rxjs/Observable';
-
-import * as fromTasks from '../reducers';
-import * as collection from '../actions/collection';
 import { Task } from '../models/task';
 
 
@@ -17,12 +15,6 @@ import { Task } from '../models/task';
 
     <bc-task-preview-list [tasks]="tasks$ | async"></bc-task-preview-list>
   `,
-  /**
-   * Container components are permitted to have just enough styles
-   * to bring the view together. If the number of styles grow,
-   * consider breaking them out into presentational
-   * components.
-   */
   styles: [
     `
     mat-card-title {
@@ -33,13 +25,10 @@ import { Task } from '../models/task';
   ],
 })
 export class CollectionPageComponent implements OnInit {
-  tasks$: Observable<Task[]>;
 
-  constructor(private store: Store<fromTasks.State>) {
-    this.tasks$ = store.pipe(select(fromTasks.getTaskCollection));
-  }
+  @Select((state: any) => state.taskState.tasks) tasks$: Observable<Task[]>;
 
-  ngOnInit() {
-    this.store.dispatch(new collection.Load());
-  }
+  constructor(private store: Store) {}
+
+  ngOnInit() {}
 }

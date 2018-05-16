@@ -1,9 +1,8 @@
 
 export class User {
-  _id?: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  password?: string;
-  accessKey?: string;
+  uid: string;
+  email: string;
+  photoURL?: string;
+  displayName?: string;
+  favoriteColor?: string;
 }

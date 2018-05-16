@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-
+import { User } from '../models/user';
 import { Store } from '@ngxs/store';
 import { LoginWithGoogle } from '../auth.actions';
 

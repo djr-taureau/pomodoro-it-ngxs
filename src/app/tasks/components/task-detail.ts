@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { RouterStateSnapshot } from '@angular/router';
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Task } from '../models/task';
-import { PomoTimerService } from '../../core/services/pomo-timer';
+import { PomoTimerService } from '../../services/pomo-timer';
 import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operators';
 import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material';

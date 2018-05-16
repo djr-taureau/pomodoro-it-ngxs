@@ -1,22 +1,15 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Params, NavigationCancel, NavigationError, Router, RouterStateSnapshot, RoutesRecognized } from '@angular/router';
+import { Store, Select, getActionTypeFromInstance } from '@ngxs/store';
 import { Subscription } from 'rxjs/Subscription';
 import { map } from 'rxjs/operators';
+import { SelectTask } from '../store/task.actions';
+import * as task from '../store/tasks.state';
+import { TaskState } from '../store/tasks.state';
+import * as pomo from '../store/pomos.state';
 
-import * as fromTasks from '../reducers';
-import * as task from '../actions/task';
-import * as pomoTasks from '../actions/collection';
-/**
- * Note: Container components are also reusable. Whether or not
- * a component is a presentation component or a container
- * component is an implementation detail.
- *
- * The View Task Page's responsibility is to map router params
- * to a 'Select' Task action. Actually showing the selected
- * Task remains a responsibility of the
- * SelectedTaskPageComponent
- */
+
+
 @Component({
   selector: 'bc-view-task-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,19 +17,11 @@ import * as pomoTasks from '../actions/collection';
     <bc-selected-task-page></bc-selected-task-page>
   `,
 })
-export class ViewTaskPageComponent implements OnDestroy {
+export class ViewTaskPageComponent {
+  @Select(TaskState.SelectedTask)
   actionsSubscription: Subscription;
-
-  constructor(store: Store<fromTasks.State>, route: ActivatedRoute) {
-    this.actionsSubscription = route.params
-      .pipe(map(params => new task.Select(params.id)))
-      .subscribe(store);
-    // this.actionsSubscription = route.params
-    //   .pipe(map(params => new task.LoadPomos(params.id)))
-    //   .subscribe(store);
-  }
-
-  ngOnDestroy() {
-    this.actionsSubscription.unsubscribe();
+  constructor(private store: Store, private route: ActivatedRoute) {
+    route.params
+    .pipe(map(params => params.id = this.store.dispatch(TaskState.SelectedTask)));
   }
 }

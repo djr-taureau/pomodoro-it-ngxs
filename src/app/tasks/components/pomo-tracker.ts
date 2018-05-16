@@ -1,16 +1,15 @@
 
-import { LoadPomos } from './../actions/task';
+import { LoadPomos } from '../store/pomo.actions';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RouterStateSnapshot } from '@angular/router';
 import { Component, OnInit, Input, Output, EventEmitter, Injectable } from '@angular/core';
 import { Pomo } from '../models/pomo';
 import {MatTableDataSource} from '@angular/material';
-import { Store, select } from '@ngrx/store';
+import { Store, Select } from '@ngxs/store';
 import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/obserable/of';
 import { DataSource } from '@angular/cdk/collections';
-import * as fromTasks from '../reducers';
-import * as taskPomo from '../actions/collection';
+
 // import { LoadPomos } from '../actions/task';
 
 
@@ -75,7 +74,7 @@ export class PomoTrackerComponent implements OnInit {
   // pomos: Array<Pomo> = [];
   pomos$: Observable<Pomo[]>;
 
-  constructor(private store: Store<fromTasks.State>) {
+  constructor(private store: Store) {
   }
 
   ngOnInit() {

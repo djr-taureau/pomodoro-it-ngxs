@@ -9,7 +9,9 @@ import { User } from './auth.model';
 import { LoginRedirect } from './auth.actions';
 import { AuthState } from './auth.state';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthenticatedGuard implements CanActivate {
 
   @Select(AuthState.getUser) user$: Observable<User | undefined>;

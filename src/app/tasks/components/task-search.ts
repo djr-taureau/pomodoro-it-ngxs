@@ -1,4 +1,5 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'bc-task-search',
@@ -6,9 +7,10 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
     <mat-card>
       <mat-card-title>Find a Task</mat-card-title>
       <mat-card-content>
-        <mat-input-container>
-          <input matInput placeholder="Search for a Task" [value]="query" (keyup)="search.emit($event.target.value)">
-        </mat-input-container>
+          <input
+            matInput placeholder="Search for a Task"
+            [value]="query || null"
+            (keyup)="search.emit($event.target.value)">
         <mat-spinner [class.show]="searching" [diameter]="30" [strokeWidth]="3"></mat-spinner>
       </mat-card-content>
       <mat-card-footer><span *ngIf="error">{{error}}</span></mat-card-footer>

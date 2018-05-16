@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import {NgxOAuthClient, DefaultHeaders, Configuration} from 'ngx-oauth-client';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -8,6 +9,9 @@ import { environment } from '../../../../src/environments/environment';
 @DefaultHeaders({
   'Content-Type': 'application/json',
   'Accept': 'application/json'
+})
+@Injectable({
+  providedIn: 'root',
 })
 export class TodoistApiAuth extends NgxOAuthClient {
  requestInterceptor(request) {

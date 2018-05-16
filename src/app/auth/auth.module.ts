@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import {NgxOAuthModule} from 'ngx-oauth-client';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
@@ -18,6 +19,7 @@ export const AUTH_ROUTES: Routes = [
 
 @NgModule({
   imports: [
+    NgxOAuthModule,
     AngularFireAuthModule,
     AngularFirestoreModule,
     MaterialModule,
@@ -33,22 +35,4 @@ export const AUTH_ROUTES: Routes = [
   ],
   exports: COMPONENTS,
 })
-export class AuthModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: RootAuthModule,
-      providers: [
-        AuthenticatedGuard,
-        TodoistApiAuth
-      ],
-    };
-  }
-}
-
-@NgModule({
-  imports: [
-    AuthModule,
-    RouterModule.forChild([{ path: 'login', component: LoginPageComponent }]),
-  ],
-})
-export class RootAuthModule {}
+export class AuthModule {}

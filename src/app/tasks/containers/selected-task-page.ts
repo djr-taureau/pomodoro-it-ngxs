@@ -1,14 +1,13 @@
-import { AddPomo } from './../actions/task';
-import { PomoTimerService } from './../../core/services/pomo-timer';
+import * as pomos from '../store/pomo.actions';
+import * as tasks from '../store/task.actions';
+import { PomoTimerService } from '../../services/pomo-timer';
 import { Component, ViewEncapsulation,
-  OnInit, OnDestroy, AfterViewInit, ChangeDetectionStrategy, Output, Input,
-  EventEmitter, Inject, Injectable } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+        OnInit, OnDestroy, AfterViewInit,
+        ChangeDetectionStrategy, Output, Input,
+        EventEmitter, Inject, Injectable } from '@angular/core';
+import { Store, Select } from '@ngxs/store';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
-import * as fromTasks from '../reducers';
-import * as collection from '../actions/collection';
-import * as taskPomo from '../actions/task';
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
 import { Subject } from 'rxjs/Subject';
@@ -26,6 +25,7 @@ import {MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA} from '@angula
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { UUID } from 'angular2-uuid';
+
 @Component({
   selector: 'bc-selected-task-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,15 +44,17 @@ import { UUID } from 'angular2-uuid';
       (pauseClicked)="resumeClicked($event)"
       (reset)="resumeClicked($event)">
     </bc-task-detail>
-    <bc-pomo-tracker [pomos]="pomos$ | async"></bc-pomo-tracker>
+    <bc-pomo-tracker></bc-pomo-tracker>
     </div>
   `,
 
 })
 
 export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
+
   task$: Observable<Task>;
-  pomos$: Observable<Pomo[]>;
+
+  // pomos$: Observable<Pomo[]>;
   timeRemaining: any;
   isSelectedTaskInCollection$: Observable<boolean>;
   timerSource = new BehaviorSubject(null);
@@ -63,22 +65,14 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
   pomo;
   taskIds;
 
-
-
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
-              private store: Store<fromTasks.State>) {
-    this.task$ = store.pipe(select(fromTasks.getSelectedTask));
-    // this.pomos = store.pipe(select(fromTasks.getPomos));
-    console.log('this task ', this.task$);
-    this.isSelectedTaskInCollection$ = store.pipe(
-      select(fromTasks.isSelectedTaskInCollection)
-    );
-    this.taskIds = store.pipe(select(fromTasks.getCollectionTaskIds));
-    this.pomos = store.pipe(select(fromTasks.getPomoIds));
-    this.pomoTimerService.timerSource$ = this.timerSource;
-    // console.log(this.isSelectedTaskInCollection$);
-  }
+              private store: Store) {
+      this.task$ = store.select(tasks.SelectTask);
+      // this.isSelectedTaskInCollection$ = store.select(tasks.isSelectedTaskInCollection);
+      // this.pomos = store.select(tasks.getPomos);
+      this.pomoTimerService.timerSource$ = this.timerSource;
+    }
 
   ngOnInit(): void {
     //TODO Move to child component
@@ -92,17 +86,9 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
    this.timerSource = this.pomoTimerService.timerSource$;
    // this.store.dispatch(new collection.LoadPomos());
     console.log('this task ', this.task$);
-    console.log('this pomos ', this.pomos$);
+    // console.log('this pomos ', this.pomos$);
     console.log('are these the taskIds', this.taskIds);
     console.log('show me the pomoIds', this.pomos);
-    // this.pomos$.pipe().subscribe(pomo => {
-    //   console.log(pomo);
-    // });
-  //  this.store.select(fromTasks.getTaskPomos).subscribe(pomos => {
-  //    this.pomos$ = pomos;
-  //    console.log(this.pomos$);
-  //  });
-     //TODO Starting Point for Sunday
    this.timerSource.pipe().subscribe(val => {
     /* do something with the value */
     if (val === 0 && !this.pomoTimerService.timerStarted) {
@@ -113,21 +99,19 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
   ngAfterViewInit() {
-  //
-  }
 
+  }
   addToCollection(task: Task) {
-    this.store.dispatch(new collection.AddTask(task));
+    this.store.dispatch(new tasks.AddTask(task));
   }
 
   addPomoToTask(pomo: Pomo) {
-    this.store.dispatch(new taskPomo.AddPomo(pomo));
+    this.store.dispatch(new pomos.AddPomo(pomo));
   }
 
   removeFromCollection(task: Task) {
-    this.store.dispatch(new collection.RemoveTask(task));
+    this.store.dispatch(new tasks.RemoveTask(task));
   }
 
   resumeClicked(event) {
@@ -237,7 +221,7 @@ export class PomoDialogComponent implements OnInit {
   pomo;
 
   constructor(private pomoTimerService: PomoTimerService,
-              private store: Store<fromTasks.State>,
+              private store: Store,
               private fb: FormBuilder,
               public dialogRef: MatDialogRef<PomoDialogComponent>,
               @Inject(MAT_DIALOG_DATA) data

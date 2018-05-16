@@ -7,9 +7,6 @@ import { _throw } from 'rxjs/observable/throw';
 import * as firebase from 'firebase/app';
 import { Authenticate } from '../models/user';
 import { Observable } from 'rxjs/Observable';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { JwksValidationHandler } from 'angular-oauth2-oidc';
-import { AuthConfig } from 'angular-oauth2-oidc';
 import {NgxOAuthClient, NgxOAuthResponse, DefaultHeaders, Configuration} from 'ngx-oauth-client';
 import { TodoistApiAuth } from './todoist-api-auth';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -29,7 +26,9 @@ interface User {
 // };
 // state=PipU9sG8&code=c5d6a801f4979d6eb1ead836ba045b0b2ca2693e
 // second call http://localhost:4200/login?state=PipU9sG8&code=01bc75e11d028180870cf5e3c85afa2fdda1edce
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
   clientId: '928cd4baca4f456790059633990eaa2e';
   secretString: 'PipU9sG8';
@@ -80,7 +79,7 @@ export class AuthService {
       });
   }
 
-  private updateUserData(user) {
+  updateUserData(user) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const data:  User = {
         uid: user.uid,
@@ -91,18 +90,6 @@ export class AuthService {
     return userRef.set(data, { merge: true});
   }
 
-  // login({ username, password }: Authenticate): Observable<User> {
-  //   /**
-  //    * Simulate a failed login to display the error
-  //    * message for the login form.
-  //    */
-  //   if (!username) {
-  //     console.log('danger');
-  //   }
-
-  //   // return of({ name: 'User' });
-  // }
-
   todoistLogin ({username, password}: Authenticate): Observable<User> {
     this.todoistTest();
     this.todoistAuth = this.http.get(this.oAuthUrl)
@@ -110,7 +97,7 @@ export class AuthService {
       response => console.log('where is it', response),
       err => console.log(err)
     );
-    this.todoistRes = { name: 'David', state: 'response' };
+    // this.todoistRes = { name: 'David', state: 'response' };
     return of(this.todoistRes);
     // this.oauthService.customQueryParams = {
     //   client_id: this.clientId,

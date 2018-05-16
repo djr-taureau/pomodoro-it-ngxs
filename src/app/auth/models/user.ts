@@ -11,7 +11,13 @@ export interface Authenticate {
 }
 
 export interface User {
-  name: string;
+  uid?: string;
+  email?: string;
+  photoURL?: string;
+  displayName?: string;
+  username?: string;
+  password?: string;
+  code?: string;
   state?: string;
   accessKey?: string;
 }

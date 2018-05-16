@@ -1,3 +1,4 @@
+import { AuthService } from './services/auth.service';
 import { ApplicationRef } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -6,8 +7,7 @@ import * as firebase from 'firebase';
 
 import { Action, Selector, State, StateContext, Store, NgxsOnInit } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
-
-import { take, tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators'; //
 
 import {
   CheckSession,
@@ -23,15 +23,20 @@ import {
 import { AuthStateModel, User } from './auth.model';
 
 
+
 @State<AuthStateModel>({
   name: 'auth',
   defaults: {
-    user: null
+    user: null,
+    loggedIn: false
   }
 })
 export class AuthState implements NgxsOnInit {
 
-  constructor(private store: Store, private afAuth: AngularFireAuth, private ref: ApplicationRef) {}
+  constructor(private authService: AuthService,
+              private store: Store,
+              private afAuth: AngularFireAuth,
+              private ref: ApplicationRef) {}
 
   /**
    * Selectors
@@ -65,12 +70,13 @@ export class AuthState implements NgxsOnInit {
       })
     );
   }
-
+  // look at auth service
   @Action(LoginWithGoogle)
   loginWithGoogle(sc: StateContext<AuthStateModel>) {
     const provider = new firebase.auth.GoogleAuthProvider();
     return this.afAuth.auth.signInWithPopup(provider).then(
       (response: { user: User }) => {
+        this.authService.updateUserData(response.user),
         sc.dispatch(new LoginSuccess(response.user));
       })
       .catch(error => {
@@ -115,8 +121,8 @@ export class AuthState implements NgxsOnInit {
 
   @Action(LoginSuccess)
   onLoginSuccess(sc: StateContext<AuthStateModel>) {
-    console.log('onLoginSuccess, navigating to /dashboard');
-    sc.dispatch(new Navigate(['/dashboard']));
+    console.log('onLoginSuccess, navigating to /find');
+    sc.dispatch(new Navigate(['/tasks/find']));
     this.ref.tick();
   }
 
@@ -130,16 +136,16 @@ export class AuthState implements NgxsOnInit {
   @Action(LoginSuccess)
   setUserStateOnSuccess(sc: StateContext<AuthStateModel>, event: LoginSuccess) {
     console.log('setUserStateOnSuccess');
-    sc.setState({
-      user: event.user
-    });
+    // sc.setState({
+    //   user: userInfo
+    // });
   }
 
   @Action([LoginFailed, LogoutSuccess])
   setUserStateOnFailure(sc: StateContext<AuthStateModel>) {
-    sc.setState({
-      user: undefined
-    });
+    // sc.setState({
+    //   user: undefined
+    // });
     sc.dispatch(new LoginRedirect());
   }
 

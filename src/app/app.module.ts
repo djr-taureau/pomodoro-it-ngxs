@@ -1,5 +1,4 @@
 import { AuthTokenService } from './auth/services/auth-token.service';
-import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -8,31 +7,26 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { DBModule } from '@ngrx/db';
-import { StoreRouterConnectingModule, RouterStateSerializer, routerReducer } from '@ngrx/router-store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-
 import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
 import { NgxsModule } from '@ngxs/store';
 import { routes } from './routes';
-import { reducers, metaReducers } from './reducers';
-import { schema } from './db';
-import { CustomRouterStateSerializer } from './shared/utils';
 import { AppComponent } from './core/containers/app';
 import { environment } from '../environments/environment';
-import { NgxOAuthModule } from 'ngx-oauth-client';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AuthState } from './auth';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+
 
 @NgModule({
   imports: [
-    NgxOAuthModule,
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -47,71 +41,18 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
       cookieName: 'My-Xrsf-Cookie',
       headerName: 'My-Xsrf-Header'
     }),
+
     // RouterModule.forRoot(routes, { useHash: true }),
     RouterModule.forRoot(routes),
-    /**
-     * StoreModule.forRoot is imported once in the root module, accepting a reducer
-     * function or object map of reducer functions. If passed an object of
-     * reducers, combineReducers will be run creating your application
-     * meta-reducer. This returns all providers for an @ngrx/store
-     * based application.
-     */
-    StoreModule.forRoot(reducers, { metaReducers }),
-    NgxsModule.forRoot([
-      // testAuthState
-    ]),
-    /**
-     * @ngrx/router-store keeps router state up-to-date in the store.
-     */
-    StoreRouterConnectingModule.forRoot({
-      /*
-        They stateKey defines the name of the state used by the router-store reducer.
-        This matches the key defined in the map of reducers
-      */
-      stateKey: 'router',
-    }),
-
-    /**
-     * Store devtools instrument the store retaining past versions of state
-     * and recalculating new states. This enables powerful time-travel
-     * debugging.
-     *
-     * To use the debugger, install the Redux Devtools extension for either
-     * Chrome or Firefox
-     *
-     * See: https://github.com/zalmoxisus/redux-devtools-extension
-     */
-    // StoreDevtoolsModule.instrument({
-    //   name: 'NgRx Book Store DevTools',
-    //   logOnly: environment.production,
-    // }),
-
-    /**
-     * EffectsModule.forRoot() is imported once in the root module and
-     * sets up the effects class to be initialized immediately when the
-     * application starts.
-     *
-     * See: https://github.com/ngrx/platform/blob/master/docs/effects/api.md#forroot
-     */
-    EffectsModule.forRoot([]),
-
-    /**
-     * `provideDB` sets up @ngrx/db with the provided schema and makes the Database
-     * service available.
-     */
-    DBModule.provideDB(schema),
-
-    CoreModule.forRoot(),
-
-    AuthModule.forRoot(),
+    NgxsModule.forRoot([]),
+    NgxsRouterPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot(),
+    CoreModule,
+    AuthModule,
   ],
   providers: [
-    /**
-     * The `RouterStateSnapshot` provided by the `Router` is a large complex structure.
-     * A custom RouterStateSerializer is used to parse the `RouterStateSnapshot` provided
-     * by `@ngrx/router-store` to include only the desired pieces of the snapshot.
-     */
-    { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+    // { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
     // { provide: HTTP_INTERCEPTORS , useClass: AuthTokenService, multi: true},
   ],
   bootstrap: [AppComponent],
