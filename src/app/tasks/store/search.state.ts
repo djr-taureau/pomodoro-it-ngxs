@@ -1,10 +1,10 @@
-
 import { AUTH_ROUTES } from './../../auth/auth.module';
 import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
 import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
 import { Subject } from 'rxjs/Subject';
 import { Task } from '../models/task';
-import * as TaskActions from '../store/task.actions'
+import * as TaskActions from '../store/task.actions';
+import { TaskStateModel } from '../store/tasks.state';
 import { Pomo } from '../models/pomo';
 import * as task from '../store/task.actions';
 import { TodoistTasksService } from '../../services/todoist-tasks';
@@ -16,11 +16,10 @@ import {
   mergeMap, debounceTime, takeUntil, skip, tap
 } from 'rxjs/operators';
 import { query } from '@angular/animations';
-
-export const SEARCH_DEBOUNCE = new InjectionToken<number>('Search Debounce');
+import { TaskState } from '.';
 
 export class SearchStateModel {
-  searchTasks: string[];
+  ids: string[];
   query: string;
   loading: boolean;
   error: string;
@@ -30,7 +29,7 @@ export class SearchStateModel {
 @State<SearchStateModel>({
   name: 'search',
   defaults: {
-    searchTasks: [],
+    ids: [],
     query: '',
     loading: false,
     error: null,
@@ -41,9 +40,6 @@ export class SearchStateModel {
 export class SearchState {
   constructor(private todoist: TodoistTasksService,
     private auth: AuthService,
-    @Optional()
-    @Inject(SEARCH_DEBOUNCE)
-    private debounce: number,
     private taskService: TaskService,
     private actions$: Actions) { }
 
@@ -54,30 +50,57 @@ export class SearchState {
   }
 
   @Selector()
-  static searchTasks(state: SearchStateModel) {
-    return state.searchTasks;
+  static getIds(state: SearchStateModel) {
+    return state.ids;
   }
 
   @Action(TaskActions.Search)
-  Search(
-    { patchState }: StateContext<SearchStateModel>,
-    { payload }: TaskActions.Search
-  ) {
-    patchState({ query: payload, loading: true, });
+  search(ctxSearch: StateContext<SearchStateModel>, action: task.Search) {
+    // placeholder for now
+    // return StateContext<>.dispatch(new TakeAnimalsOutside());
   }
 
-  @Action(TaskActions.SearchComplete)
-  SearchComplete(
-    { patchState }: StateContext<SearchStateModel>,
-    { payload }: TaskActions.SearchComplete
-  ) {
-    patchState({ loading: false });
+  @Action(task.SearchComplete)
+  searchComplete(ctxSearch: StateContext<SearchStateModel>, action: task.SearchComplete) {
+   // setState({ids: payload.map(task => task.id), loading: false, query: '', error: ''});
+   // const tasksLoad = action.payload;
+   const searchState = ctxSearch.getState();
+   ctxSearch.setState({
+     ...searchState,
+     ids: action.payload.map(task => task.id),
+     loading: false,
+     query: '',
+     error: ''
+   });
+    return ctxSearch.dispatch(new task.LoadSearchTasks(action.payload));
   }
 
+  @Action(task.LoadSearchTasks)
+  loadSearchTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadSearchTasks) {
+    const taskState = ctxTask.getState();
+    ctxTask.setState({
+      ...taskState,
+      selectedTaskId: null,
+      tasks: action.payload.map(tasks => tasks)
+    });
+  }
+
+  // @Action(TaskActions.SearchComplete)
+  // searchComplete({setState}: StateContext<SearchStateModel>, {payload}: TaskActions.SearchComplete) {
+  //  setState({ids: payload.map(task => task.id), loaded: true, loading: false});
+  // }
+
+  // export const getSearchResults = createSelector(
+  //   getTaskEntities,
+  //   getSearchTaskIds,
+  //   (tasks, searchIds) => {
+  //     return searchIds.map(id => tasks[id]);
+  //   }
+  // );
   @Action(TaskActions.SearchError)
   SearchError(
     { patchState }: StateContext<SearchStateModel>,
-    { payload }: TaskActions.SearchError
+    { payload }
   ) {
     patchState({ loading: false });
   }

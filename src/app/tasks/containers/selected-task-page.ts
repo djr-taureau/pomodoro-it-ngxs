@@ -1,6 +1,3 @@
-import * as pomos from '../store/pomo.actions';
-import * as tasks from '../store/task.actions';
-import { PomoTimerService } from '../../services/pomo-timer';
 import { Component, ViewEncapsulation,
         OnInit, OnDestroy, AfterViewInit,
         ChangeDetectionStrategy, Output, Input,
@@ -25,7 +22,10 @@ import {MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA} from '@angula
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { UUID } from 'angular2-uuid';
+import { LoadTask, SelectTask, AddTask, RemoveTask } from '../store';
+import { AppState } from './../store/index';
 
+import { PomoTimerService } from '../../services/pomo-timer';
 @Component({
   selector: 'bc-selected-task-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,7 +68,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
               private store: Store) {
-      this.task$ = store.select(tasks.SelectTask);
+      this.task$ = store.select(SelectTask);
       // this.isSelectedTaskInCollection$ = store.select(tasks.isSelectedTaskInCollection);
       // this.pomos = store.select(tasks.getPomos);
       this.pomoTimerService.timerSource$ = this.timerSource;
@@ -103,15 +103,15 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
 
   }
   addToCollection(task: Task) {
-    this.store.dispatch(new tasks.AddTask(task));
+    this.store.dispatch(new AddTask(task));
   }
 
-  addPomoToTask(pomo: Pomo) {
-    this.store.dispatch(new pomos.AddPomo(pomo));
-  }
+  // addPomoToTask(pomo: Pomo) {
+  //   this.store.dispatch(new AddPomo(pomo));
+  // }
 
   removeFromCollection(task: Task) {
-    this.store.dispatch(new tasks.RemoveTask(task));
+    this.store.dispatch(new RemoveTask(task));
   }
 
   resumeClicked(event) {
@@ -183,7 +183,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
         notes: data.notes,
         date: data.date
       };
-      this.addPomoToTask(this.pomo);
+      // this.addPomoToTask(this.pomo);
       console.log('new countdown', this.pomoTimerService.countdownSeconds$);
       this.timerSource.next(this.pomoTimerService.countdownSeconds$);
     });

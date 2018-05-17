@@ -10,7 +10,7 @@ import { CollectionPageComponent } from './containers/collection-page';
 import { MaterialModule } from '../material';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CollectionState } from './store';
+import { AppState } from './store';
 
 import { NgxsModule } from '@ngxs/store';
 
@@ -30,7 +30,7 @@ import { NgxsModule } from '@ngxs/store';
       },
       { path: '', component: CollectionPageComponent },
     ]),
-    NgxsModule.forFeature(CollectionState),
+    NgxsModule.forFeature(AppState),
   ],
   declarations: [
     FindTaskPageComponent,

@@ -18,10 +18,10 @@ import * as pomo from '../store/pomos.state';
   `,
 })
 export class ViewTaskPageComponent {
-  @Select(TaskState.SelectedTask)
+  @Select(SelectTask)
   actionsSubscription: Subscription;
   constructor(private store: Store, private route: ActivatedRoute) {
     route.params
-    .pipe(map(params => params.id = this.store.dispatch(TaskState.SelectedTask)));
+    .pipe(map(params => params.id = this.store.dispatch(SelectTask)));
   }
 }

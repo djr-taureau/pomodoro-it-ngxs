@@ -1,27 +1,32 @@
-import { CollectionState } from './../store/index';
-import { AddTask } from './../store/task.actions';
 import { TodoistTasksService } from './../../services/todoist-tasks';
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { Store } from '@ngxs/store';
+
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap, take, tap, catchError } from 'rxjs/operators';
 import { Task } from '../models/task';
-import { LoadTask, SelectTask } from '../store';
-import { Load } from '../store/pomo.actions';
-
-import { Navigate } from '@ngxs/router-plugin';
+import { LoadTask, SelectTask, AddTask, Load } from '../store';
+import { AppState } from './../store/index';
 
 
-@Injectable()
+
+
+@Injectable(
+  {
+    providedIn: 'root',
+  }
+)
 export class TaskExistsGuard implements CanActivate {
 
-  constructor(private store: Store, private todoist: TodoistTasksService, private router: Router) {}
+  constructor(private store: Store, private todoist: TodoistTasksService,
+    public router: Router) {}
   canActivate(route: ActivatedRouteSnapshot) {
     return this.checkStore().pipe(
       switchMap(() => {
-        const id = parseInt(route.params.id);
+        const id = route.params.id;
+        console.log('is this id defined', id);
         return this.hasTask(id);
       })
     );
@@ -56,7 +61,7 @@ export class TaskExistsGuard implements CanActivate {
     return this.store.select(state => state.taskState.loaded).pipe(
       switchMap((loaded: boolean) => {
         if (!loaded) {
-          return this.store.dispatch(new LoadTask());
+          return this.store.dispatch(new Load());
         }
         return of(true);
       }),

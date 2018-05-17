@@ -7,6 +7,7 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import { Task } from '../tasks/models/task';
 import { Pomo } from '../tasks/models/pomo';
 import * as taskActions from '../tasks/store/task.actions';
+import { FirestoreService } from './firestore-service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,11 @@ export class TaskService {
   task: Observable<Task>;
   pomo: Observable<Pomo>;
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(private afs: AngularFirestore, private fireService: FirestoreService) {}
 
 
-  addTask(task: Task) {
-      const ref = this.afs.doc<Task>(`tasks/${task.id}`);
-      return Observable.fromPromise( ref.set(task) );
+  addTask$(task: Task) {
+    return this.fireService.add('tasks', task);
   }
 
   addPomo(pomo: Pomo) {
@@ -80,15 +80,7 @@ export class TaskService {
 
     // Listen for the 'CREATE' action
 
-    // @Effect() create$: Observable<Action> = this.actions$.ofType(actions.CREATE)
-    //     .map((action: actions.Create) => action.pizza )
-    //     .switchMap(pizza => {
-    //         const ref = this.afs.doc<fromPizza.Pizza>(`pizzas/${pizza.id}`)
-    //         return Observable.fromPromise( ref.set(pizza) )
-    //     })
-    //     .map(() => {
-    //         return new actions.Success()
-    //     })
+
 
     // Listen for the 'UPDATE' action
 

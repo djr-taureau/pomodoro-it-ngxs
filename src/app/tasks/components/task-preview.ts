@@ -6,9 +6,8 @@ import { Task } from '../models/task';
     <a [routerLink]="['/tasks', id]">
       <mat-card>
         <mat-card-title-group>
-          <img mat-card-sm-image *ngIf="thumbnail" [src]="thumbnail"/>
           <mat-card-title color="primary">{{ content }}</mat-card-title>
-          <mat-card-subtitle color="secondary" *ngIf="projectId">{{ projectId }}</mat-card-subtitle>
+          <mat-card-subtitle color="secondary" *ngIf="this.task.project_id">{{ projectId }}</mat-card-subtitle>
         </mat-card-title-group>
         <mat-card-content>
           <p>Due Date Not Working</p>
@@ -88,12 +87,12 @@ export class TaskPreviewComponent {
     return this.task.project_id;
   }
 
-  // get description() {
-  //   return this.task.due.date;
-  // }
+  // // get description() {
+  // //   return this.task.due.date;
+  // // }
 
-  get thumbnail(): string | boolean {
-    return false;
-  }
+  // get thumbnail(): string | boolean {
+  //   return false;
+  // }
 }
 //
