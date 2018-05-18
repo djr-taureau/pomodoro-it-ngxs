@@ -23,9 +23,11 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { UUID } from 'angular2-uuid';
 import { LoadTask, SelectTask, AddTask, RemoveTask } from '../store';
-import { AppState } from './../store/index';
-
+import { AppState, TaskState, CollectionState } from './../store/index';
+import { ActivatedRoute, Params, NavigationCancel, NavigationError, Router, RouterStateSnapshot, RoutesRecognized } from '@angular/router';
 import { PomoTimerService } from '../../services/pomo-timer';
+import { isDoStatement } from 'typescript';
+
 @Component({
   selector: 'bc-selected-task-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +35,7 @@ import { PomoTimerService } from '../../services/pomo-timer';
   <div class="mdl-grid">
     <bc-task-detail
       [task]="task$ | async"
-      [inCollection]="isSelectedTaskInCollection$"
+      [inCollection]="isSelectedTaskInCollection"
       [pomoTitle]="this.pomoTimerService.pomoTitle$"
       [pomoCount]="this.pomoTimerService.pomoCount$"
       [pomosCompleted]="this.pomoTimerService.pomosCompleted$"
@@ -52,11 +54,15 @@ import { PomoTimerService } from '../../services/pomo-timer';
 
 export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
 
+  @Select(TaskState) taskState$: Observable<any>;
+  @Select(TaskState.SelectedTaskId) selectedTaskId$: Observable<string>;
+  // @Select(CollectionState.Ids) selectedTaskId$: Observable<string>;
+  isSelectedTaskInCollection;
+
   task$: Observable<Task>;
 
   // pomos$: Observable<Pomo[]>;
   timeRemaining: any;
-  isSelectedTaskInCollection$: Observable<boolean>;
   timerSource = new BehaviorSubject(null);
   pomoDialogRef: MatDialogRef<PomoDialogComponent>;
   dialogResult: any;
@@ -67,8 +73,12 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
 
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
-              private store: Store) {
-      this.task$ = store.select(SelectTask);
+              private store: Store,
+              private route: ActivatedRoute) {
+      // TODO this is going to be load task
+      this.task$ = store.select(new SelectTask(id));
+      // this.isSelectedTaskInCollection = this.isTaskInCollection();
+      console.log(this.isSelectedTaskInCollection);
       // this.isSelectedTaskInCollection$ = store.select(tasks.isSelectedTaskInCollection);
       // this.pomos = store.select(tasks.getPomos);
       this.pomoTimerService.timerSource$ = this.timerSource;
@@ -76,6 +86,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     //TODO Move to child component
+  // this.task$ = this.store.select(SelectTask);
    this.pomoTimerService.pomoCount$ = 1;
    this.pomoTimerService.pomosCompleted$ = 0;
    this.pomoTimerService.pomosCycleCompleted$ = 0;
@@ -85,6 +96,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
    this.timerSource.next(this.pomoTimerService.countdownSeconds$);
    this.timerSource = this.pomoTimerService.timerSource$;
    // this.store.dispatch(new collection.LoadPomos());
+   console.log('is this task in collection', this.isSelectedTaskInCollection);
     console.log('this task ', this.task$);
     // console.log('this pomos ', this.pomos$);
     console.log('are these the taskIds', this.taskIds);
@@ -112,6 +124,12 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
 
   removeFromCollection(task: Task) {
     this.store.dispatch(new RemoveTask(task));
+  }
+
+  isTaskInCollection() {
+    const selectedTask = this.store.selectSnapshot(TaskState.SelectedTaskId);
+    const collectionIds = this.store.selectSnapshot(CollectionState.Ids);
+    return collectionIds.indexOf(selectedTask) > -1;
   }
 
   resumeClicked(event) {

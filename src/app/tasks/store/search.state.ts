@@ -45,25 +45,33 @@ export class SearchState {
 
 
   @Selector()
-  static query(state: SearchStateModel) {
+  static Query(state: SearchStateModel) {
     return state.query;
   }
 
   @Selector()
-  static getIds(state: SearchStateModel) {
+  static GetIds(state: SearchStateModel) {
     return state.ids;
   }
 
+  @Selector()
+  static Loading(state: SearchStateModel) {
+    return state.loading;
+  }
+
+  @Selector()
+  static Error(state: SearchStateModel) {
+    return state.error;
+  }
+
+
   @Action(TaskActions.Search)
   search(ctxSearch: StateContext<SearchStateModel>, action: task.Search) {
-    // placeholder for now
-    // return StateContext<>.dispatch(new TakeAnimalsOutside());
+    //return StateContext<>.dispatch(new TakeAnimalsOutside());
   }
 
   @Action(task.SearchComplete)
   searchComplete(ctxSearch: StateContext<SearchStateModel>, action: task.SearchComplete) {
-   // setState({ids: payload.map(task => task.id), loading: false, query: '', error: ''});
-   // const tasksLoad = action.payload;
    const searchState = ctxSearch.getState();
    ctxSearch.setState({
      ...searchState,
@@ -72,31 +80,18 @@ export class SearchState {
      query: '',
      error: ''
    });
-    return ctxSearch.dispatch(new task.LoadSearchTasks(action.payload));
+    return ctxSearch.dispatch(new task.LoadTasks(action.payload));
   }
 
-  @Action(task.LoadSearchTasks)
-  loadSearchTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadSearchTasks) {
+  @Action(task.LoadTasks)
+  loadSearchTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
     const taskState = ctxTask.getState();
     ctxTask.setState({
       ...taskState,
-      selectedTaskId: null,
       tasks: action.payload.map(tasks => tasks)
     });
   }
 
-  // @Action(TaskActions.SearchComplete)
-  // searchComplete({setState}: StateContext<SearchStateModel>, {payload}: TaskActions.SearchComplete) {
-  //  setState({ids: payload.map(task => task.id), loaded: true, loading: false});
-  // }
-
-  // export const getSearchResults = createSelector(
-  //   getTaskEntities,
-  //   getSearchTaskIds,
-  //   (tasks, searchIds) => {
-  //     return searchIds.map(id => tasks[id]);
-  //   }
-  // );
   @Action(TaskActions.SearchError)
   SearchError(
     { patchState }: StateContext<SearchStateModel>,

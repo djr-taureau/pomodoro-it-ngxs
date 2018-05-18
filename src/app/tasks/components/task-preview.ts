@@ -7,7 +7,7 @@ import { Task } from '../models/task';
       <mat-card>
         <mat-card-title-group>
           <mat-card-title color="primary">{{ content }}</mat-card-title>
-          <mat-card-subtitle color="secondary" *ngIf="this.task.project_id">{{ projectId }}</mat-card-subtitle>
+          <mat-card-subtitle color="secondary" *ngIf="projectId">{{ projectId }}</mat-card-subtitle>
         </mat-card-title-group>
         <mat-card-content>
           <p>Due Date Not Working</p>
@@ -21,7 +21,7 @@ import { Task } from '../models/task';
     `
     :host {
       display: flex;
-    }
+    }2
 
     :host a {
       display: flex;

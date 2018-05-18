@@ -46,7 +46,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
     RouterModule.forRoot(routes),
     NgxsModule.forRoot([]),
     NgxsRouterPluginModule.forRoot(),
-    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot({maxAge: 25}),
     NgxsLoggerPluginModule.forRoot(),
     CoreModule,
     AuthModule,

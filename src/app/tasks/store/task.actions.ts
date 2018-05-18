@@ -11,11 +11,11 @@ export class SearchComplete {
 }
 
 export class SearchError {
-  static readonly type = '[Task] Search Complete';
+  static readonly type = '[Task] Search Error';
 }
 
-export class LoadSearchTasks {
-  static readonly type = '[Task] Load all Searched Tasks';
+export class LoadTasks {
+  static readonly type = '[Task] Load Tasks';
   constructor(public payload: Task[]) {}
 }
 export class SelectTask {
@@ -26,3 +26,5 @@ export class LoadTask {
   static readonly type = '[Task] Load';
   constructor(public payload: Task) {}
 }
+
+//

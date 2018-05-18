@@ -1,14 +1,14 @@
 import { TodoistTasksService } from './../../services/todoist-tasks';
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { map, switchMap, take, tap, catchError } from 'rxjs/operators';
+import { map, switchMap, filter, take, tap, catchError } from 'rxjs/operators';
 import { Task } from '../models/task';
 import { LoadTask, SelectTask, AddTask, Load } from '../store';
-import { AppState } from './../store/index';
+import { AppState, TaskState, SearchState, CollectionState } from './../store/index';
 
 
 
@@ -20,25 +20,44 @@ import { AppState } from './../store/index';
 )
 export class TaskExistsGuard implements CanActivate {
 
+  @Select(TaskState) taskState$: Observable<any>;
+  @Select(SearchState) searchState$: Observable<any>;
+  @Select(TaskState.Tasks) tasks$: Observable<Task[]>;
+  @Select(CollectionState.Loaded) loaded$: Observable<boolean>;
+
   constructor(private store: Store, private todoist: TodoistTasksService,
     public router: Router) {}
-  canActivate(route: ActivatedRouteSnapshot) {
-    return this.checkStore().pipe(
-      switchMap(() => {
-        const id = route.params.id;
-        console.log('is this id defined', id);
-        return this.hasTask(id);
-      })
+
+
+  waitForCollectionToLoad(): Observable<boolean> {
+    return this.loaded$.pipe(
+      filter(loaded => loaded),
+      take(1)
     );
   }
 
-  hasTask(id: number): Observable<boolean> {
+  // hasTaskInStore(id: string): Observable<boolean> {
+  //   return this.tasks$.pipe(
+  //     map(tasks => !!tasks[id]),
+  //     take(1)
+  //   );
+  // }
+
+  hasTaskInStore(id: string): Observable<boolean> {
+    this.store.selectSnapshot(TaskState.SelectedTaskId);
+    return this.tasks$.pipe(
+      map(tasks => !!tasks[id]),
+      take(1)
+    );
+  }
+
+  hasTask(id: string): Observable<boolean> {
     return this.store.select(state => state.TaskState.tasks).pipe(
-      map((tasks: Task[]) => tasks.find(task => task.id === id)),
+      map((tasks: Task[]) => tasks.filter(task => task.id === id)),
       switchMap(task => {
         if (!!task) {
           return this.store
-            .dispatch(new SelectTask(task.id))
+            .dispatch(new LoadTask(task))
             .pipe(switchMap(() => of(true)));
         }
         return of(false);
@@ -58,7 +77,7 @@ export class TaskExistsGuard implements CanActivate {
   }
 
   checkStore(): Observable<boolean> {
-    return this.store.select(state => state.taskState.loaded).pipe(
+    return this.loaded$.pipe(
       switchMap((loaded: boolean) => {
         if (!loaded) {
           return this.store.dispatch(new Load());
@@ -66,6 +85,15 @@ export class TaskExistsGuard implements CanActivate {
         return of(true);
       }),
       take(1)
+    );
+  }
+
+  canActivate(route: ActivatedRouteSnapshot) {
+    return this.checkStore().pipe(
+      switchMap(() => {
+        const id = route.params.id;
+        return this.hasTask(id);
+      })
     );
   }
 }

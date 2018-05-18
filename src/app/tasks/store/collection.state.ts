@@ -11,6 +11,7 @@ import { TodoistTasksService } from '../../services/todoist-tasks';
 import { TaskService } from '../../services/task-service';
 import { AuthService } from '../../auth/services/auth.service';
 import { asapScheduler, of, Observable } from 'rxjs';
+import { AppState, TaskState } from '../store';
 
 import {
   catchError, map, switchMap, toArray,
@@ -43,10 +44,24 @@ export class CollectionState {
 
 
 
-// @Selector()
-// static getIds(state: CollectionStateModel) {
-//   return state.ids;
-// }
+@Selector()
+static Loaded(state: CollectionStateModel) {
+  return state.loaded;
+}
+
+@Selector()
+  static Loading(state: CollectionStateModel) {
+    return state.loading;
+  }
+@Selector()
+  static Ids(state: CollectionStateModel) {
+  return state.ids;
+}
+
+@Selector()
+  static TaskId(state: TaskStateModel) {
+  return state.selectedTaskId;
+}
 
 @Action(collectionActions.Load)
 load({ setState, dispatch }: StateContext<CollectionStateModel>) {
@@ -73,19 +88,6 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
     setState({ids: payload.map(task => task.id), loaded: true, loading: false});
  }
 
-//  airlines = airlines.map(
-//   (a: Airline) =>
-//     a.id === payload.id ? payload : a
-// );
-// setState(airlines);
-
-// case CollectionActionTypes.LoadSuccess: {
-//   return {
-//     loaded: true,
-//     loading: false,
-//     ids: action.payload.map(task => task.id),
-//   };
-// }
 //  @Action(collectionActions.AddTask)
 //   addTask(
 //     { patchState, dispatch }: StateContext<CollectionStateModel>,

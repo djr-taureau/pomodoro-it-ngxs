@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
 import * as task from '../store/task.actions';
-import * as searchState from '../store/search.state';
+import { AppState } from '../store';
 import * as collection from '../store/collection.actions';
 import { TodoistTasksService } from '../../services/todoist-tasks';
 import { TaskService } from '../../services/task-service';
@@ -47,17 +47,17 @@ export class TaskState {
 
 
   @Selector()
-  static getSelectedTaskId(state: TaskStateModel) {
+  static SelectedTaskId(state: TaskStateModel) {
     return state.selectedTaskId;
   }
 
   @Selector()
-  static getTasks(state: TaskStateModel) {
+  static Tasks(state: TaskStateModel) {
     return state.tasks;
   }
 
-  @Action(task.LoadSearchTasks)
-  selectTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadSearchTasks) {
+  @Action(task.LoadTasks)
+  loadTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
     const taskState = ctxTask.getState();
     ctxTask.setState({
       ...taskState,
@@ -66,7 +66,31 @@ export class TaskState {
     });
   }
 
-
+  @Action(task.SelectTask)
+  selectTask(ctxTask: StateContext<TaskStateModel>, action: task.SelectTask) {
+    const taskState = ctxTask.getState();
+    ctxTask.patchState({
+      selectedTaskId: action.payload,
+    });
+  }
+//// TODO isSelectedTaskInCollection
+// export const isSelectedTaskInCollection = (
+//   getCollectionTaskIds,
+//   getSelectedTaskId,
+//   (ids, selected) => {
+//     ids = ids.map(id => id.toString());
+//     ids.map(id => id.toString());
+//     console.log(typeof(ids[0]));
+//     console.log(typeof(selected));
+//     console.log([ids]);
+//     console.log(ids.indexOf(selected));
+//     return ids.indexOf(selected) > -1;
+//   }
+// );
+// export const getCollectionTaskIds = createSelector(
+//   getCollectionState,
+//   fromCollection.getIds
+// );
   @Action(task.Search)
   search(
     { patchState, dispatch }: StateContext<TaskStateModel>,
