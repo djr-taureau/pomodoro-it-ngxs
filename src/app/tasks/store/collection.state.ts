@@ -12,7 +12,7 @@ import { TaskService } from '../../services/task-service';
 import { AuthService } from '../../auth/services/auth.service';
 import { asapScheduler, of, Observable } from 'rxjs';
 import { AppState, TaskState } from '../store';
-
+// Load
 import {
   catchError, map, switchMap, toArray,
   mergeMap, debounceTime, takeUntil, skip, tap,
@@ -23,15 +23,15 @@ import { AddTaskSuccess, AddTaskFail, LoadSuccess } from './collection.actions';
 export class CollectionStateModel {
   loaded: boolean;
   loading: boolean;
-  ids: string[];
+  collectionIds: string[];
 }
 
 @State<CollectionStateModel>({
   name: 'collection',
   defaults: {
-    loaded: false,
+    loaded: true,
     loading: false,
-    ids: [],
+    collectionIds: [],
   }
 })
 
@@ -53,24 +53,38 @@ static Loaded(state: CollectionStateModel) {
   static Loading(state: CollectionStateModel) {
     return state.loading;
   }
-@Selector()
-  static Ids(state: CollectionStateModel) {
-  return state.ids;
-}
 
 @Selector()
-  static TaskId(state: TaskStateModel) {
-  return state.selectedTaskId;
+  static CollectionIds(state: CollectionStateModel) {
+  return state.collectionIds;
 }
+
+
+
+
+
+// isTaskInCollection() {
+//   const selectedTask = this.store.selectSnapshot(TaskState.SelectedTaskId);
+//   const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
+//   return collectionIds.indexOf(this.selectedTaskID) > -1;
+// }
+
+// @Action(collectionActions.CheckTask)
+// checkTask(ctxColl: StateContext<CollectionStateModel>, ctxTask: StateContext<TaskStateModel>) {
+//   const collState = ctxColl.getState();
+//   const taskState = ctxTask.getState();
+//   return collState.collectionIds.indexOf(taskState.selectedTaskId) > -1;
+// }
 
 @Action(collectionActions.Load)
 load({ setState, dispatch }: StateContext<CollectionStateModel>) {
+  setState({collectionIds: [], loading: true, loaded: false});
    return this.taskService
      .getTasks$()
      .pipe(
        map((tasks: Task[]) =>
          asapScheduler.schedule(() =>
-           dispatch(new collectionActions.LoadSuccess(tasks))
+           dispatch(new collectionActions.LoadSuccess(tasks)),
          )
        ),
        catchError(error =>
@@ -85,8 +99,13 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
 
  @Action(collectionActions.LoadSuccess)
   loadSuccess({ setState }: StateContext<CollectionStateModel>, { payload }: collectionActions.LoadSuccess ) {
-    setState({ids: payload.map(task => task.id), loaded: true, loading: false});
+    setState({collectionIds: payload.map(task => task.id), loaded: true, loading: false});
  }
+
+ @Action(collectionActions.LoadFail)
+ loadFail({ patchState }: StateContext<CollectionStateModel>, { payload }: collectionActions.LoadSuccess ) {
+   patchState({loaded: false, loading: false});
+}
 
 //  @Action(collectionActions.AddTask)
 //   addTask(
@@ -104,20 +123,22 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
 //        catchError(error =>
 //          of(
 //            asapScheduler.schedule(() =>
-//              dispatch(new collectionActions.AddTaskFail(task))
+//              dispatch(new collectionActions.AddTaskFail(error))
 //            )
 //          )
 //      );
-//  }
+//   }
 
-        // ofActionDispatched(collection.AddTask),
-        // //map((task: string) => payload),
-        // .switchMap(task => {
-        //   const ref = this.afs.doc<Task>(`tasks/${task.selec}`)
-        //   return Observable.fromPromise( ref.set(task)
+//         // ofActionDispatched(collection.AddTask),
+//         // //map((task: string) => payload),
+//         // .switchMap(task => {
+//         //   const ref = this.afs.doc<Task>(`tasks/${task.selec}`)
+//         //   return Observable.fromPromise( ref.set(task)
 
-  // $Action(collection.AddTaskSuccess)
-  // AddTaskSuccess({});
+  // @Action(collectionActions.AddTaskSuccess)
+  //   addTaskSuccess({ setState }: StateContext<CollectionStateModel>, { payload }: collectionActions.AddTaskSuccess ) {
+  //     setState({ids: payload.map(task => task.id), loaded: true, loading: false});
+  // }
 
   // $Action(collection.AddTaskFail)
   // AddTaskFail({});

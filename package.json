@@ -39,8 +39,10 @@
     "lodash": "^4.17.10",
     "moment": "^2.22.1",
     "ngx-oauth-client": "^0.3.0",
+    "node-sass": "^4.9.0",
     "rxjs": "^6.1.0",
     "rxjs-compat": "^6.1.0",
+    "sass-loader": "^7.0.1",
     "todoist-api-ts": "^1.0.3",
     "zone.js": "^0.8.26"
   },

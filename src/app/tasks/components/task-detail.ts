@@ -31,11 +31,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
       </mat-card-footer>
       <mat-card-actions align="start">
-      <button mat-raised-button color="warn" (click)="remove.emit(task)">
+      <button mat-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(task)">
         Remove Task from Collection
       </button>
-      <button mat-raised-button color="primary" (click)="add.emit(task)">
-      Add Task to Collection
+      <button mat-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(task)">
+        Add Task to Collection
       </button>
         <button #resume id="resume" name="resumeButton" class="resume-btn"
           mat-raised-button color="primary" (click)="resumeCommand($event)"><i class="material-icons">play_arrow</i></button>
@@ -104,7 +104,9 @@ export class TaskDetailComponent implements AfterViewInit {
   @Output() resumeClicked = new EventEmitter();
 
 
-  constructor(public timerService: PomoTimerService, element: ElementRef) {}
+  constructor(public timerService: PomoTimerService, element: ElementRef) {
+    console.log('is there a task', this.task);
+  }
 
   @ViewChild('resume', {read: ElementRef}) resumeButton;
   @ViewChild('pause', {read: ElementRef}) pauseButton;
@@ -138,9 +140,9 @@ export class TaskDetailComponent implements AfterViewInit {
     return this.task.comment_count;
   }
 
-  get thumbnail() {
-    return false;
-  }
+  // get thumbnail() {
+  //   return false;
+  // }
 
   resumeCommand(action: any) {
     this.resumeClicked.emit(action);

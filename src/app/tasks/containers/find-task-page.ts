@@ -3,13 +3,14 @@ import { TaskPreviewListComponent } from './../components/task-preview-list';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Store, Select, ofAction, Actions } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { take, catchError, map, debounceTime, filter, switchMap, skip, takeUntil, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Task } from '../models/task';
 import * as task from '../store/task.actions';
-import { TaskState, SearchState } from '../store';
+import { TaskState, SearchState, CollectionState } from '../store';
 import { FormControlName } from '@angular/forms';
 import { TodoistTasksService } from '../../services/todoist-tasks';
 @Component({
@@ -35,6 +36,7 @@ export class FindTaskPageComponent implements OnInit, OnDestroy {
 
   @Select(TaskState) taskState$: Observable<any>;
   @Select(SearchState) searchState$: Observable<any>;
+  @Select(CollectionState) collectionState$: Observable<any>;
   @Select(TaskState.Tasks) tasks$: Observable<Task[]>;
   @Select(SearchState.Loading) loading$: Observable<boolean>;
   @Select(SearchState.Error) error$: Observable<string>;
@@ -54,17 +56,7 @@ export class FindTaskPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.subscribe((state: any) => {
-      this.state = {...TaskState};
-      this.chr.detectChanges();
-      console.log(this.chr.detectChanges());
-    });
-    this.searchState$.subscribe(
-      value => console.log(value)
-    );
-    this.taskState$.subscribe(
-      value => console.log(value)
-    );
+    //
   }
 
   ngOnDestroy() {

@@ -60,8 +60,6 @@ export class LoadFail {
 }
 
 
-
-
 export type CollectionActions =
   | AddTask
   | AddTaskSuccess

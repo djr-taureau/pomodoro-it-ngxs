@@ -19,6 +19,8 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AuthState } from './auth';
+
+import { AppState } from './tasks/store';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -46,8 +48,8 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
     RouterModule.forRoot(routes),
     NgxsModule.forRoot([]),
     NgxsRouterPluginModule.forRoot(),
-    NgxsReduxDevtoolsPluginModule.forRoot({maxAge: 25}),
-    NgxsLoggerPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot({maxAge: 5}),
+    // NgxsLoggerPluginModule.forRoot(),
     CoreModule,
     AuthModule,
   ],

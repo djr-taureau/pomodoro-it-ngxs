@@ -17,9 +17,9 @@ import {
 } from 'rxjs/operators';
 import { query } from '@angular/animations';
 import { TaskState } from '.';
-
+//
 export class SearchStateModel {
-  ids: string[];
+  searchIds: string[];
   query: string;
   loading: boolean;
   error: string;
@@ -29,7 +29,7 @@ export class SearchStateModel {
 @State<SearchStateModel>({
   name: 'search',
   defaults: {
-    ids: [],
+    searchIds: [],
     query: '',
     loading: false,
     error: null,
@@ -50,8 +50,8 @@ export class SearchState {
   }
 
   @Selector()
-  static GetIds(state: SearchStateModel) {
-    return state.ids;
+  static SearchIds(state: SearchStateModel) {
+    return state.searchIds;
   }
 
   @Selector()
@@ -65,9 +65,18 @@ export class SearchState {
   }
 
 
-  @Action(TaskActions.Search)
+  @Action(task.Search)
   search(ctxSearch: StateContext<SearchStateModel>, action: task.Search) {
-    //return StateContext<>.dispatch(new TakeAnimalsOutside());
+   const searchState = ctxSearch.getState();
+   const queryText = action.payload;
+     ctxSearch.setState({
+       ...searchState,
+       searchIds: [],
+       loading: true,
+       query: action.payload,
+       error: ''
+     });
+    // return ctxSearch.dispatch(new task.LoadTasks(action.payload));
   }
 
   @Action(task.SearchComplete)
@@ -75,22 +84,22 @@ export class SearchState {
    const searchState = ctxSearch.getState();
    ctxSearch.setState({
      ...searchState,
-     ids: action.payload.map(task => task.id),
+     searchIds: action.payload.map(task => task.id),
      loading: false,
-     query: '',
+     query: searchState.query,
      error: ''
    });
     return ctxSearch.dispatch(new task.LoadTasks(action.payload));
   }
 
-  @Action(task.LoadTasks)
-  loadSearchTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
-    const taskState = ctxTask.getState();
-    ctxTask.setState({
-      ...taskState,
-      tasks: action.payload.map(tasks => tasks)
-    });
-  }
+  // @Action(task.LoadTasks)
+  // loadSearchTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
+  //   const taskState = ctxTask.getState();
+  //   ctxTask.setState({
+  //     ...taskState,
+  //     tasks: action.payload.map(tasks => tasks)
+  //   });
+  // }
 
   @Action(TaskActions.SearchError)
   SearchError(

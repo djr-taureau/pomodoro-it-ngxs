@@ -11,7 +11,7 @@ import { TodoistTasksService } from '../../services/todoist-tasks';
 import { TaskService } from '../../services/task-service';
 import { AuthService } from '../../auth/services/auth.service';
 import { asapScheduler, of, Observable } from 'rxjs';
-import { SelectTask } from './task.actions';
+import { SelectTask, LoadTask } from './task.actions';
 
 
 import {
@@ -72,25 +72,23 @@ export class TaskState {
     ctxTask.patchState({
       selectedTaskId: action.payload,
     });
+    // return taskState.tasks.map(tasks => tasks[taskState.selectedTaskId]);
   }
-//// TODO isSelectedTaskInCollection
-// export const isSelectedTaskInCollection = (
-//   getCollectionTaskIds,
-//   getSelectedTaskId,
-//   (ids, selected) => {
-//     ids = ids.map(id => id.toString());
-//     ids.map(id => id.toString());
-//     console.log(typeof(ids[0]));
-//     console.log(typeof(selected));
-//     console.log([ids]);
-//     console.log(ids.indexOf(selected));
-//     return ids.indexOf(selected) > -1;
-//   }
-// );
-// export const getCollectionTaskIds = createSelector(
-//   getCollectionState,
-//   fromCollection.getIds
-// );
+
+  @Action(task.LoadTask)
+  loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
+    const taskState = ctxTask.getState();
+    return taskState.tasks.filter(tasks => tasks[taskState.selectedTaskId]);
+  }
+
+  // export const getSelectedTask = createSelector(
+  //   getTaskEntities,
+  //   getSelectedTaskId,
+  //   (entities, selectedId) => {
+  //     return selectedId && entities[selectedId];
+  //   }
+  // );
+
   @Action(task.Search)
   search(
     { patchState, dispatch }: StateContext<TaskStateModel>,
