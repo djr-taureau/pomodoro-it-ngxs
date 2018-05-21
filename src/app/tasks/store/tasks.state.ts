@@ -1,6 +1,6 @@
 import { AUTH_ROUTES } from './../../auth/auth.module';
 import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
-import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched, NgxsOnInit } from '@ngxs/store';
 import { Subject } from 'rxjs/Subject';
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
@@ -47,17 +47,18 @@ export class TaskState {
     private actions$: Actions) { }
 
 
+
   @Selector()
   static SelectedTaskId(state: TaskStateModel) {
     return state.selectedTaskId;
   }
 
-  // @Selector()
-  // static SelectedTask(state: TaskStateModel): Task {
-  //   return state.tasks.find(
-  //     (task: Task) => task.id === state.selectedTaskId
-  //   );
-  // }
+  @Selector()
+  static SelectedTask(state: TaskStateModel): Task {
+    return state.tasks.find(
+      (t: Task) => t.id === state.selectedTaskId
+    );
+  }
 
   @Selector()
   static Tasks(state: TaskStateModel) {
@@ -74,21 +75,21 @@ export class TaskState {
     });
   }
 
-  @Action(task.LoadTask)
-  async loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
-    const taskState = ctxTask.getState();
-    ctxTask.patchState({
-      ...taskState,
-      tasks: taskState.tasks.filter(a => a.id = taskState.selectedTaskId)
-    });
-  }
-
-  // @Action(LoadTask)
-  // loadTask({getState, patchState}: StateContext<TaskStateModel>, { payload}: LoadTask ) {
-  //   patchState({
-  //     tasks: getState().tasks.filter(a => a.id = TaskState.SelectedTaskId )
+  // @Action(task.LoadTask)
+  // async loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
+  //   const taskState = ctxTask.getState();
+  //   ctxTask.patchState({
+  //     ...taskState,
+  //     tasks: taskState.tasks.filter(a => a.id = taskState.selectedTaskId)
   //   });
   // }
+
+  @Action(LoadTask)
+  async loadTask({getState, patchState}: StateContext<TaskStateModel>, { payload}: LoadTask ) {
+    patchState({
+      tasks: getState().tasks.filter(a => a.id = TaskState.SelectedTaskId )
+    });
+  }
 
   // @Action(task.LoadTask)
   // loadTask({ getState, patchState}: StateContext<TaskStateModel>, { payload }: task.LoadTask) {

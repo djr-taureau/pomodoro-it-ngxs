@@ -46,8 +46,7 @@ export class FindTaskPageComponent implements OnInit, OnDestroy {
   // @Select(CountState.LastCount) lastCount$: Observable<any>;
 
   constructor(private store: Store, private actions$: Actions,
-              private todoist: TodoistTasksService,
-              private chr: ChangeDetectorRef) {
+              private todoist: TodoistTasksService) {
   }
 
   search(query: string) {
