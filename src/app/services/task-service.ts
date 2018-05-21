@@ -8,7 +8,7 @@ import { Task } from '../tasks/models/task';
 import { Pomo } from '../tasks/models/pomo';
 import * as taskActions from '../tasks/store/task.actions';
 import { FirestoreService } from './firestore-service';
-//
+// fix DB issues
 @Injectable({
   providedIn: 'root'
 })
@@ -17,12 +17,13 @@ export class TaskService {
   task: Observable<Task>;
   pomo: Observable<Pomo>;
 
-  constructor(private afs: AngularFirestore, private fireService: FirestoreService) {}
+  constructor(private afs: AngularFirestore, private fireService: FirestoreService) { }
 
 
-  addTask$(task: Task) {
+  addTask(task: Task) {
     return this.fireService.add('tasks', task);
   }
+
 
   addPomo(pomo: Pomo) {
     const ref = this.afs.doc<Pomo>(`pomos/${pomo.id}`);
@@ -39,7 +40,7 @@ export class TaskService {
   //   return this.http
   //     .put<Pizza>(`/api/pizzas/${payload.id}`, payload)
   //     .pipe(catchError((error: any) => Observable.throw(error.json())));
-  // }
+  // } // see if it worked
 
   // removePizza(payload: Pizza): Observable<Pizza> {
   //   return this.http

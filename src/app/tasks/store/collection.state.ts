@@ -12,20 +12,17 @@ import { TaskService } from '../../services/task-service';
 import { AuthService } from '../../auth/services/auth.service';
 import { asapScheduler, of, Observable } from 'rxjs';
 import { AppState, TaskState } from '../store';
-// Load
 import {
   catchError, map, switchMap, toArray,
   mergeMap, debounceTime, takeUntil, skip, tap,
 } from 'rxjs/operators';
 import { state } from '@angular/animations';
 import { AddTaskSuccess, AddTaskFail, LoadSuccess } from './collection.actions';
-
 export class CollectionStateModel {
   loaded: boolean;
   loading: boolean;
   collectionIds: string[];
 }
-
 @State<CollectionStateModel>({
   name: 'collection',
   defaults: {
@@ -42,8 +39,6 @@ export class CollectionState {
     private taskService: TaskService,
     private actions$: Actions) { }
 
-
-
 @Selector()
 static Loaded(state: CollectionStateModel) {
   return state.loaded;
@@ -58,23 +53,6 @@ static Loaded(state: CollectionStateModel) {
   static CollectionIds(state: CollectionStateModel) {
   return state.collectionIds;
 }
-
-
-
-
-
-// isTaskInCollection() {
-//   const selectedTask = this.store.selectSnapshot(TaskState.SelectedTaskId);
-//   const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
-//   return collectionIds.indexOf(this.selectedTaskID) > -1;
-// }
-
-// @Action(collectionActions.CheckTask)
-// checkTask(ctxColl: StateContext<CollectionStateModel>, ctxTask: StateContext<TaskStateModel>) {
-//   const collState = ctxColl.getState();
-//   const taskState = ctxTask.getState();
-//   return collState.collectionIds.indexOf(taskState.selectedTaskId) > -1;
-// }
 
 @Action(collectionActions.Load)
 load({ setState, dispatch }: StateContext<CollectionStateModel>) {
@@ -107,27 +85,35 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
    patchState({loaded: false, loading: false});
 }
 
-//  @Action(collectionActions.AddTask)
-//   addTask(
-//     { patchState, dispatch }: StateContext<CollectionStateModel>,
-//     { payload }
-//   ) {
-//   patchState({ loading: true });
-//    return this.taskService
-//      .addTask$(payload)
-//      .map((task: Task) =>
-//          asapScheduler.schedule(() =>
-//            dispatch(new collectionActions.AddTaskSuccess(task))
-//          )
-//        ),
-//        catchError(error =>
-//          of(
-//            asapScheduler.schedule(() =>
-//              dispatch(new collectionActions.AddTaskFail(error))
-//            )
-//          )
-//      );
-//   }
+ @Action(collectionActions.AddTask)
+  addTask(
+    { patchState, dispatch }: StateContext<CollectionStateModel>,
+    { payload }
+  ) {
+  patchState({ loading: true });
+   return Observable.fromPromise(this.taskService.addTask(payload));
+  }
+
+  // @Action(collectionActions.RemoveTask)
+  // removeTask(
+  //   { patchState, dispatch }: StateContext<CollectionStateModel>,
+  //   { payload }
+  // ) {
+  // patchState({ loading: false });
+  //  return Observable.fromPromise(this.taskService.removeTask$(payload));
+  // }
+
+  // .map((action: userActions.GoogleLogin) => action.payload)
+  // .switchMap(payload => {
+  //     return Observable.fromPromise( this.googleLogin() );
+  // })
+  // .map( credential => {
+  //     // successful login
+  //     return new userActions.GetUser();
+  // })
+  // .catch(err => {
+  //     return Observable.of(new userActions.AuthError({error: err.message}));
+  // });
 
 //         // ofActionDispatched(collection.AddTask),
 //         // //map((task: string) => payload),

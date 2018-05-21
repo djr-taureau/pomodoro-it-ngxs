@@ -20,11 +20,10 @@ export class LoadTasks {
 }
 export class SelectTask {
   static readonly type = '[Task] Select';
-  constructor(public payload: string) {}
+  constructor(public payload: any) {}
 }
 export class LoadTask {
   static readonly type = '[Task] Load';
   constructor(public payload: any) {}
 }
 
-//

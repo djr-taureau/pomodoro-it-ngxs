@@ -34,7 +34,6 @@ import { TaskState, SearchState, CollectionState } from '../store';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <div class="mdl-grid">
-  <div class="mdl-grid">
   <bc-task-detail
     [task]="task$ | async"
     [inCollection]="this.isTaskInCollection()"
@@ -59,7 +58,8 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
   @Select(TaskState) taskState$: Observable<any>;
   @Select(CollectionState) CollectionState$: Observable<any>;
   @Select(TaskState.SelectedTaskId) selectedTaskId: any;
-  task$: Observable<Task>;
+  @Select(TaskState.SelectedTask) task$: Observable<Task>;
+
   timeRemaining: any;
   timerSource = new BehaviorSubject(null);
   pomoDialogRef: MatDialogRef<PomoDialogComponent>;
@@ -74,15 +74,16 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
               public pomoTimerService: PomoTimerService,
               private store: Store,
               private route: ActivatedRoute) {
-      this.task$ = this.store.dispatch(new LoadTask(this.selectedTaskId));
+      // this.task$ = this.store.select(TaskState.SelectedTask);
+      this.store.select(TaskState.SelectedTask);
       this.pomoTimerService.timerSource$ = this.timerSource;
       this.task$.subscribe(value => console.log('where is my task', value));
     }
 
   ngOnInit(): void {
    // filter(tasks => tasks[taskState.selectedTaskId])
-   const taskId = this.route.snapshot.paramMap.get('id');
-   this.store.dispatch(new LoadTask(taskId));
+   // const taskId = this.route.snapshot.paramMap.get('id');
+   // this.store.dispatch(new LoadTask(taskId));
 
    this.pomoTimerService.pomoCount$ = 1;
    this.pomoTimerService.pomosCompleted$ = 0;
@@ -157,17 +158,17 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '700px';
     dialogConfig.data = {
-      id: '',
-      content: ''
+      id: '2542096372',
+      content: 'Better Python dependency and package management'
     };
 
-    this.task$.pipe().subscribe(id => console.log(id));
-    this.task$.pipe()
-      .subscribe(
-        task => {
-          dialogConfig.data.id = task.id,
-          dialogConfig.data.content = task.content;
-        });
+    // this.task$.pipe().subscribe(id => console.log(id));
+    // this.task$.pipe()
+    //   .subscribe(
+    //     task => {
+    //       dialogConfig.data.id = task.id,
+    //       dialogConfig.data.content = task.content;
+    //     });
 
     this.dialogRef = this.dialog.open(PomoDialogComponent, dialogConfig);
 
@@ -179,7 +180,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
         notes: data.notes,
         date: data.date
       };
-      // this.addPomoToTask(this.pomo);
+      this.addPomoToTask(this.pomo);
       console.log('new countdown', this.pomoTimerService.countdownSeconds$);
       this.timerSource.next(this.pomoTimerService.countdownSeconds$);
     });

@@ -53,6 +53,13 @@ export class TaskState {
   }
 
   @Selector()
+  static SelectedTask(state: TaskStateModel): Task {
+    return state.tasks.find(
+      (task: Task) => task.id === state.selectedTaskId
+    );
+  }
+
+  @Selector()
   static Tasks(state: TaskStateModel) {
     return state.tasks;
   }
@@ -73,38 +80,25 @@ export class TaskState {
     ctxTask.patchState({
       selectedTaskId: action.payload,
     });
-    // return taskState.tasks.map(tasks => tasks[taskState.selectedTaskId]);
   }
 
   @Action(task.LoadTask)
   loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
     const taskState = ctxTask.getState();
-    return taskState.tasks.filter(tasks => tasks[taskState.selectedTaskId])
-      .map((tasks: Task) => Task);
-    // return taskState.tasks.map(tasks  => tasks.filter(task => task.id === taskState.sel))
+    // ctxTask.patchState({ tasks: TaskState.SelectedTask})
+    // return taskState.tasks.filter(tasks => tasks[taskState.selectedTaskId])
+    //   .map((task: Task) => Task) =>
+    //     asapScheduler.schedule(() =>
+    //     console.log(Task))
     }
 
-  // export const getSelectedTask = createSelector(
-  //   getTaskEntities,
-  //   getSelectedTaskId,
-  //   (entities, selectedId) => {
-  //     return selectedId && entities[selectedId];
-  //   }
-  // );
-
-    // this
-  //   return this.store.select(TaskState.Tasks).pipe(
-  //     map((tasks: Task[]) => tasks.filter(task => task.id === id)),
-  //     switchMap(task => {
-  //       if (!!task) {
-  //         return this.store
-  //           .dispatch(new LoadTask(Task))
-  //           .pipe(switchMap(() => of(true)));
-  //       }
-  //       return of(false);
-  //     })
-  //   );
-  // }
+    // return this.taskService
+    //      .addTask$(payload)
+    //      .map((task: Task) =>
+    //          asapScheduler.schedule(() =>
+    //            dispatch(new collectionActions.AddTaskSuccess(task))
+    //          )
+    //        ),
 
   @Action(task.Search)
   search(

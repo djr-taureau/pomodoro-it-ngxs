@@ -64,7 +64,6 @@ export class SearchState {
     return state.error;
   }
 
-
   @Action(task.Search)
   search(ctxSearch: StateContext<SearchStateModel>, action: task.Search) {
    const searchState = ctxSearch.getState();
@@ -91,15 +90,6 @@ export class SearchState {
    });
     return ctxSearch.dispatch(new task.LoadTasks(action.payload));
   }
-
-  // @Action(task.LoadTasks)
-  // loadSearchTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
-  //   const taskState = ctxTask.getState();
-  //   ctxTask.setState({
-  //     ...taskState,
-  //     tasks: action.payload.map(tasks => tasks)
-  //   });
-  // }
 
   @Action(TaskActions.SearchError)
   SearchError(

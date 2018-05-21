@@ -11,7 +11,7 @@ import { catchError, map } from 'rxjs/operators';
 export class PomoStateModel {
   loaded: boolean;
   loading: boolean;
-  Pomos: Pomo[];
+  pomos: Pomo[];
   selectedPomoId: string;
 }
 
@@ -21,7 +21,7 @@ export class PomoStateModel {
   defaults: {
    loaded: false,
    loading: false,
-   Pomos: [],
+   pomos: [],
    selectedPomoId: null
   }
 })
@@ -35,17 +35,22 @@ constructor(private todoist: TodoistTasksService,
 
   @Selector()
   static Pomos(state: PomoStateModel) {
-    return state.Pomos;
+    return state.pomos;
   }
 
   @Selector()
-  static loaded(state: PomoStateModel) {
+  static Loaded(state: PomoStateModel) {
     return state.loaded;
   }
 
   @Selector()
+  static SelectedPomoId(state: PomoStateModel) {
+    return state.selectedPomoId;
+  }
+
+  @Selector()
   static SelectedPomo(state: PomoStateModel): Pomo {
-    return state.Pomos.find(
+    return state.pomos.find(
       (pomo: Pomo) => pomo.id === state.selectedPomoId
     );
   }
@@ -76,7 +81,7 @@ constructor(private todoist: TodoistTasksService,
     { patchState }: StateContext<PomoStateModel>,
     { payload }: pomo.LoadPomosSuccess
   ) {
-    patchState({ Pomos: payload, loaded: true, loading: false });
+    patchState({ pomos: payload, loaded: true, loading: false });
   }
 
   @Action(pomo.LoadPomosFail)
