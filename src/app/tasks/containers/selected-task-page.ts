@@ -1,3 +1,4 @@
+import { TaskStateModel } from './../store/tasks.state';
 import { Component, ViewEncapsulation,
         OnInit, OnDestroy, AfterViewInit,
         ChangeDetectionStrategy, Output, Input,
@@ -13,7 +14,7 @@ import { interval } from 'rxjs/observable/interval';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { empty } from 'rxjs/observable/empty';
-import { switchMap, scan, takeWhile, startWith, mapTo, map, filter, last } from 'rxjs/operators';
+import { switchMap, scan, takeWhile, startWith, mapTo, map, filter, last, tap } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { Subscription } from 'rxjs/Subscription';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
@@ -27,26 +28,28 @@ import { ActivatedRoute, Params, NavigationCancel, NavigationError, Router, Rout
 import { PomoTimerService } from '../../services/pomo-timer';
 import { isDoStatement } from 'typescript';
 import { TaskState, SearchState, CollectionState } from '../store';
+
 @Component({
   selector: 'bc-selected-task-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <div class="mdl-grid">
-    <bc-task-detail
-      [task]="task$ | async"
-      [inCollection]="this.isTaskInCollection()"
-      [pomoTitle]="this.pomoTimerService.pomoTitle$"
-      [pomoCount]="this.pomoTimerService.pomoCount$"
-      [pomosCompleted]="this.pomoTimerService.pomosCompleted$"
-      (add)="addToCollection($event)"
-      (addPomo)="addPomoToTask($event)"
-      (remove)="removeFromCollection($event)"
-      (resumeClicked)="resumeClicked($event)"
-      (pauseClicked)="resumeClicked($event)"
-      (reset)="resumeClicked($event)">
-    </bc-task-detail>
-    <bc-pomo-tracker></bc-pomo-tracker>
-    </div>
+  <div class="mdl-grid">
+  <bc-task-detail
+    [task]="task$ | async"
+    [inCollection]="this.isTaskInCollection()"
+    [pomoTitle]="this.pomoTimerService.pomoTitle$"
+    [pomoCount]="this.pomoTimerService.pomoCount$"
+    [pomosCompleted]="this.pomoTimerService.pomosCompleted$"
+    (add)="addToCollection($event)"
+    (addPomo)="addPomoToTask($event)"
+    (remove)="removeFromCollection($event)"
+    (resumeClicked)="resumeClicked($event)"
+    (pauseClicked)="resumeClicked($event)"
+    (reset)="resumeClicked($event)">
+  </bc-task-detail>
+  <bc-pomo-tracker></bc-pomo-tracker>
+  </div>
   `,
 
 })
@@ -56,10 +59,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
   @Select(TaskState) taskState$: Observable<any>;
   @Select(CollectionState) CollectionState$: Observable<any>;
   @Select(TaskState.SelectedTaskId) selectedTaskId: any;
-  @Select() task$: Observable<Task>;
-  // @Select(CollectionState.IsTaskInCollection) isSelectedTaskinCollection$: Observable<boolean>;
-  // isSelectedTaskInCollection;
-  // pomos$: Observable<Pomo[]>;
+  task$: Observable<Task>;
   timeRemaining: any;
   timerSource = new BehaviorSubject(null);
   pomoDialogRef: MatDialogRef<PomoDialogComponent>;
@@ -68,22 +68,22 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
   pomos;
   pomo;
   taskIds;
-  task;
+  task: Task;
 
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
               private store: Store,
               private route: ActivatedRoute) {
-
-      this.task$ = this.store.dispatch(new LoadTask(this.selectedTaskId)).pipe(
-        data => this.task = data
-      );
-      // this.isSelectedTaskinCollection$ = this.store.select(IsTaskInCollection);
+      this.task$ = this.store.dispatch(new LoadTask(this.selectedTaskId));
       this.pomoTimerService.timerSource$ = this.timerSource;
+      this.task$.subscribe(value => console.log('where is my task', value));
     }
 
   ngOnInit(): void {
-   // this.task$ = this.store.dispatch(new LoadTask(this.selectedTaskId));
+   // filter(tasks => tasks[taskState.selectedTaskId])
+   const taskId = this.route.snapshot.paramMap.get('id');
+   this.store.dispatch(new LoadTask(taskId));
+
    this.pomoTimerService.pomoCount$ = 1;
    this.pomoTimerService.pomosCompleted$ = 0;
    this.pomoTimerService.pomosCycleCompleted$ = 0;
@@ -101,6 +101,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
         }
       }
     });
+    // this.store.dispatch(new LoadTask(this.selectedTaskId));
   }
   ngAfterViewInit() {
 

@@ -1,4 +1,5 @@
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFireDatabase, AngularFireObject } from 'angularfire2/database';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -41,7 +42,7 @@ export class AuthService {
 
   constructor(public http: HttpClient, public todoist: TodoistApiAuth,
               private afAuth: AngularFireAuth, private afs: AngularFirestore,
-            private router: Router) {
+              private db: AngularFireDatabase, private router: Router) {
     // this.configureWithNewConfigApi();
     this.user$ = this.afAuth.authState
       .switchMap(user => {

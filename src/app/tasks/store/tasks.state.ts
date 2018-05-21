@@ -18,6 +18,7 @@ import {
   catchError, map, switchMap, toArray,
   mergeMap, debounceTime, takeUntil, skip, tap
 } from 'rxjs/operators';
+import { isThisTypeNode } from 'typescript';
 
 export const SEARCH_DEBOUNCE = new InjectionToken<number>('Search Debounce');
 // export const SEARCH_SCHEDULER = new InjectionToken<Scheduler>(
@@ -78,8 +79,10 @@ export class TaskState {
   @Action(task.LoadTask)
   loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
     const taskState = ctxTask.getState();
-    return taskState.tasks.filter(tasks => tasks[taskState.selectedTaskId]);
-  }
+    return taskState.tasks.filter(tasks => tasks[taskState.selectedTaskId])
+      .map((tasks: Task) => Task);
+    // return taskState.tasks.map(tasks  => tasks.filter(task => task.id === taskState.sel))
+    }
 
   // export const getSelectedTask = createSelector(
   //   getTaskEntities,
@@ -88,6 +91,20 @@ export class TaskState {
   //     return selectedId && entities[selectedId];
   //   }
   // );
+
+    // this
+  //   return this.store.select(TaskState.Tasks).pipe(
+  //     map((tasks: Task[]) => tasks.filter(task => task.id === id)),
+  //     switchMap(task => {
+  //       if (!!task) {
+  //         return this.store
+  //           .dispatch(new LoadTask(Task))
+  //           .pipe(switchMap(() => of(true)));
+  //       }
+  //       return of(false);
+  //     })
+  //   );
+  // }
 
   @Action(task.Search)
   search(

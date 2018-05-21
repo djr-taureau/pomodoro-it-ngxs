@@ -38,34 +38,41 @@ export class TaskExistsGuard implements CanActivate {
 
 
   hasTaskInCollection(id: string): Observable<boolean> {
-    this.tasks$.subscribe(value => value);
+    // this.tasks$.subscribe(value => value);
     return this.ids$.pipe(
       map(tasks => !!tasks[id]),
       take(1)
     );
   }
 
+  // isTaskInCollection(id: string): Observable<boolean> {
+  //   const selectedTask = this.store.selectSnapshot(TaskState.SelectedTaskId);
+  //   const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
+  //   return collectionIds.indexOf(id) > -1;
+  // }
+
   hasTaskInApi(id: string): Observable<boolean> {
-    return this.todoist.retrieveTask('2644241490').pipe(
-      tap(task => this.store.select(new LoadTask(task))),
+    return this.todoist.retrieveTask(id).pipe(
+      // TODO is it LOAD or SELECT
+      tap(task => this.store.dispatch(new LoadTask(task))),
       // tap(task => console.log('me task in api', task)),
       map(task => !!task),
-      // catchError(error => {
-      //   console.log(error);
-      //   this.router.navigate(['/404']);
-      //   return of(false);
-      // })
+      catchError(error => {
+        console.log(error);
+        this.router.navigate(['/404']);
+        return of(false);
+      })
     );
   }
 
   hasTask(id: string): Observable<boolean> {
-    return this.hasTaskInCollection('2644241490').pipe(
+    return this.hasTaskInCollection(id).pipe(
       switchMap(inStore => {
         if (inStore) {
           return of(inStore);
         }
-        return this.hasTaskInApi('2644241490');
-      })
+        return this.hasTaskInApi(id);
+      }),
     );
   }
   // this
