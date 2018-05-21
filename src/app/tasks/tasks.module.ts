@@ -26,7 +26,7 @@ import { NgxsModule } from '@ngxs/store';
       {
         path: ':id',
         component: ViewTaskPageComponent,
-        // canActivate: [TaskExistsGuard], // keep working on this
+        canActivate: [TaskExistsGuard], // keep working on this
       },
       { path: '', component: CollectionPageComponent },
     ]),

@@ -24,6 +24,6 @@ export class SelectTask {
 }
 export class LoadTask {
   static readonly type = '[Task] Load';
-  constructor(public payload: any) {}
+  constructor(public payload: Task) {}
 }
 

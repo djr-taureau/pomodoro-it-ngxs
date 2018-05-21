@@ -83,12 +83,12 @@ export class SearchState {
    const searchState = ctxSearch.getState();
    ctxSearch.setState({
      ...searchState,
-     searchIds: action.payload.map(task => task.id),
+     searchIds: action.payload.map(a => a.id),
      loading: false,
      query: searchState.query,
      error: ''
    });
-    return ctxSearch.dispatch(new task.LoadTasks(action.payload));
+    ctxSearch.dispatch(new task.LoadTasks(action.payload));
   }
 
   @Action(TaskActions.SearchError)

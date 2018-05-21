@@ -52,12 +52,12 @@ export class TaskState {
     return state.selectedTaskId;
   }
 
-  @Selector()
-  static SelectedTask(state: TaskStateModel): Task {
-    return state.tasks.find(
-      (task: Task) => task.id === state.selectedTaskId
-    );
-  }
+  // @Selector()
+  // static SelectedTask(state: TaskStateModel): Task {
+  //   return state.tasks.find(
+  //     (task: Task) => task.id === state.selectedTaskId
+  //   );
+  // }
 
   @Selector()
   static Tasks(state: TaskStateModel) {
@@ -65,7 +65,7 @@ export class TaskState {
   }
 
   @Action(task.LoadTasks)
-  loadTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
+  async loadTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
     const taskState = ctxTask.getState();
     ctxTask.setState({
       ...taskState,
@@ -74,31 +74,45 @@ export class TaskState {
     });
   }
 
+  @Action(task.LoadTask)
+  async loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
+    const taskState = ctxTask.getState();
+    ctxTask.patchState({
+      ...taskState,
+      tasks: taskState.tasks.filter(a => a.id = taskState.selectedTaskId)
+    });
+  }
+
+  // @Action(LoadTask)
+  // loadTask({getState, patchState}: StateContext<TaskStateModel>, { payload}: LoadTask ) {
+  //   patchState({
+  //     tasks: getState().tasks.filter(a => a.id = TaskState.SelectedTaskId )
+  //   });
+  // }
+
+  // @Action(task.LoadTask)
+  // loadTask({ getState, patchState}: StateContext<TaskStateModel>, { payload }: task.LoadTask) {
+  //   const state = getState();
+  //   patchState({
+  //     tasks: [...state.tasks, payload]
+  //   });
+  // }
+
   @Action(task.SelectTask)
   selectTask(ctxTask: StateContext<TaskStateModel>, action: task.SelectTask) {
     const taskState = ctxTask.getState();
     ctxTask.patchState({
       selectedTaskId: action.payload,
+      tasks: taskState.tasks.filter(a => a.id = taskState.selectedTaskId)
     });
   }
 
-  @Action(task.LoadTask)
-  loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
-    const taskState = ctxTask.getState();
-    // ctxTask.patchState({ tasks: TaskState.SelectedTask})
-    // return taskState.tasks.filter(tasks => tasks[taskState.selectedTaskId])
-    //   .map((task: Task) => Task) =>
-    //     asapScheduler.schedule(() =>
-    //     console.log(Task))
-    }
-
-    // return this.taskService
-    //      .addTask$(payload)
-    //      .map((task: Task) =>
-    //          asapScheduler.schedule(() =>
-    //            dispatch(new collectionActions.AddTaskSuccess(task))
-    //          )
-    //        ),
+  // @Action(LoadTask)
+  // loadTask({getState, patchState}: StateContext<TaskStateModel>, { payload}: LoadTask ) {
+  //   patchState({
+  //     tasks: getState().tasks.filter(a => a.id = TaskState.SelectedTaskId )
+  //   });
+  // }
 
   @Action(task.Search)
   search(

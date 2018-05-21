@@ -1,3 +1,4 @@
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { TaskStateModel } from './../store/tasks.state';
 import { Component, ViewEncapsulation,
         OnInit, OnDestroy, AfterViewInit,
@@ -14,7 +15,8 @@ import { interval } from 'rxjs/observable/interval';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { empty } from 'rxjs/observable/empty';
-import { switchMap, scan, takeWhile, startWith, mapTo, map, filter, last, tap } from 'rxjs/operators';
+import { switchMap, scan, takeWhile, startWith, withLatestFrom,
+  mapTo, map, filter, last, tap } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { Subscription } from 'rxjs/Subscription';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
@@ -55,10 +57,12 @@ import { TaskState, SearchState, CollectionState } from '../store';
 
 export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
 
-  @Select(TaskState) taskState$: Observable<any>;
+  @Select(TaskState) TaskState$: Observable<any>;
   @Select(CollectionState) CollectionState$: Observable<any>;
+  @Select(TaskState.Tasks) tasks$: Observable<any>;
   @Select(TaskState.SelectedTaskId) selectedTaskId: any;
-  @Select(TaskState.SelectedTask) task$: Observable<Task>;
+
+  task$: Observable<Task>;
 
   timeRemaining: any;
   timerSource = new BehaviorSubject(null);
@@ -74,10 +78,9 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
               public pomoTimerService: PomoTimerService,
               private store: Store,
               private route: ActivatedRoute) {
-      // this.task$ = this.store.select(TaskState.SelectedTask);
-      this.store.select(TaskState.SelectedTask);
+      // TODO THIS one LINE OF CODE gave me all of my problems
+      this.store.dispatch(new LoadTask(this.selectedTaskId)).subscribe(data => console.log(data));
       this.pomoTimerService.timerSource$ = this.timerSource;
-      this.task$.subscribe(value => console.log('where is my task', value));
     }
 
   ngOnInit(): void {

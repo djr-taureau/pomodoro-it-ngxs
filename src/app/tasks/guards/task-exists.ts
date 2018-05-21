@@ -36,33 +36,12 @@ export class TaskExistsGuard implements CanActivate {
     );
   }
 
-
-  hasTaskInCollection(id: string): Observable<boolean> {
-    // this.tasks$.subscribe(value => value);
-    return this.ids$.pipe(
-      map(tasks => !!tasks[id]),
-      take(1)
-    );
-  }
-
-  // isTaskInCollection(id: string): Observable<boolean> {
-  //   const selectedTask = this.store.selectSnapshot(TaskState.SelectedTaskId);
-  //   const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
-  //   return collectionIds.indexOf(id) > -1;
-  // }
-
-  hasTaskInApi(id: string): Observable<boolean> {
-    return this.todoist.retrieveTask(id).pipe(
-      // TODO is it LOAD or SELECT
-      tap(task => this.store.dispatch(new LoadTask(task))),
-      // tap(task => console.log('me task in api', task)),
-      map(task => !!task),
-      catchError(error => {
-        console.log(error);
-        this.router.navigate(['/404']);
-        return of(false);
-      })
-    );
+  canActivate(route: ActivatedRouteSnapshot) {
+    return this.waitForCollectionToLoad().pipe(
+       switchMap(() => {
+        return this.hasTask(route.params['id']);
+       })
+     );
   }
 
   hasTask(id: string): Observable<boolean> {
@@ -75,39 +54,35 @@ export class TaskExistsGuard implements CanActivate {
       }),
     );
   }
-  // this
-  //   return this.store.select(TaskState.Tasks).pipe(
-  //     map((tasks: Task[]) => tasks.filter(task => task.id === id)),
-  //     switchMap(task => {
-  //       if (!!task) {
-  //         return this.store
-  //           .dispatch(new LoadTask(Task))
-  //           .pipe(switchMap(() => of(true)));
-  //       }
-  //       return of(false);
-  //     })
-  //   );
-  // }
 
-
-
-  checkStore(): Observable<boolean> {
-    return this.loaded$.pipe(
-      switchMap((loaded: boolean) => {
-        if (!loaded) {
-          return this.store.dispatch(new Load());
-        }
-        return of(true);
-      }),
+  hasTaskInCollection(id: string): Observable<boolean> {
+    // this.tasks$.subscribe(value => value);
+    return this.ids$.pipe(
+      map(tasks => !!tasks[id]),
       take(1)
     );
   }
 
-  canActivate(route: ActivatedRouteSnapshot) {
-    return this.waitForCollectionToLoad().pipe(
-       switchMap(() => {
-        return this.hasTask(route.params['id']);
-       })
-     );
+  hasTaskInApi(id: string): Observable<boolean> {
+    return this.todoist.retrieveTask(id).pipe(
+      tap(task => this.store.dispatch(new LoadTask(task))),
+      map(task => !!task),
+      catchError(error => {
+        console.log(error);
+        this.router.navigate(['/404']);
+        return of(false);
+      })
+    );
   }
+  // checkStore(): Observable<boolean> {
+  //   return this.loaded$.pipe(
+  //     switchMap((loaded: boolean) => {
+  //       if (!loaded) {
+  //         return this.store.dispatch(new Load());
+  //       }
+  //       return of(true);
+  //     }),
+  //     take(1)
+  //   );
+  // }
 }

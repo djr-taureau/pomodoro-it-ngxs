@@ -16,7 +16,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
     <div class="mdl-cell mdl-cell--6-col">
     <mat-card *ngIf="task">
       <mat-card-title-group>
-        <mat-card-title color="primary">{{ content }}</mat-card-title>
+        <mat-card-title color="primary">{{ task.content }}</mat-card-title>
         <mat-card-title>{{ pomoTitle }} - {{ timerService.timerSource$ | async | minutesSeconds }}</mat-card-title>
       </mat-card-title-group>
       <mat-card-content>
