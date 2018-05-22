@@ -4,7 +4,7 @@ import { Component, ViewEncapsulation,
         OnInit, OnDestroy, AfterViewInit,
         ChangeDetectionStrategy, Output, Input,
         EventEmitter, Inject, Injectable } from '@angular/core'; //
-import { Store, Select } from '@ngxs/store';
+import { Store, Select, Actions, ofActionDispatched } from '@ngxs/store';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { Task } from '../models/task';
@@ -16,7 +16,7 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { empty } from 'rxjs/observable/empty';
 import { switchMap, scan, takeWhile, startWith, withLatestFrom,
-  mapTo, map, filter, last, tap, take, mergeMap } from 'rxjs/operators';
+  mapTo, map, filter, last, tap, take, mergeMap, flatMap } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { Subscription } from 'rxjs/Subscription';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
@@ -62,7 +62,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
 
   @Select(TaskState) TaskState$: Observable<any>;
   @Select(CollectionState) CollectionState$: Observable<any>;
-  @Select(TaskState.Tasks) task$: Observable<any>;
+  @Select(TaskState.Tasks) task$: Observable<Task>;
 
   timeRemaining: any;
   timerSource = new BehaviorSubject(null);
@@ -78,19 +78,53 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
               private store: Store,
-              private route: ActivatedRoute) {
-      // TODO THIS one LINE OF CODE gave me all of my problems
+              private route: ActivatedRoute,
+              private actions$: Actions) {
+      // TODO THIS one LINE OF CODE gave me all of my problem
+      // this.actions$
+      // .pipe(ofActionDispatched(LoadTask))
+      // .take(1),
+      // flatMap(({ payload }) => payload = this.task);
+      // subscribe(({ payload }) => payload = this.task);
+      console.log('task', this.task);
       // this.selectedTaskId$.pipe(
       //   take(1),
-      //   mergeMap(id => this.store.dispatch(new LoadTask(id))),
+      // this.store.dispatch(new SelectTask(route.snapshot.params.id.toString())).subscribe();
+      // this.task$.pipe(
+      //   take(1),
+      //   flatMap(task => this.task)
+      // );
+      console.log('router', route.snapshot.params.id);
+
       //   withLatestFrom(this.selectedTaskId$ = this.selectedTaskId)
       //   // withLatestFrom(this.tasks$),
       // ).subscribe(data => console.log('selected taskid', data));
 
+      // this.task$.pipe(
+      //   take(1),
+      //   withLatestFrom(this.task$)).subscribe(data =>
+      //     this.task = data);
       this.pomoTimerService.timerSource$ = this.timerSource;
     }
 
   ngOnInit(): void {
+    this.store.dispatch(new SelectTask(this.route.snapshot.params.id))
+     .subscribe(t => {
+       if (t) { console.log(t); } });
+    this.task$.map(tasks => task => {
+      return this.task = {
+        id: task.id,
+        content: task.content,
+        project_id: task.project_id
+      };
+    });
+    console.log('where is the TAKS', this.task);
+    // this.task$
+    //    .pipe(
+    //      take(1),
+    //      withLatestFrom(this.task$),
+    //      map(task => console.log('task ob', task))
+    //    );
    this.pomoTimerService.pomoCount$ = 1;
    this.pomoTimerService.pomosCompleted$ = 0;
    this.pomoTimerService.pomosCycleCompleted$ = 0;

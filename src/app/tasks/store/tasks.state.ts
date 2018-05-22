@@ -54,9 +54,18 @@ export class TaskState {
   @Action(LoadTask)
   loadTask({getState, setState}: StateContext<Task[]>, {payload}: LoadTask) {
     let tasks = getState();
-    tasks = tasks.map(
+    tasks = tasks.filter(
       (t: Task) => t.id === payload.id ? payload : t
     );
+    setState(tasks);
+  }
+
+  @Action(SelectTask)
+  selectTask({getState, setState, patchState}: StateContext<Task[]>, {payload}: SelectTask) {
+    let tasks = getState();
+    // tasks = [];
+    tasks = tasks.filter(
+      (t: Task) => payload === t.id.toString());
     setState(tasks);
   }
 

@@ -18,7 +18,7 @@ import { switchMap, scan, takeWhile, startWith, withLatestFrom,
     <div class="mdl-cell mdl-cell--6-col">
     <mat-card *ngIf="task">
       <mat-card-title-group>
-        <mat-card-title color="primary">{{ task.content }}</mat-card-title>
+        <mat-card-title color="primary">{{ content }}</mat-card-title>
         <mat-card-title>{{ pomoTitle }} - {{ timerService.timerSource$ | async | minutesSeconds }}</mat-card-title>
       </mat-card-title-group>
       <mat-card-content>
@@ -98,7 +98,7 @@ export class TaskDetailComponent implements AfterViewInit {
   // ngxs state selectors
   @Select(TaskState) TaskState$: Observable<any>;
   @Select(CollectionState) CollectionState$: Observable<any>;
-  @Select(TaskState.Tasks) task$: Observable<any>;
+  @Select(TaskState.Tasks) task$: Observable<Task>;
   // component inputs
   @Input() task: Task;
   @Input() inCollection: boolean;
@@ -113,10 +113,9 @@ export class TaskDetailComponent implements AfterViewInit {
 
   constructor(public timerService: PomoTimerService, element: ElementRef) {
     console.log('is there a task', this.task);
-    // this.task$.pipe(
-    //   take(1),
-    //   withLatestFrom(this.task$)).subscribe(data =>
-    //     this.task = data);
+    this.task$.pipe(
+      take(1),
+      withLatestFrom(this.task$)).subscribe(data => console.log(data));
   }
 
   @ViewChild('resume', {read: ElementRef}) resumeButton;
@@ -133,15 +132,13 @@ export class TaskDetailComponent implements AfterViewInit {
     this.timerService.timerSource$.next(this.timerService.countdownSeconds$);
   }
 
-  // get id() {
-  //   console.log('wtf', this.task.id);
-  //   console.log(this.inCollection);
-  //   return this.task.id;
-  // }
+  get id() {
+    return this.task.id;
+  }
 
-  // get content() {
-  //   return this.task.content;
-  // }
+  get content() {
+    return this.task.content;
+  }
 
   // get projectId() {
   //   return this.task.project_id;
