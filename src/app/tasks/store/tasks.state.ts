@@ -26,11 +26,17 @@ export const SEARCH_DEBOUNCE = new InjectionToken<number>('Search Debounce');
 //   'Search Scheduler'
 // )
 // initial state
-@State<Task[]>({
-  name: 'tasks',
-    defaults: []
-})
+export class TaskStateModel {
+  tasks: Task[];
+}
 
+@State<TaskStateModel>({
+  name: 'tasks',
+  defaults: {
+    tasks: [],
+  }
+})
+//
 @Injectable()
 export class TaskState {
 
@@ -39,34 +45,33 @@ export class TaskState {
     private taskService: TaskService,
     private actions$: Actions) { }
 
-   @Selector()
-  static Tasks(state: StateContext<Task[]>) {
-    return state;
+  @Selector()
+  static Tasks(ctx: TaskStateModel) {
+    return ctx.tasks;
   }
 
+  ngxsOnInit(sc: StateContext<TaskStateModel>) {}
+
   @Action(LoadTasks)
-    loadTasks({getState, setState}: StateContext<Task[]>, {payload}: LoadTasks) {
+    loadTasks({getState, setState}: StateContext<TaskStateModel>, {payload}: LoadTasks) {
     const taskState = getState();
     const tasks = payload.map(t => t);
-    setState(tasks);
+    setState({...taskState, tasks});
   }
 
   @Action(LoadTask)
-  loadTask({getState, setState}: StateContext<Task[]>, {payload}: LoadTask) {
-    let tasks = getState();
-    tasks = tasks.filter(
-      (t: Task) => t.id === payload.id ? payload : t
-    );
-    setState(tasks);
+  loadTask({getState, setState}: StateContext<TaskStateModel>, {payload}: LoadTask) {
+    const taskState = getState();
+    const tasks = taskState.tasks.filter((t: Task) => t.id === payload.id ? payload : t);
+    setState({...taskState, tasks});
   }
 
   @Action(SelectTask)
-  selectTask({getState, setState, patchState}: StateContext<Task[]>, {payload}: SelectTask) {
-    let tasks = getState();
+  selectTask({getState, setState, patchState}: StateContext<TaskStateModel>, {payload}: SelectTask) {
+    const taskState = getState();
     // tasks = [];
-    tasks = tasks.filter(
-      (t: Task) => payload === t.id.toString());
-    setState(tasks);
+    const tasks = taskState.tasks.filter((t: Task) => payload === t.id.toString());
+    setState({...taskState, tasks});
   }
 
   @Action(task.Search)

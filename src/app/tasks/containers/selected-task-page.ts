@@ -61,7 +61,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
   private httpSubscription: Subscription;
 
   @Select(TaskState) TaskState$: Observable<any>;
-  @Select(CollectionState) CollectionState$: Observable<any>;
+  // @Select(CollectionState) CollectionState$: Observable<any>;
   @Select(TaskState.Tasks) task$: Observable<Task>;
 
   timeRemaining: any;
@@ -73,7 +73,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
   pomos;
   pomo;
 
-
+//
 
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
@@ -86,7 +86,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
       // .take(1),
       // flatMap(({ payload }) => payload = this.task);
       // subscribe(({ payload }) => payload = this.task);
-      console.log('task', this.task);
+      // console.log('task', this.task);
       // this.selectedTaskId$.pipe(
       //   take(1),
       // this.store.dispatch(new SelectTask(route.snapshot.params.id.toString())).subscribe();
@@ -94,37 +94,32 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
       //   take(1),
       //   flatMap(task => this.task)
       // );
-      console.log('router', route.snapshot.params.id);
-
+      // console.log('router', route.snapshot.params.id);
       //   withLatestFrom(this.selectedTaskId$ = this.selectedTaskId)
       //   // withLatestFrom(this.tasks$),
       // ).subscribe(data => console.log('selected taskid', data));
-
-      // this.task$.pipe(
-      //   take(1),
-      //   withLatestFrom(this.task$)).subscribe(data =>
-      //     this.task = data);
+      this.store.dispatch(new SelectTask(this.route.snapshot.params.id))
+      .subscribe(t => {
+        if (t) { console.log(t); } });
+    //  this.task$.map(tasks => task => {
+    //    return this.task = {
+    //      id: task.id,
+    //      content: task.content,
+    //      project_id: task.project_id
+    //    };
+    //  });
+    //   this.task$.pipe(
+    //     take(1),
+    //     withLatestFrom(this.task$)).subscribe(data =>
+    //       this.task = data);
       this.pomoTimerService.timerSource$ = this.timerSource;
     }
 
   ngOnInit(): void {
-    this.store.dispatch(new SelectTask(this.route.snapshot.params.id))
-     .subscribe(t => {
-       if (t) { console.log(t); } });
-    this.task$.map(tasks => task => {
-      return this.task = {
-        id: task.id,
-        content: task.content,
-        project_id: task.project_id
-      };
-    });
-    console.log('where is the TAKS', this.task);
-    // this.task$
-    //    .pipe(
-    //      take(1),
-    //      withLatestFrom(this.task$),
-    //      map(task => console.log('task ob', task))
-    //    );
+    this.task$.pipe(
+         take(1),
+         withLatestFrom(this.task$),
+         map(task => this.task));
    this.pomoTimerService.pomoCount$ = 1;
    this.pomoTimerService.pomosCompleted$ = 0;
    this.pomoTimerService.pomosCycleCompleted$ = 0;
@@ -153,10 +148,9 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   isTaskInCollection(): boolean {
-    // const selectedTask = this.store.selectSnapshot(TaskState.Tasks);
-    // const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
-    // return collectionIds.indexOf(`${this.task.id}`) > -1;
-    return false;
+    const selectedTask = this.store.selectSnapshot(TaskState.Tasks);
+    const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
+    return collectionIds.indexOf(this.route.snapshot.params.id.toString()) > -1;
   }
 
   addToCollection(task: Task) {

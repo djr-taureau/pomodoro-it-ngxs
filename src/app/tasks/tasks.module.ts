@@ -16,6 +16,7 @@ import { NgxsModule } from '@ngxs/store';
 
 @NgModule({
   imports: [
+    NgxsModule.forFeature(AppState),
     CommonModule,
     MaterialModule,
     MatDialogModule,
@@ -30,7 +31,6 @@ import { NgxsModule } from '@ngxs/store';
       },
       { path: '', component: CollectionPageComponent },
     ]),
-    NgxsModule.forFeature(AppState),
   ],
   declarations: [
     FindTaskPageComponent,

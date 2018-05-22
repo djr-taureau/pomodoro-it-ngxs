@@ -47,11 +47,11 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
     // RouterModule.forRoot(routes, { useHash: true }),
     RouterModule.forRoot(routes),
     NgxsModule.forRoot([]),
+    CoreModule,
+    AuthModule,
     NgxsRouterPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot({maxAge: 5}),
     NgxsLoggerPluginModule.forRoot(),
-    CoreModule,
-    AuthModule,
   ],
   providers: [
     // { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },

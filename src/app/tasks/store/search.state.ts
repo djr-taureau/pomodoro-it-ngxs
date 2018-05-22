@@ -62,6 +62,7 @@ export class SearchState {
   static Error(state: SearchStateModel) {
     return state.error;
   }
+  ngxsOnInit(sc: StateContext<SearchStateModel>) {}
 
   @Action(task.Search)
   search(ctxSearch: StateContext<SearchStateModel>, action: task.Search) {

@@ -1,3 +1,4 @@
+
 import { CheckSession } from './../../auth/auth.actions';
 import { Observable } from 'rxjs/Observable';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
@@ -21,19 +22,21 @@ import { AuthState } from '../../auth/auth.state';
             My Task Collection
       </bc-nav-item>
       <bc-nav-item (navigate)="closeSidenav()"
-        *ngIf="loggedIn$ | async" routerLink="/"
+        *ngIf="loggedIn$ | async" routerLink="/find/tasks"
         icon="search" hint="Find your next task!">
             Find Tasks
       </bc-nav-item>
       <bc-nav-item (navigate)="closeSidenav()"
-        *ngIf="loggedIn$ | async" routerLink="/dash"
+        *ngIf="loggedIn$ | async" routerLink="/tasks"
         icon="alarm" hint="View your Dashboard">
             View My Task Pomodoro Dashboard
       </bc-nav-item>
-        <bc-nav-item (navigate)="closeSidenav()" *ngIf="!(loggedIn$ | async)">
+        <bc-nav-item (navigate)="closeSidenav()"
+          *ngIf="!(loggedIn$ | async)" routerLink="/auth/login">
           Sign In
         </bc-nav-item>
-        <bc-nav-item (navigate)="logout()" *ngIf="loggedIn$ | async">
+        <bc-nav-item (navigate)="logout()"
+          *ngIf="loggedIn$ | async" routerLink="/SignOut">
             Sign Out
         </bc-nav-item>
       </bc-sidenav>

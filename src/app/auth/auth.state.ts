@@ -121,8 +121,9 @@ export class AuthState implements NgxsOnInit {
 
   @Action(LoginSuccess)
   onLoginSuccess(sc: StateContext<AuthStateModel>) {
+    sc.patchState({loggedIn: true});
     console.log('onLoginSuccess, navigating to /find');
-    sc.dispatch(new Navigate(['/tasks/find']));
+    // sc.dispatch(new Navigate(['/tasks/find']));
     this.ref.tick();
   }
 
@@ -133,13 +134,13 @@ export class AuthState implements NgxsOnInit {
     this.ref.tick();
   }
 
-  @Action(LoginSuccess)
-  setUserStateOnSuccess(sc: StateContext<AuthStateModel>, event: LoginSuccess) {
-    console.log('setUserStateOnSuccess');
-    // sc.setState({
-    //   user: userInfo
-    // });
-  }
+  // @Action(LoginSuccess)
+  // setUserStateOnSuccess(sc: StateContext<AuthStateModel>, event: LoginSuccess) {
+  //   console.log('setUserStateOnSuccess');
+  //   // sc.setState({
+  //   //   user: userInfo
+  //   // });
+  // }
 
   @Action([LoginFailed, LogoutSuccess])
   setUserStateOnFailure(sc: StateContext<AuthStateModel>) {

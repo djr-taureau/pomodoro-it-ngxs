@@ -21,6 +21,7 @@ export class CollectionStateModel {
   loaded: boolean;
   loading: boolean;
   collectionIds: string[];
+  collection: Task[];
 }
 @State<CollectionStateModel>({
   name: 'collection',
@@ -28,6 +29,7 @@ export class CollectionStateModel {
     loaded: true,
     loading: false,
     collectionIds: [],
+    collection: []
   }
 })
 
@@ -38,8 +40,11 @@ export class CollectionState {
     private taskService: TaskService,
     private actions$: Actions) { }
 
+
+
+
 @Selector()
-static Loaded(ctx: CollectionStateModel) {
+static Loaded(ctx: StateContext<CollectionStateModel>) {
   return ctx.loaded;
 }
 
@@ -53,9 +58,16 @@ static Loaded(ctx: CollectionStateModel) {
   return ctx.collectionIds;
 }
 
+@Selector()
+  static Collection(ctx: CollectionStateModel) {
+  return ctx.collection;
+}
+
+ngxsOnInit(sc: StateContext<CollectionStateModel>) {}
+
 @Action(collectionActions.Load)
 load({ setState, dispatch }: StateContext<CollectionStateModel>) {
-  setState({collectionIds: [], loading: true, loaded: false});
+  setState({collectionIds: [], collection: [], loading: true, loaded: false});
    return this.taskService
      .getTasks$()
      .pipe(
@@ -76,7 +88,7 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
 
  @Action(collectionActions.LoadSuccess)
   loadSuccess({ setState }: StateContext<CollectionStateModel>, { payload }: collectionActions.LoadSuccess ) {
-    setState({collectionIds: payload.map(task => task.id), loaded: true, loading: false});
+    setState({collectionIds: payload.map(task => task.id), collection: payload.map(task => task), loaded: true, loading: false});
  }
 
  @Action(collectionActions.LoadFail)
@@ -93,11 +105,11 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
    return Observable.fromPromise(this.taskService.addTask(payload));
   }
 
-  // @Action(collectionActions.RemoveTask)
-  // removeTask(
-  //   { patchState, dispatch }: StateContext<CollectionStateModel>,
-  //   { payload }
-  // ) {
+  @Action(collectionActions.RemoveTask)
+  removeTask(
+    { patchState, dispatch }: StateContext<CollectionStateModel>,
+    { payload }
+  ) {
   // patchState({ loading: true });
   //  return Observable.fromPromise(this.taskService.removeTask(payload));
   // }

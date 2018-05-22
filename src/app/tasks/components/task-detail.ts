@@ -18,7 +18,7 @@ import { switchMap, scan, takeWhile, startWith, withLatestFrom,
     <div class="mdl-cell mdl-cell--6-col">
     <mat-card *ngIf="task">
       <mat-card-title-group>
-        <mat-card-title color="primary">{{ content }}</mat-card-title>
+        <mat-card-title color="primary">{{ task.content }}</mat-card-title>
         <mat-card-title>{{ pomoTitle }} - {{ timerService.timerSource$ | async | minutesSeconds }}</mat-card-title>
       </mat-card-title-group>
       <mat-card-content>
@@ -111,12 +111,7 @@ export class TaskDetailComponent implements AfterViewInit {
   @Output() resumeClicked = new EventEmitter();
 
 
-  constructor(public timerService: PomoTimerService, element: ElementRef) {
-    console.log('is there a task', this.task);
-    this.task$.pipe(
-      take(1),
-      withLatestFrom(this.task$)).subscribe(data => console.log(data));
-  }
+  constructor(public timerService: PomoTimerService, element: ElementRef) {}
 
   @ViewChild('resume', {read: ElementRef}) resumeButton;
   @ViewChild('pause', {read: ElementRef}) pauseButton;

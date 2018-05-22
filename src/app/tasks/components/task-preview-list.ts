@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Task } from '../models/task';
 import { Observable } from 'rxjs/Observable';
 import { Store, Select, ofAction, Actions } from '@ngxs/store';
-import { TaskState } from '../store';
+import { TaskState, CollectionState } from '../store';
 
 
 @Component({

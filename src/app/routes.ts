@@ -5,11 +5,11 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 // import { NotFoundPageComponent } from './core/containers/not-found-page';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/', pathMatch: 'full' },
+  { path: '', redirectTo: '/tasks', pathMatch: 'full' },
   {
     path: 'tasks',
     loadChildren: './tasks/tasks.module#TasksModule',
-    // canActivate: [AuthGuard],
+    // canActivate: [AuthenticatedGuard],
   },
    { path: '**', component: NotFoundPageComponent },
 ];
