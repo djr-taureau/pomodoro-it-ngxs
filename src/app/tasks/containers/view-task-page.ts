@@ -20,18 +20,10 @@ import * as pomo from '../store/pomos.state';
 
 export class ViewTaskPageComponent implements OnDestroy {
   actionsSubscription: Subscription;
-  @Select(TaskState) taskState$: Observable<any>;
-  @Select(CollectionState) collectionState$: Observable<any>;
-  @Select(TaskState.SelectedTaskId) selectedTaskID: any;
+
   constructor(private store: Store, private route: ActivatedRoute) {
     this.actionsSubscription = route.params
     .pipe(map(params => this.store.dispatch(new SelectTask(params.id)))).subscribe();
-  }
-
-  isTaskInCollection() {
-    const selectedTask = this.store.selectSnapshot(TaskState.SelectedTaskId);
-    const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
-    return collectionIds.indexOf(this.selectedTaskID) > -1;
   }
 
   ngOnDestroy() {

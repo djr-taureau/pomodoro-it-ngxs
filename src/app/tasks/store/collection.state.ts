@@ -1,4 +1,3 @@
-import { TaskStateModel } from './tasks.state';
 import { AUTH_ROUTES } from './../../auth/auth.module';
 import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
 import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
@@ -40,18 +39,18 @@ export class CollectionState {
     private actions$: Actions) { }
 
 @Selector()
-static Loaded(state: CollectionStateModel) {
-  return state.loaded;
+static Loaded(ctx: CollectionStateModel) {
+  return ctx.loaded;
 }
 
 @Selector()
-  static Loading(state: CollectionStateModel) {
-    return state.loading;
+  static Loading(ctx: CollectionStateModel) {
+    return ctx.loading;
   }
 
 @Selector()
-  static CollectionIds(state: CollectionStateModel) {
-  return state.collectionIds;
+  static CollectionIds(ctx: CollectionStateModel) {
+  return ctx.collectionIds;
 }
 
 @Action(collectionActions.Load)
@@ -99,27 +98,11 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
   //   { patchState, dispatch }: StateContext<CollectionStateModel>,
   //   { payload }
   // ) {
-  // patchState({ loading: false });
-  //  return Observable.fromPromise(this.taskService.removeTask$(payload));
+  // patchState({ loading: true });
+  //  return Observable.fromPromise(this.taskService.removeTask(payload));
   // }
 
-  // .map((action: userActions.GoogleLogin) => action.payload)
-  // .switchMap(payload => {
-  //     return Observable.fromPromise( this.googleLogin() );
-  // })
-  // .map( credential => {
-  //     // successful login
-  //     return new userActions.GetUser();
-  // })
-  // .catch(err => {
-  //     return Observable.of(new userActions.AuthError({error: err.message}));
-  // });
 
-//         // ofActionDispatched(collection.AddTask),
-//         // //map((task: string) => payload),
-//         // .switchMap(task => {
-//         //   const ref = this.afs.doc<Task>(`tasks/${task.selec}`)
-//         //   return Observable.fromPromise( ref.set(task)
 
   // @Action(collectionActions.AddTaskSuccess)
   //   addTaskSuccess({ setState }: StateContext<CollectionStateModel>, { payload }: collectionActions.AddTaskSuccess ) {

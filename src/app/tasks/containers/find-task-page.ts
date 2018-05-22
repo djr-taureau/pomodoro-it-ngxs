@@ -1,4 +1,3 @@
-import { TaskStateModel } from './../store/tasks.state';
 import { TaskPreviewListComponent } from './../components/task-preview-list';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
@@ -41,13 +40,9 @@ export class FindTaskPageComponent implements OnInit, OnDestroy {
   @Select(SearchState.Loading) loading$: Observable<boolean>;
   @Select(SearchState.Error) error$: Observable<string>;
   @Select(SearchState.Query) searchQuery$: Observable<string>;
-  // @Select(CountState) state$: Observable<any>;
-  // @Select(CountState.Counts) counts$: Observable<any>;
-  // @Select(CountState.LastCount) lastCount$: Observable<any>;
 
   constructor(private store: Store, private actions$: Actions,
-              private todoist: TodoistTasksService,
-              private chr: ChangeDetectorRef) {
+              private todoist: TodoistTasksService) {
   }
 
   search(query: string) {
@@ -56,11 +51,11 @@ export class FindTaskPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    //
+    // placeholder
   }
 
   ngOnDestroy() {
-    //
+    // placeholder
   }
 }
 

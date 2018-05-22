@@ -1,6 +1,7 @@
 import { AUTH_ROUTES } from './../../auth/auth.module';
 import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
-import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Actions, ofAction,
+  ofActionDispatched, NgxsOnInit } from '@ngxs/store';
 import { Subject } from 'rxjs/Subject';
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
@@ -11,31 +12,23 @@ import { TodoistTasksService } from '../../services/todoist-tasks';
 import { TaskService } from '../../services/task-service';
 import { AuthService } from '../../auth/services/auth.service';
 import { asapScheduler, of, Observable } from 'rxjs';
-import { SelectTask, LoadTask } from './task.actions';
-
+import { SelectTask, LoadTask, LoadTasks } from './task.actions';
 
 import {
   catchError, map, switchMap, toArray,
   mergeMap, debounceTime, takeUntil, skip, tap
 } from 'rxjs/operators';
+
 import { isThisTypeNode } from 'typescript';
 
 export const SEARCH_DEBOUNCE = new InjectionToken<number>('Search Debounce');
 // export const SEARCH_SCHEDULER = new InjectionToken<Scheduler>(
 //   'Search Scheduler'
-// );
-export class TaskStateModel {
-  selectedTaskId: string;
-  tasks: Task[];
-}
-
+// )
 // initial state
-@State<TaskStateModel>({
+@State<Task[]>({
   name: 'tasks',
-  defaults: {
-    selectedTaskId: null,
-    tasks: []
-  }
+    defaults: []
 })
 
 @Injectable()
@@ -46,78 +39,29 @@ export class TaskState {
     private taskService: TaskService,
     private actions$: Actions) { }
 
-
-  @Selector()
-  static SelectedTaskId(state: TaskStateModel) {
-    return state.selectedTaskId;
+   @Selector()
+  static Tasks(state: StateContext<Task[]>) {
+    return state;
   }
 
-  // @Selector()
-  // static SelectedTask(state: TaskStateModel): Task {
-  //   return state.tasks.find(
-  //     (task: Task) => task.id === state.selectedTaskId
-  //   );
-  // }
-
-  @Selector()
-  static Tasks(state: TaskStateModel) {
-    return state.tasks;
+  @Action(LoadTasks)
+    loadTasks({getState, setState}: StateContext<Task[]>, {payload}: LoadTasks) {
+    const taskState = getState();
+    const tasks = payload.map(t => t);
+    setState(tasks);
   }
 
-  @Action(task.LoadTasks)
-  async loadTasks(ctxTask: StateContext<TaskStateModel>, action: task.LoadTasks) {
-    const taskState = ctxTask.getState();
-    ctxTask.setState({
-      ...taskState,
-      selectedTaskId: null,
-      tasks: action.payload.map(tasks => tasks)
-    });
+  @Action(LoadTask)
+  loadTask({getState, setState}: StateContext<Task[]>, {payload}: LoadTask) {
+    let tasks = getState();
+    tasks = tasks.map(
+      (t: Task) => t.id === payload.id ? payload : t
+    );
+    setState(tasks);
   }
-
-  @Action(task.LoadTask)
-  async loadTask(ctxTask: StateContext<TaskStateModel>, action: task.LoadTask) {
-    const taskState = ctxTask.getState();
-    ctxTask.patchState({
-      ...taskState,
-      tasks: taskState.tasks.filter(a => a.id = taskState.selectedTaskId)
-    });
-  }
-
-  // @Action(LoadTask)
-  // loadTask({getState, patchState}: StateContext<TaskStateModel>, { payload}: LoadTask ) {
-  //   patchState({
-  //     tasks: getState().tasks.filter(a => a.id = TaskState.SelectedTaskId )
-  //   });
-  // }
-
-  // @Action(task.LoadTask)
-  // loadTask({ getState, patchState}: StateContext<TaskStateModel>, { payload }: task.LoadTask) {
-  //   const state = getState();
-  //   patchState({
-  //     tasks: [...state.tasks, payload]
-  //   });
-  // }
-
-  @Action(task.SelectTask)
-  selectTask(ctxTask: StateContext<TaskStateModel>, action: task.SelectTask) {
-    const taskState = ctxTask.getState();
-    ctxTask.patchState({
-      selectedTaskId: action.payload,
-      tasks: taskState.tasks.filter(a => a.id = taskState.selectedTaskId)
-    });
-  }
-
-  // @Action(LoadTask)
-  // loadTask({getState, patchState}: StateContext<TaskStateModel>, { payload}: LoadTask ) {
-  //   patchState({
-  //     tasks: getState().tasks.filter(a => a.id = TaskState.SelectedTaskId )
-  //   });
-  // }
 
   @Action(task.Search)
-  search(
-    { patchState, dispatch }: StateContext<TaskStateModel>,
-    { payload }
+  search({ patchState, dispatch }: StateContext<Task[]>, { payload }: task.Search
   ) {
     patchState({});
     const nextSearch$ = this.actions$.pipe(ofActionDispatched(task.Search), skip(1));

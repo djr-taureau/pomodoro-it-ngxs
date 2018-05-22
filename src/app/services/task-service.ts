@@ -24,6 +24,9 @@ export class TaskService {
     return this.fireService.add('tasks', task);
   }
 
+  removeTask(task: Task) {
+    // return this.fireService.delete(task);
+  }
 
   addPomo(pomo: Pomo) {
     const ref = this.afs.doc<Pomo>(`pomos/${pomo.id}`);

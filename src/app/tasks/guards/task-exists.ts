@@ -21,7 +21,6 @@ export class TaskExistsGuard implements CanActivate {
   @Select(TaskState) taskState$: Observable<any>;
   @Select(SearchState) searchState$: Observable<any>;
   @Select(TaskState.Tasks) tasks$: Observable<Task[]>;
-  @Select(TaskState.SelectedTaskId) selectedTaskId$: Observable<any>;
   @Select(CollectionState.CollectionIds) ids$: Observable<any>;
   @Select(CollectionState.Loaded) loaded$: Observable<boolean>;
 

@@ -4,7 +4,7 @@ import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispa
 import { Subject } from 'rxjs/Subject';
 import { Task } from '../models/task';
 import * as TaskActions from '../store/task.actions';
-import { TaskStateModel } from '../store/tasks.state';
+import { TaskState } from '../store/tasks.state';
 import { Pomo } from '../models/pomo';
 import * as task from '../store/task.actions';
 import { TodoistTasksService } from '../../services/todoist-tasks';
@@ -16,7 +16,6 @@ import {
   mergeMap, debounceTime, takeUntil, skip, tap
 } from 'rxjs/operators';
 import { query } from '@angular/animations';
-import { TaskState } from '.';
 //
 export class SearchStateModel {
   searchIds: string[];

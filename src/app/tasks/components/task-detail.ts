@@ -5,10 +5,12 @@ import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, ViewChil
 import { Task } from '../models/task';
 import { PomoTimerService } from '../../services/pomo-timer';
 import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operators';
 import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
+import { Store, Select } from '@ngxs/store';
+import { TaskState, SearchState, CollectionState } from '../store';
+import { switchMap, scan, takeWhile, startWith, withLatestFrom,
+  mapTo, map, filter, last, tap, take, mergeMap } from 'rxjs/operators';
 @Component({
   selector: 'bc-task-detail',
   template: `
@@ -93,12 +95,17 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   ],
 })
 export class TaskDetailComponent implements AfterViewInit {
-
+  // ngxs state selectors
+  @Select(TaskState) TaskState$: Observable<any>;
+  @Select(CollectionState) CollectionState$: Observable<any>;
+  @Select(TaskState.Tasks) task$: Observable<any>;
+  // component inputs
   @Input() task: Task;
   @Input() inCollection: boolean;
   @Input() pomoCount: number;
   @Input() pomoTitle: number;
   @Input() pomosCompleted: number;
+  // component outputs
   @Output() add = new EventEmitter<Task>();
   @Output() remove = new EventEmitter<Task>();
   @Output() resumeClicked = new EventEmitter();
@@ -106,6 +113,10 @@ export class TaskDetailComponent implements AfterViewInit {
 
   constructor(public timerService: PomoTimerService, element: ElementRef) {
     console.log('is there a task', this.task);
+    // this.task$.pipe(
+    //   take(1),
+    //   withLatestFrom(this.task$)).subscribe(data =>
+    //     this.task = data);
   }
 
   @ViewChild('resume', {read: ElementRef}) resumeButton;
@@ -122,23 +133,23 @@ export class TaskDetailComponent implements AfterViewInit {
     this.timerService.timerSource$.next(this.timerService.countdownSeconds$);
   }
 
-  get id() {
-    console.log('wtf', this.task.id);
-    console.log(this.inCollection);
-    return this.task.id;
-  }
+  // get id() {
+  //   console.log('wtf', this.task.id);
+  //   console.log(this.inCollection);
+  //   return this.task.id;
+  // }
 
-  get content() {
-    return this.task.content;
-  }
+  // get content() {
+  //   return this.task.content;
+  // }
 
-  get projectId() {
-    return this.task.project_id;
-  }
+  // get projectId() {
+  //   return this.task.project_id;
+  // }
 
-  get comment_count() {
-    return this.task.comment_count;
-  }
+  // get comment_count() {
+  //   return this.task.comment_count;
+  // }
 
   // get thumbnail() {
   //   return false;

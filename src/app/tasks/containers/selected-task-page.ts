@@ -1,5 +1,5 @@
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { TaskStateModel } from './../store/tasks.state';
+
 import { Component, ViewEncapsulation,
         OnInit, OnDestroy, AfterViewInit,
         ChangeDetectionStrategy, Output, Input,
@@ -16,7 +16,7 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { merge } from 'rxjs/observable/merge';
 import { empty } from 'rxjs/observable/empty';
 import { switchMap, scan, takeWhile, startWith, withLatestFrom,
-  mapTo, map, filter, last, tap } from 'rxjs/operators';
+  mapTo, map, filter, last, tap, take, mergeMap } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { Subscription } from 'rxjs/Subscription';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
@@ -55,39 +55,42 @@ import { TaskState, SearchState, CollectionState } from '../store';
 
 })
 
-export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
+export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestroy {
+  // TODO
+  private paramsSubscription: Subscription;
+  private httpSubscription: Subscription;
 
   @Select(TaskState) TaskState$: Observable<any>;
   @Select(CollectionState) CollectionState$: Observable<any>;
-  @Select(TaskState.Tasks) tasks$: Observable<any>;
-  @Select(TaskState.SelectedTaskId) selectedTaskId: any;
-
-  task$: Observable<Task>;
+  @Select(TaskState.Tasks) task$: Observable<any>;
 
   timeRemaining: any;
   timerSource = new BehaviorSubject(null);
   pomoDialogRef: MatDialogRef<PomoDialogComponent>;
   dialogResult: any;
   dialogRef;
+  task;
   pomos;
   pomo;
-  taskIds;
-  task: Task;
+
+
 
   constructor(private dialog: MatDialog,
               public pomoTimerService: PomoTimerService,
               private store: Store,
               private route: ActivatedRoute) {
       // TODO THIS one LINE OF CODE gave me all of my problems
-      this.store.dispatch(new LoadTask(this.selectedTaskId)).subscribe(data => console.log(data));
+      // this.selectedTaskId$.pipe(
+      //   take(1),
+      //   mergeMap(id => this.store.dispatch(new LoadTask(id))),
+      //   withLatestFrom(this.selectedTaskId$ = this.selectedTaskId)
+      //   // withLatestFrom(this.tasks$),
+      // ).subscribe(data => console.log('selected taskid', data));
+
       this.pomoTimerService.timerSource$ = this.timerSource;
     }
 
   ngOnInit(): void {
-   // filter(tasks => tasks[taskState.selectedTaskId])
-   // const taskId = this.route.snapshot.paramMap.get('id');
-   // this.store.dispatch(new LoadTask(taskId));
-
    this.pomoTimerService.pomoCount$ = 1;
    this.pomoTimerService.pomosCompleted$ = 0;
    this.pomoTimerService.pomosCycleCompleted$ = 0;
@@ -105,16 +108,21 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
         }
       }
     });
-    // this.store.dispatch(new LoadTask(this.selectedTaskId));
   }
   ngAfterViewInit() {
 
   }
 
+  ngOnDestroy() {
+    // this.paramsSubscription.unsubscribe();
+    // this.httpSubscription.unsubscribe();
+  }
+
   isTaskInCollection(): boolean {
-    const selectedTask = this.store.selectSnapshot(TaskState.SelectedTaskId);
-    const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
-    return collectionIds.indexOf(this.selectedTaskId) > -1;
+    // const selectedTask = this.store.selectSnapshot(TaskState.Tasks);
+    // const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
+    // return collectionIds.indexOf(`${this.task.id}`) > -1;
+    return false;
   }
 
   addToCollection(task: Task) {
@@ -213,12 +221,9 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit {
 
 export class PomoDialogComponent implements OnInit {
 
-  @Select(TaskState) taskState$: Observable<any>;
-  @Select(SearchState) searchState$: Observable<any>;
-  @Select(CollectionState) collectionState$: Observable<any>;
-  @Select(TaskState.Tasks) tasks$: Observable<Task[]>;
   @Input() task: Task;
   @Output() savePomo = new EventEmitter<Pomo>();
+
   form: FormGroup;
   content;
   id;
