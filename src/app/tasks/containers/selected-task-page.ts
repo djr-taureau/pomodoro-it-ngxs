@@ -61,7 +61,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
   private httpSubscription: Subscription;
 
   @Select(TaskState) TaskState$: Observable<any>;
-  // @Select(CollectionState) CollectionState$: Observable<any>;
+  @Select(CollectionState) collection$: Observable<Task>;
   @Select(TaskState.Tasks) task$: Observable<Task>;
 
   timeRemaining: any;

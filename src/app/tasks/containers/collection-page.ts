@@ -14,7 +14,7 @@ import { AddTask, RemoveTask, Load } from '../store/collection.actions';
       <mat-card-title>My Pomodo-it Tasks</mat-card-title>
     </mat-card>
 
-    <bc-task-preview-list [tasks]="tasks$"></bc-task-preview-list>
+    <bc-task-preview-list [tasks]="collection$ | async "></bc-task-preview-list>
   `,
   styles: [
     `
@@ -27,7 +27,7 @@ import { AddTask, RemoveTask, Load } from '../store/collection.actions';
 })
 export class CollectionPageComponent implements OnInit {
 
-  @Select(CollectionState) tasks$: Observable<Task[]>;
+  @Select(CollectionState) collection$: Observable<Task[]>;
 
   constructor(private store: Store) {
   }
