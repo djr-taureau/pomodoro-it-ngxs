@@ -149,8 +149,9 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
 
   isTaskInCollection(): boolean {
     const selectedTask = this.store.selectSnapshot(TaskState.Tasks);
-    const collectionIds = this.store.selectSnapshot(CollectionState.CollectionIds);
-    return collectionIds.indexOf(this.route.snapshot.params.id.toString()) > -1;
+    const collection = this.store.selectSnapshot(CollectionState.Collection);
+    // return collection.indexOf(this.route.snapshot.params.id.toString()) > -1;
+    return false;
   }
 
   addToCollection(task: Task) {

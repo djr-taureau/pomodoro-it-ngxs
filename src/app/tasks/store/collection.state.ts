@@ -17,14 +17,14 @@ import { AddTaskSuccess, AddTaskFail, LoadSuccess, Load } from './collection.act
 export class CollectionStateModel {
   loaded: boolean;
   loading: boolean;
-  collectionIds: string[];
+  collection: Task[];
 }
 @State<CollectionStateModel>({
   name: 'collection',
   defaults: {
     loaded: true,
     loading: false,
-    collectionIds: [],
+    collection: [],
   }
 })
 
@@ -47,8 +47,8 @@ static Loaded(ctx: CollectionStateModel) {
   }
 
 @Selector()
-  static CollectionIds(ctx: CollectionStateModel) {
-  return ctx.collectionIds;
+  static Collection(ctx: CollectionStateModel) {
+  return ctx.collection;
 }
 
 ngxsOnInit(sc: StateContext<CollectionStateModel>) {
@@ -57,7 +57,7 @@ ngxsOnInit(sc: StateContext<CollectionStateModel>) {
 
 @Action(Load)
 load({ setState, dispatch }: StateContext<CollectionStateModel>) {
-  setState({collectionIds: [], loading: true, loaded: false});
+  setState({collection: [], loading: true, loaded: false});
    return this.taskService
      .getTasks$()
      .pipe(
@@ -102,7 +102,7 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
 
  @Action(collectionActions.LoadSuccess)
   loadSuccess({ setState }: StateContext<CollectionStateModel>, { payload }: collectionActions.LoadSuccess ) {
-    setState({collectionIds: payload.map(task => task.id), loaded: true, loading: false});
+    setState({collection: payload.map(task => task), loaded: true, loading: false});
  }
 
  @Action(collectionActions.LoadFail)
