@@ -12,7 +12,7 @@ import { TodoistTasksService } from '../../services/todoist-tasks';
 import { TaskService } from '../../services/task-service';
 import { AuthService } from '../../auth/services/auth.service';
 import { asapScheduler, of, Observable } from 'rxjs';
-import { SelectTask, LoadTask, LoadTasks } from './task.actions';
+import { SelectTask, LoadTask, LoadTasks, Search } from './task.actions';
 
 import {
   catchError, map, switchMap, toArray,
@@ -38,7 +38,7 @@ export class TaskStateModel {
 })
 //
 @Injectable()
-export class TaskState {
+export class TaskState implements NgxsOnInit {
 
   constructor(private todoist: TodoistTasksService,
     private auth: AuthService,
@@ -51,6 +51,8 @@ export class TaskState {
   }
 
   ngxsOnInit(sc: StateContext<TaskStateModel>) {}
+    //sc.dispatch(new LoadCatgories());
+
 
   @Action(LoadTasks)
     loadTasks({getState, setState}: StateContext<TaskStateModel>, {payload}: LoadTasks) {
@@ -62,7 +64,8 @@ export class TaskState {
   @Action(LoadTask)
   loadTask({getState, setState}: StateContext<TaskStateModel>, {payload}: LoadTask) {
     const taskState = getState();
-    const tasks = taskState.tasks.filter((t: Task) => t.id === payload.id ? payload : t);
+    const tasks = taskState.tasks.filter(
+      (t: Task) => t.id.toString() === payload.id ? payload : t);
     setState({...taskState, tasks});
   }
 
@@ -74,8 +77,8 @@ export class TaskState {
     setState({...taskState, tasks});
   }
 
-  @Action(task.Search)
-  search({ patchState, dispatch }: StateContext<Task[]>, { payload }: task.Search
+  @Action(Search)
+  search({ patchState, dispatch }: StateContext<Task[]>, { payload }: Search
   ) {
     patchState({});
     const nextSearch$ = this.actions$.pipe(ofActionDispatched(task.Search), skip(1));

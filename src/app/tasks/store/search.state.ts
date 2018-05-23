@@ -1,6 +1,6 @@
 import { AUTH_ROUTES } from './../../auth/auth.module';
 import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
-import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
+import { NgxsOnInit, State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
 import { Subject } from 'rxjs/Subject';
 import { Task } from '../models/task';
 import * as TaskActions from '../store/task.actions';
@@ -36,7 +36,7 @@ export class SearchStateModel {
 })
 
 @Injectable()
-export class SearchState {
+export class SearchState implements NgxsOnInit {
   constructor(private todoist: TodoistTasksService,
     private auth: AuthService,
     private taskService: TaskService,

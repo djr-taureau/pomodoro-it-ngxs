@@ -22,7 +22,7 @@ import { AuthState } from '../../auth/auth.state';
             My Task Collection
       </bc-nav-item>
       <bc-nav-item (navigate)="closeSidenav()"
-        *ngIf="loggedIn$ | async" routerLink="/find/tasks"
+        *ngIf="loggedIn$ | async" routerLink="/tasks/find"
         icon="search" hint="Find your next task!">
             Find Tasks
       </bc-nav-item>

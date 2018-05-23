@@ -37,7 +37,7 @@ import { TaskState, SearchState, CollectionState } from '../store';
   template: `
   <div class="mdl-grid">
   <bc-task-detail
-    [task]="task$ | async"
+    [task]="task$"
     [inCollection]="this.isTaskInCollection()"
     [pomoTitle]="this.pomoTimerService.pomoTitle$"
     [pomoCount]="this.pomoTimerService.pomoCount$"
@@ -98,7 +98,7 @@ export class SelectedTaskPageComponent implements OnInit, AfterViewInit, OnDestr
       //   withLatestFrom(this.selectedTaskId$ = this.selectedTaskId)
       //   // withLatestFrom(this.tasks$),
       // ).subscribe(data => console.log('selected taskid', data));
-      this.store.dispatch(new SelectTask(this.route.snapshot.params.id))
+      this.store.dispatch(new LoadTask(this.route.snapshot.params.id))
       .subscribe(t => {
         if (t) { console.log(t); } });
     //  this.task$.map(tasks => task => {

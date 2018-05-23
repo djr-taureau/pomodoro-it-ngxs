@@ -123,7 +123,7 @@ export class AuthState implements NgxsOnInit {
   onLoginSuccess(sc: StateContext<AuthStateModel>) {
     sc.patchState({loggedIn: true});
     console.log('onLoginSuccess, navigating to /find');
-    // sc.dispatch(new Navigate(['/tasks/find']));
+    sc.dispatch(new Navigate(['/tasks/find']));
     this.ref.tick();
   }
 

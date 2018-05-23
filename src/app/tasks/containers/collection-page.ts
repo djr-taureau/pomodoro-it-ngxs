@@ -1,11 +1,10 @@
-import { CollectionState } from '../store';
-import * as collection from '../store/collection.actions';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
 import { Observable } from 'rxjs/Observable';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { Task } from '../models/task';
-
+import { CollectionState } from '../store/collection.state';
+import { AddTask, RemoveTask, Load } from '../store/collection.actions';
 
 @Component({
   selector: 'bc-collection-page',
@@ -15,7 +14,7 @@ import { Task } from '../models/task';
       <mat-card-title>My Pomodo-it Tasks</mat-card-title>
     </mat-card>
 
-    <bc-task-preview-list [tasks]="tasks$ | async "></bc-task-preview-list>
+    <bc-task-preview-list [tasks]="tasks$"></bc-task-preview-list>
   `,
   styles: [
     `
@@ -28,13 +27,12 @@ import { Task } from '../models/task';
 })
 export class CollectionPageComponent implements OnInit {
 
-  @Select((state: any) => state.collectionState.collection) tasks$: Observable<Task[]>;
+  @Select(CollectionState) tasks$: Observable<Task[]>;
 
   constructor(private store: Store) {
-    this.store.dispatch(new collection.Load());
   }
 
   ngOnInit() {
-    this.tasks$.pipe(map(tasks => tasks));
+    // placeholder
   }
 }

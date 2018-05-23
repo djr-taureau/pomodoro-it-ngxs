@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgxsModule } from '@ngxs/store';
 import { Router, RouterModule } from '@angular/router';
 import { ComponentsModule } from './components';
 import { TaskExistsGuard, TaskGuard } from './guards';
@@ -8,15 +9,15 @@ import { ViewTaskPageComponent } from './containers/view-task-page';
 import { SelectedTaskPageComponent, PomoDialogComponent } from './containers/selected-task-page';
 import { CollectionPageComponent } from './containers/collection-page';
 import { MaterialModule } from '../material';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppState } from './store';
+import { TaskState, CollectionState, SearchState } from './store';
 
-import { NgxsModule } from '@ngxs/store';
+
 
 @NgModule({
   imports: [
-    NgxsModule.forFeature(AppState),
+    NgxsModule.forFeature([TaskState, CollectionState, SearchState]),
     CommonModule,
     MaterialModule,
     MatDialogModule,

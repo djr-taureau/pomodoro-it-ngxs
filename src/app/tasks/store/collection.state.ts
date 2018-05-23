@@ -1,27 +1,23 @@
-import { AUTH_ROUTES } from './../../auth/auth.module';
-import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
-import { State, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
-import { Subject } from 'rxjs/Subject';
+import { ApplicationRef } from '@angular/core';
+import { TaskStateModel } from './tasks.state';
+import { State, NgxsOnInit, Action, StateContext, Selector, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
 import { Task } from '../models/task';
 import { Pomo } from '../models/pomo';
 import * as taskActions from '../store/task.actions';
 import * as collectionActions from '../store/collection.actions';
 import { TodoistTasksService } from '../../services/todoist-tasks';
 import { TaskService } from '../../services/task-service';
-import { AuthService } from '../../auth/services/auth.service';
 import { asapScheduler, of, Observable } from 'rxjs';
-import { AppState, TaskState } from '../store';
 import {
   catchError, map, switchMap, toArray,
   mergeMap, debounceTime, takeUntil, skip, tap,
 } from 'rxjs/operators';
 import { state } from '@angular/animations';
-import { AddTaskSuccess, AddTaskFail, LoadSuccess } from './collection.actions';
+import { AddTaskSuccess, AddTaskFail, LoadSuccess, Load } from './collection.actions';
 export class CollectionStateModel {
   loaded: boolean;
   loading: boolean;
   collectionIds: string[];
-  collection: Task[];
 }
 @State<CollectionStateModel>({
   name: 'collection',
@@ -29,22 +25,19 @@ export class CollectionStateModel {
     loaded: true,
     loading: false,
     collectionIds: [],
-    collection: []
   }
 })
 
-@Injectable()
-export class CollectionState {
+
+export class CollectionState implements NgxsOnInit {
   constructor(private todoist: TodoistTasksService,
-    private auth: AuthService,
+    private appRef: ApplicationRef,
     private taskService: TaskService,
     private actions$: Actions) { }
 
 
-
-
 @Selector()
-static Loaded(ctx: StateContext<CollectionStateModel>) {
+static Loaded(ctx: CollectionStateModel) {
   return ctx.loaded;
 }
 
@@ -58,22 +51,22 @@ static Loaded(ctx: StateContext<CollectionStateModel>) {
   return ctx.collectionIds;
 }
 
-@Selector()
-  static Collection(ctx: CollectionStateModel) {
-  return ctx.collection;
+ngxsOnInit(sc: StateContext<CollectionStateModel>) {
+  sc.dispatch(new Load());
 }
 
-ngxsOnInit(sc: StateContext<CollectionStateModel>) {}
-
-@Action(collectionActions.Load)
+@Action(Load)
 load({ setState, dispatch }: StateContext<CollectionStateModel>) {
-  setState({collectionIds: [], collection: [], loading: true, loaded: false});
+  setState({collectionIds: [], loading: true, loaded: false});
    return this.taskService
      .getTasks$()
      .pipe(
        map((tasks: Task[]) =>
-         asapScheduler.schedule(() =>
-           dispatch(new collectionActions.LoadSuccess(tasks)),
+       asapScheduler.schedule(() =>
+           dispatch([
+             new collectionActions.LoadSuccess(tasks),
+             // new taskActions.LoadTasks(tasks)
+            ])
          )
        ),
        catchError(error =>
@@ -82,13 +75,34 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
              dispatch(new collectionActions.LoadFail(error))
            )
          )
-       )
+       ),
      );
  }
 
+//  @Action(LoadCollection)
+// loadCollection({ setState, dispatch }: StateContext<CollectionStateModel>) {
+//   setState({collectionIds: [], loading: true, loaded: false});
+//    return this.taskService
+//      .getTasks$()
+//      .pipe(
+//        map((tasks: Task[]) =>
+//          asapScheduler.schedule(() =>
+//            dispatch(new collectionActions.LoadSuccess(tasks)),
+//          )
+//        ),
+//        catchError(error =>
+//          of(
+//            asapScheduler.schedule(() =>
+//              dispatch(new collectionActions.LoadFail(error))
+//            )
+//          )
+//        )
+//      );
+//  }
+
  @Action(collectionActions.LoadSuccess)
   loadSuccess({ setState }: StateContext<CollectionStateModel>, { payload }: collectionActions.LoadSuccess ) {
-    setState({collectionIds: payload.map(task => task.id), collection: payload.map(task => task), loaded: true, loading: false});
+    setState({collectionIds: payload.map(task => task.id), loaded: true, loading: false});
  }
 
  @Action(collectionActions.LoadFail)
@@ -105,16 +119,32 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
    return Observable.fromPromise(this.taskService.addTask(payload));
   }
 
-  @Action(collectionActions.RemoveTask)
-  removeTask(
-    { patchState, dispatch }: StateContext<CollectionStateModel>,
-    { payload }
-  ) {
-  // patchState({ loading: true });
-  //  return Observable.fromPromise(this.taskService.removeTask(payload));
+  // @Action(collectionActions.RemoveTask)
+  // removeTask(
+  //   { patchState, dispatch }: StateContext<CollectionStateModel>,
+  //   { payload }
+  // ) {
+  // patchState({ loading: false });
+  //  return Observable.fromPromise(this.taskService.removeTask$(payload));
   // }
 
+  // .map((action: userActions.GoogleLogin) => action.payload)
+  // .switchMap(payload => {
+  //     return Observable.fromPromise( this.googleLogin() );
+  // })
+  // .map( credential => {
+  //     // successful login
+  //     return new userActions.GetUser();
+  // })
+  // .catch(err => {
+  //     return Observable.of(new userActions.AuthError({error: err.message}));
+  // });
 
+//         // ofActionDispatched(collection.AddTask),
+//         // //map((task: string) => payload),
+//         // .switchMap(task => {
+//         //   const ref = this.afs.doc<Task>(`tasks/${task.selec}`)
+//         //   return Observable.fromPromise( ref.set(task)
 
   // @Action(collectionActions.AddTaskSuccess)
   //   addTaskSuccess({ setState }: StateContext<CollectionStateModel>, { payload }: collectionActions.AddTaskSuccess ) {
@@ -133,5 +163,4 @@ load({ setState, dispatch }: StateContext<CollectionStateModel>) {
   // $Action(collection.AddTaskFail)
   // AddTaskFail({});
 }
-
 
